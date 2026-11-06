@@ -25,6 +25,14 @@ export const en = {
   navReports: 'Reports',
   navSettings: 'Settings',
   navActivityLog: 'Activity log',
+  navToday: 'Today',
+  navMyClasses: 'My classes',
+  navPlanner: 'Planner',
+  navCalendar: 'Calendar',
+  navNeedsGrading: 'Needs grading',
+  navStudents: 'Students',
+  navQuestionBank: 'Question bank',
+  navAiTools: 'AI tools',
 
   // School admin overview
   overviewTitle: 'Overview',
