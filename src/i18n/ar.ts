@@ -35,6 +35,11 @@ export const ar: Record<keyof typeof en, string> = {
   navStudents: 'الطلاب',
   navQuestionBank: 'بنك الأسئلة',
   navAiTools: 'أدوات الذكاء الاصطناعي',
+  navHome: 'الرئيسية',
+  navMyCourses: 'موادي',
+  navAssignments: 'الواجبات',
+  navMyGrades: 'درجاتي',
+  navProgress: 'تقدمي',
 
   // School admin overview
   overviewTitle: 'نظرة عامة',
