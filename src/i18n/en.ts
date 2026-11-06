@@ -1,0 +1,72 @@
+export const en = {
+  // Studio chrome
+  studioName: 'York-E 3.0',
+  studioSubtitle: 'Design studio',
+  syntheticData: 'Synthetic sample data',
+  tabCanvas: 'Canvas',
+  tabSuperAdmin: 'Super admin',
+  tabSchoolAdmin: 'School admin',
+  tabCoordinator: 'Coordinator',
+  tabTeacher: 'Teacher',
+  tabStudent: 'Student',
+  tabParent: 'Parent',
+  switchToArabic: 'العربية',
+  switchToEnglish: 'English',
+
+  // Navigation
+  navOverview: 'Overview',
+  navClasses: 'Classes',
+  navUsers: 'Users',
+  navCourses: 'Courses',
+  navGradebook: 'Gradebook',
+  navAttendance: 'Attendance',
+  navAnalytics: 'Analytics',
+  navAnnouncements: 'Announcements',
+  navReports: 'Reports',
+  navSettings: 'Settings',
+  navActivityLog: 'Activity log',
+
+  // School admin overview
+  overviewTitle: 'Overview',
+  activeLearners: 'Active learners',
+  needsAttention: 'Needs attention',
+  classesCount: 'Classes',
+  teachersCount: 'Teachers',
+  weeklyActive: 'Weekly active learners by grade',
+  progressByGrade: 'Progress by grade',
+  progressByClass: 'Progress by class',
+  weakestSkills: 'Weakest skills this term',
+  teacherUsage: 'Teacher usage',
+  recentActivity: 'Recent activity',
+  needsYourAttention: 'Needs your attention',
+  viewAll: 'View all',
+
+  // Status
+  onTrack: 'On track',
+  watch: 'Watch',
+  atRisk: 'At risk',
+  rising: 'rising',
+  steady: 'steady',
+  falling: 'falling',
+
+  // Table headers
+  colStudent: 'Student',
+  colClass: 'Class',
+  colAverage: 'Average',
+  colTrend: 'Trend',
+  colStatus: 'Status',
+  colCompletion: 'Completion',
+  colLastActive: 'Last active',
+  colTeacher: 'Teacher',
+  colSkill: 'Skill',
+  colMastery: 'Mastery',
+
+  // Common
+  seatsUsed: 'seats used',
+  thisTerm: 'this term',
+  ofTotal: 'of',
+  noData: 'Nothing to show yet',
+  search: 'Search',
+  filter: 'Filter',
+  export: 'Export',
+} as const
