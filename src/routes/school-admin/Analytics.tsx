@@ -159,7 +159,13 @@ export function SchoolAdminAnalytics() {
             <CardContent>
               <div className="h-[240px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={bandsByGrade} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                  {/* barSize capped: three grades across a wide card otherwise
+                      gives bars so fat they read as blocks of colour. */}
+                  <BarChart
+                    data={bandsByGrade}
+                    barSize={64}
+                    margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
+                  >
                     <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
                     <XAxis dataKey="grade" reversed={dir === 'rtl'} {...axisProps} />
                     <YAxis orientation={dir === 'rtl' ? 'right' : 'left'} {...axisProps} />
