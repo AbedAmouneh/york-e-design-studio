@@ -69,9 +69,11 @@ export function SchoolAdminClasses() {
         title={t('navClasses')}
         subtitle={`${school.name} · ${school.academicYear}`}
         actions={
-          <Button variant="accent" size="sm">
-            <Plus className="h-3.5 w-3.5" aria-hidden />
-            Create a class
+          <Button variant="accent" size="sm" asChild>
+            <Link to="/school-admin/classes/new">
+              <Plus className="h-3.5 w-3.5" aria-hidden />
+              Create a class
+            </Link>
           </Button>
         }
       />
