@@ -6,6 +6,8 @@ import { SchoolAdminOverview } from '@/routes/school-admin/Overview'
 import { SchoolAdminClasses } from '@/routes/school-admin/Classes'
 import { SchoolAdminUsers } from '@/routes/school-admin/Users'
 import { SchoolAdminBulkImport } from '@/routes/school-admin/BulkImport'
+import { SchoolAdminClassDetail } from '@/routes/school-admin/ClassDetail'
+import { SchoolAdminAttendance } from '@/routes/school-admin/Attendance'
 
 export default function App() {
   return (
@@ -19,11 +21,11 @@ export default function App() {
           <Route index element={<SchoolAdminOverview />} />
           <Route path="analytics" element={<Placeholder title="Analytics" />} />
           <Route path="classes" element={<SchoolAdminClasses />} />
-          <Route path="classes/:classId" element={<Placeholder title="Class detail" />} />
+          <Route path="classes/:classId" element={<SchoolAdminClassDetail />} />
           <Route path="users" element={<SchoolAdminUsers />} />
           <Route path="users/import" element={<SchoolAdminBulkImport />} />
           <Route path="courses" element={<Placeholder title="Courses" />} />
-          <Route path="attendance" element={<Placeholder title="Attendance" />} />
+          <Route path="attendance" element={<SchoolAdminAttendance />} />
           <Route path="announcements" element={<Placeholder title="Announcements" />} />
           <Route path="reports" element={<Placeholder title="Reports and export" />} />
           <Route path="activity-log" element={<Placeholder title="Activity log" />} />
