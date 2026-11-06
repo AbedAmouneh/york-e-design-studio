@@ -3,6 +3,9 @@ import { StudioShell } from '@/components/studio/StudioShell'
 import { Placeholder } from '@/components/studio/Placeholder'
 import { SchoolAdminApp } from '@/routes/school-admin/SchoolAdminApp'
 import { SchoolAdminOverview } from '@/routes/school-admin/Overview'
+import { SchoolAdminClasses } from '@/routes/school-admin/Classes'
+import { SchoolAdminUsers } from '@/routes/school-admin/Users'
+import { SchoolAdminBulkImport } from '@/routes/school-admin/BulkImport'
 
 export default function App() {
   return (
@@ -15,8 +18,10 @@ export default function App() {
         <Route path="school-admin" element={<SchoolAdminApp />}>
           <Route index element={<SchoolAdminOverview />} />
           <Route path="analytics" element={<Placeholder title="Analytics" />} />
-          <Route path="classes" element={<Placeholder title="Classes" />} />
-          <Route path="users" element={<Placeholder title="Users" />} />
+          <Route path="classes" element={<SchoolAdminClasses />} />
+          <Route path="classes/:classId" element={<Placeholder title="Class detail" />} />
+          <Route path="users" element={<SchoolAdminUsers />} />
+          <Route path="users/import" element={<SchoolAdminBulkImport />} />
           <Route path="courses" element={<Placeholder title="Courses" />} />
           <Route path="attendance" element={<Placeholder title="Attendance" />} />
           <Route path="announcements" element={<Placeholder title="Announcements" />} />
