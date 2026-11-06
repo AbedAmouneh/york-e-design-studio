@@ -1,0 +1,74 @@
+import type { en } from './en'
+
+export const ar: Record<keyof typeof en, string> = {
+  // Studio chrome
+  studioName: 'يورك-إي ٣٫٠',
+  studioSubtitle: 'استوديو التصميم',
+  syntheticData: 'بيانات تجريبية',
+  tabCanvas: 'اللوحة',
+  tabSuperAdmin: 'مدير المنصة',
+  tabSchoolAdmin: 'إدارة المدرسة',
+  tabCoordinator: 'المنسق',
+  tabTeacher: 'المعلم',
+  tabStudent: 'الطالب',
+  tabParent: 'ولي الأمر',
+  switchToArabic: 'العربية',
+  switchToEnglish: 'English',
+
+  // Navigation
+  navOverview: 'نظرة عامة',
+  navClasses: 'الصفوف',
+  navUsers: 'المستخدمون',
+  navCourses: 'المقررات',
+  navGradebook: 'سجل الدرجات',
+  navAttendance: 'الحضور',
+  navAnalytics: 'التحليلات',
+  navAnnouncements: 'الإعلانات',
+  navReports: 'التقارير',
+  navSettings: 'الإعدادات',
+  navActivityLog: 'سجل النشاط',
+
+  // School admin overview
+  overviewTitle: 'نظرة عامة',
+  activeLearners: 'الطلاب النشطون',
+  needsAttention: 'يحتاجون إلى متابعة',
+  classesCount: 'الصفوف',
+  teachersCount: 'المعلمون',
+  weeklyActive: 'الطلاب النشطون أسبوعياً حسب الصف',
+  progressByGrade: 'التقدم حسب الصف',
+  progressByClass: 'التقدم حسب الشعبة',
+  weakestSkills: 'أضعف المهارات هذا الفصل',
+  teacherUsage: 'استخدام المعلمين',
+  recentActivity: 'النشاط الأخير',
+  needsYourAttention: 'يحتاج إلى انتباهك',
+  viewAll: 'عرض الكل',
+
+  // Status
+  onTrack: 'على المسار',
+  watch: 'للمتابعة',
+  atRisk: 'متعثر',
+  rising: 'في تحسن',
+  steady: 'مستقر',
+  falling: 'في تراجع',
+
+  // Table headers
+  colStudent: 'الطالب',
+  colClass: 'الشعبة',
+  colAverage: 'المعدل',
+  colTrend: 'الاتجاه',
+  colStatus: 'الحالة',
+  colCompletion: 'نسبة الإنجاز',
+  colLastActive: 'آخر نشاط',
+  colTeacher: 'المعلم',
+  colSkill: 'المهارة',
+  colMastery: 'الإتقان',
+
+  // Common
+  seatsUsed: 'مقعداً مستخدماً',
+  thisTerm: 'هذا الفصل',
+  ofTotal: 'من',
+  noData: 'لا توجد بيانات بعد',
+  search: 'بحث',
+  filter: 'تصفية',
+  export: 'تصدير',
+}
