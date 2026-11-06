@@ -33,6 +33,11 @@ export const en = {
   navStudents: 'Students',
   navQuestionBank: 'Question bank',
   navAiTools: 'AI tools',
+  navHome: 'Home',
+  navMyCourses: 'My courses',
+  navAssignments: 'Assignments',
+  navMyGrades: 'My grades',
+  navProgress: 'My progress',
 
   // School admin overview
   overviewTitle: 'Overview',
