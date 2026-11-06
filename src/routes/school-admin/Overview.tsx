@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { ArrowUpRight, Users } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge, StatusBadge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { StatCard } from '@/components/app/StatCard'
 import {
   Table,
   TableBody,
@@ -350,25 +351,3 @@ export function SchoolAdminOverview() {
   )
 }
 
-function StatCard({
-  label,
-  value,
-  hint,
-  emphasis,
-}: {
-  label: string
-  value: string
-  hint?: string
-  emphasis?: boolean
-}) {
-  return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between gap-2">
-        <span className="text-small text-muted-foreground">{label}</span>
-        {emphasis ? <Badge variant="warning">!</Badge> : null}
-      </div>
-      <p className="tabular mt-2 text-display font-semibold leading-none text-foreground">{value}</p>
-      {hint ? <p className="mt-1.5 text-caption text-muted-foreground">{hint}</p> : null}
-    </Card>
-  )
-}
