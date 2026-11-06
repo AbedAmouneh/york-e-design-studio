@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { StudioShell } from '@/components/studio/StudioShell'
-import { Placeholder } from '@/components/studio/Placeholder'
 import { Canvas } from '@/routes/Canvas'
 
 import { SchoolAdminApp } from '@/routes/school-admin/SchoolAdminApp'
@@ -61,6 +60,33 @@ import { EarlyDoActivity } from '@/routes/student/early/DoActivity'
 import { EarlyWellDone } from '@/routes/student/early/WellDone'
 import { EarlyStickers } from '@/routes/student/early/Stickers'
 
+import { ParentApp } from '@/routes/parent/ParentApp'
+import { ParentMyChildren } from '@/routes/parent/MyChildren'
+import { ParentChildOverview } from '@/routes/parent/ChildOverview'
+import { ParentChildProgress } from '@/routes/parent/ChildProgress'
+import { ParentChildWork } from '@/routes/parent/ChildWork'
+import { ParentChildAttendance } from '@/routes/parent/ChildAttendance'
+import { ParentMessages } from '@/routes/parent/Messages'
+import { ParentAnnouncements } from '@/routes/parent/Announcements'
+import { ParentSettings } from '@/routes/parent/Settings'
+
+import { CoordinatorApp } from '@/routes/coordinator/CoordinatorApp'
+import { CoordinatorOverview } from '@/routes/coordinator/Overview'
+import { CoordinatorUnitPlans } from '@/routes/coordinator/UnitPlans'
+import { CoordinatorStandards } from '@/routes/coordinator/Standards'
+import { CoordinatorAcrossClasses } from '@/routes/coordinator/AcrossClasses'
+import { CoordinatorFlagged } from '@/routes/coordinator/Flagged'
+
+import { SuperAdminApp } from '@/routes/super-admin/SuperAdminApp'
+import { SuperAdminTenants } from '@/routes/super-admin/Tenants'
+import { SuperAdminTenantDetail } from '@/routes/super-admin/TenantDetail'
+import { SuperAdminProvision } from '@/routes/super-admin/Provision'
+import { SuperAdminSeats } from '@/routes/super-admin/Seats'
+import { SuperAdminCatalogue } from '@/routes/super-admin/Catalogue'
+import { SuperAdminUsage } from '@/routes/super-admin/Usage'
+import { SuperAdminSupport } from '@/routes/super-admin/Support'
+import { SuperAdminSettings } from '@/routes/super-admin/Settings'
+
 export default function App() {
   return (
     <Routes>
@@ -119,14 +145,24 @@ export default function App() {
           <Route path="ai" element={<TeacherAiTools />} />
         </Route>
 
-        <Route
-          path="super-admin"
-          element={<Placeholder title="Super admin" note="York Press level. Eight screens planned." />}
-        />
-        <Route
-          path="coordinator"
-          element={<Placeholder title="Coordinator" note="Five screens planned." />}
-        />
+        <Route path="super-admin" element={<SuperAdminApp />}>
+          <Route index element={<SuperAdminTenants />} />
+          <Route path="tenant/:tenantId" element={<SuperAdminTenantDetail />} />
+          <Route path="provision" element={<SuperAdminProvision />} />
+          <Route path="seats" element={<SuperAdminSeats />} />
+          <Route path="catalogue" element={<SuperAdminCatalogue />} />
+          <Route path="usage" element={<SuperAdminUsage />} />
+          <Route path="support" element={<SuperAdminSupport />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+        </Route>
+
+        <Route path="coordinator" element={<CoordinatorApp />}>
+          <Route index element={<CoordinatorOverview />} />
+          <Route path="unit-plans" element={<CoordinatorUnitPlans />} />
+          <Route path="standards" element={<CoordinatorStandards />} />
+          <Route path="classes" element={<CoordinatorAcrossClasses />} />
+          <Route path="flagged" element={<CoordinatorFlagged />} />
+        </Route>
         <Route path="student" element={<StudentApp />}>
           <Route index element={<StudentDashboard />} />
           <Route path="courses" element={<StudentMyCourses />} />
@@ -144,7 +180,16 @@ export default function App() {
           <Route path="activities" element={<EarlyActivities />} />
           <Route path="stickers" element={<EarlyStickers />} />
         </Route>
-        <Route path="parent" element={<Placeholder title="Parent" note="Eight screens planned." />} />
+        <Route path="parent" element={<ParentApp />}>
+          <Route index element={<ParentMyChildren />} />
+          <Route path="child/:childId" element={<ParentChildOverview />} />
+          <Route path="child/:childId/progress" element={<ParentChildProgress />} />
+          <Route path="child/:childId/work" element={<ParentChildWork />} />
+          <Route path="child/:childId/attendance" element={<ParentChildAttendance />} />
+          <Route path="messages" element={<ParentMessages />} />
+          <Route path="announcements" element={<ParentAnnouncements />} />
+          <Route path="settings" element={<ParentSettings />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
       </Route>
