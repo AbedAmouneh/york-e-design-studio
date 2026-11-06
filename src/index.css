@@ -1,0 +1,101 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  York-E 3.0 design tokens.
+
+  Direction B, staff: neutral base, York yellow as accent only.
+  Direction C, learner: warm surfaces, no status colours, no percentages.
+  Both scales approved 6 November 2026.
+*/
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* Surfaces */
+    --background: 0 0% 100%;
+    --surface: 60 14% 98%;
+    --surface-sunken: 60 9% 95%;
+
+    /* Text */
+    --foreground: 0 0% 4%;
+    --muted: 60 9% 95%;
+    --muted-foreground: 0 0% 42%;
+
+    /* Lines */
+    --border: 0 0% 91%;
+    --border-strong: 0 0% 85%;
+    --input: 0 0% 91%;
+    --ring: 0 0% 4%;
+
+    /* York brand. Yellow is an accent, never a surface, on staff screens. */
+    --primary: 0 0% 4%;
+    --primary-foreground: 55 99% 52%;
+    --accent: 55 99% 52%;
+    --accent-foreground: 0 0% 4%;
+
+    /* Status. Tints are for pill backgrounds. */
+    --success: 152 59% 30%;
+    --success-foreground: 0 0% 100%;
+    --success-tint: 147 44% 93%;
+    --warning: 32 95% 37%;
+    --warning-foreground: 0 0% 100%;
+    --warning-tint: 38 86% 93%;
+    --danger: 4 74% 41%;
+    --danger-foreground: 0 0% 100%;
+    --danger-tint: 8 71% 95%;
+
+    /* Learner tier, K1 to Grade 3 only. No red anywhere. */
+    --learner-surface: 50 100% 98%;
+    --learner-sidebar: 49 100% 93%;
+    --learner-primary: 173 58% 39%;
+    --learner-primary-foreground: 0 0% 100%;
+    --learner-next: 44 100% 83%;
+    --learner-next-foreground: 43 100% 24%;
+
+    --radius: 0.375rem;
+    --radius-learner: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-surface text-foreground font-sans text-body antialiased;
+  }
+
+  /* Any figure that sits in a column lines up. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  [dir='rtl'] body {
+    @apply font-arabic;
+  }
+}
+
+@layer components {
+  /*
+    Learner scope. Applied on the K1 to Grade 3 shell only, so the
+    warm palette cannot leak into staff screens by accident.
+  */
+  .learner-scope {
+    --background: var(--learner-surface);
+    --surface: var(--learner-surface);
+    --primary: var(--learner-primary);
+    --primary-foreground: var(--learner-primary-foreground);
+    --radius: var(--radius-learner);
+  }
+}
