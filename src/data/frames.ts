@@ -7,6 +7,8 @@
  * honest picture of what exists rather than a gallery of the finished parts.
  */
 
+import { UPPER_STUDENT_ID } from './student'
+
 export interface Frame {
   /** Numbered for review. "Look at frame 34" has to mean something. */
   n: number
@@ -74,8 +76,10 @@ export const frameSections: FrameSection[] = [
       f('Needs grading', '/teacher/grading'),
       f('Grade a submission', '/teacher/grading/asg-cls-3-1', { note: 'Flow' }),
       f('Students', '/teacher/students'),
-      f('Student detail', '/teacher/students/std-48'),
-      f('Skill drill down', '/teacher/students/std-48/skills'),
+      // The same child the student frames show, so the two sides can be
+      // compared directly.
+      f('Student detail', `/teacher/students/${UPPER_STUDENT_ID}`),
+      f('Skill drill down', `/teacher/students/${UPPER_STUDENT_ID}/skills`),
       f('Question bank', '/teacher/question-bank'),
       f('Create a quiz', '/teacher/question-bank/new'),
       f('Attendance register', '/teacher/attendance'),
@@ -87,30 +91,30 @@ export const frameSections: FrameSection[] = [
   {
     id: 'student-upper',
     title: 'Student, Grade 3 and above',
-    blurb: 'Sees scores, feedback and progress. Ten screens.',
+    blurb: 'Sees scores, feedback and progress. Never the words at risk.',
     frames: [
-      f('Dashboard', ''),
-      f('My courses', ''),
-      f('Course player', ''),
-      f('Take a quiz', '', { note: 'Flow' }),
-      f('Quiz results and feedback', ''),
-      f('My grades', ''),
-      f('Assignments and due dates', ''),
-      f('Calendar', ''),
-      f('Announcements', ''),
-      f('My progress', ''),
+      f('Dashboard', '/student'),
+      f('My courses', '/student/courses'),
+      f('Course player', '/student/courses/crs-math-g6'),
+      f('Assignments and due dates', '/student/assignments'),
+      f('Take a quiz', '/student/quiz/asg-cls-3-1', { note: 'Flow, no chrome' }),
+      f('Quiz results and feedback', '/student/quiz/asg-cls-3-1/results'),
+      f('My grades', '/student/grades'),
+      f('My progress', '/student/progress'),
+      f('Calendar', '/student/calendar'),
+      f('Announcements', '/student/announcements'),
     ],
   },
   {
     id: 'student-early',
     title: 'Student, K1 to Grade 3',
-    blurb: 'Stars and completion. Never a percentage, never the words at risk.',
+    blurb: 'Stars and completion. No percentage anywhere, and no at risk at all.',
     frames: [
-      f('Home', ''),
-      f('My activities', ''),
-      f('Doing an activity', ''),
-      f('Well done moment', '', { note: 'Flow' }),
-      f('My stickers', ''),
+      f('Home', '/student/early'),
+      f('My work', '/student/early/activities'),
+      f('Doing an activity', '/student/early/activity/a3', { note: 'No chrome' }),
+      f('Well done moment', '/student/early/done', { note: 'Flow' }),
+      f('My stickers', '/student/early/stickers'),
     ],
   },
   {
