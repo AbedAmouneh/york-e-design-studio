@@ -8,6 +8,10 @@ import { SchoolAdminUsers } from '@/routes/school-admin/Users'
 import { SchoolAdminBulkImport } from '@/routes/school-admin/BulkImport'
 import { SchoolAdminClassDetail } from '@/routes/school-admin/ClassDetail'
 import { SchoolAdminAttendance } from '@/routes/school-admin/Attendance'
+import { SchoolAdminAnalytics } from '@/routes/school-admin/Analytics'
+import { SchoolAdminAnnouncements } from '@/routes/school-admin/Announcements'
+import { SchoolAdminActivityLog } from '@/routes/school-admin/ActivityLog'
+import { SchoolAdminSettings } from '@/routes/school-admin/Settings'
 
 export default function App() {
   return (
@@ -19,17 +23,17 @@ export default function App() {
 
         <Route path="school-admin" element={<SchoolAdminApp />}>
           <Route index element={<SchoolAdminOverview />} />
-          <Route path="analytics" element={<Placeholder title="Analytics" />} />
+          <Route path="analytics" element={<SchoolAdminAnalytics />} />
           <Route path="classes" element={<SchoolAdminClasses />} />
           <Route path="classes/:classId" element={<SchoolAdminClassDetail />} />
           <Route path="users" element={<SchoolAdminUsers />} />
           <Route path="users/import" element={<SchoolAdminBulkImport />} />
           <Route path="courses" element={<Placeholder title="Courses" />} />
           <Route path="attendance" element={<SchoolAdminAttendance />} />
-          <Route path="announcements" element={<Placeholder title="Announcements" />} />
+          <Route path="announcements" element={<SchoolAdminAnnouncements />} />
           <Route path="reports" element={<Placeholder title="Reports and export" />} />
-          <Route path="activity-log" element={<Placeholder title="Activity log" />} />
-          <Route path="settings" element={<Placeholder title="Settings" />} />
+          <Route path="activity-log" element={<SchoolAdminActivityLog />} />
+          <Route path="settings" element={<SchoolAdminSettings />} />
         </Route>
 
         <Route path="super-admin" element={<Placeholder title="Super admin" note="York Press level. Eight screens planned." />} />
