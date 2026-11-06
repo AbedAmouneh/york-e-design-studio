@@ -8,6 +8,10 @@
  */
 
 import { UPPER_STUDENT_ID } from './student'
+import { children } from './parent'
+
+const UPPER_CHILD = children[0].id
+const EARLY_CHILD = children[1].id
 
 export interface Frame {
   /** Numbered for review. "Look at frame 34" has to mean something. */
@@ -120,16 +124,16 @@ export const frameSections: FrameSection[] = [
   {
     id: 'parent',
     title: 'Parent',
-    blurb: 'One child at a time, or several. Reads rather than acts.',
+    blurb: 'Two children, one in each age tier. Sees exactly what the child sees.',
     frames: [
-      f('My children', ''),
-      f('Child overview', ''),
-      f('Progress over time', ''),
-      f('Attendance', ''),
-      f('Assignments and marks', ''),
-      f('Messages from school', ''),
-      f('Announcements', ''),
-      f('Notification settings', ''),
+      f('My children', '/parent'),
+      f('Child overview, Grade 6', `/parent/child/${UPPER_CHILD}`),
+      f('Child overview, Grade 2', `/parent/child/${EARLY_CHILD}`),
+      f('Progress over time', `/parent/child/${UPPER_CHILD}/progress`),
+      f('Assignments and marks', `/parent/child/${UPPER_CHILD}/work`),
+      f('Attendance', `/parent/child/${UPPER_CHILD}/attendance`),
+      f('Messages from school', '/parent/messages'),
+      f('Notification settings', '/parent/settings'),
     ],
   },
   {
@@ -137,11 +141,11 @@ export const frameSections: FrameSection[] = [
     title: 'Coordinator',
     blurb: 'Owns the unit plan and standards coverage across several classes.',
     frames: [
-      f('Overview', ''),
-      f('Unit plans', ''),
-      f('Standards coverage', ''),
-      f('Across my classes', ''),
-      f('Flagged students', ''),
+      f('Overview', '/coordinator'),
+      f('Unit plans', '/coordinator/unit-plans'),
+      f('Standards coverage', '/coordinator/standards'),
+      f('Across my classes', '/coordinator/classes'),
+      f('Flagged students', '/coordinator/flagged'),
     ],
   },
   {
@@ -149,14 +153,14 @@ export const frameSections: FrameSection[] = [
     title: 'Super admin',
     blurb: 'York Press level. Tenants, seats and what every school is doing.',
     frames: [
-      f('Tenants', ''),
-      f('Tenant detail', ''),
-      f('Provision a school', '', { note: 'Flow' }),
-      f('Seats and licences', ''),
-      f('Course catalogue', ''),
-      f('Usage across schools', ''),
-      f('Support and impersonation', ''),
-      f('Platform settings', ''),
+      f('Schools', '/super-admin'),
+      f('School detail', '/super-admin/tenant/sch-noor'),
+      f('Provision a school', '/super-admin/provision', { note: 'Flow' }),
+      f('Seats and licences', '/super-admin/seats'),
+      f('Course catalogue', '/super-admin/catalogue'),
+      f('Usage across schools', '/super-admin/usage'),
+      f('Support and impersonation', '/super-admin/support'),
+      f('Platform settings', '/super-admin/settings'),
     ],
   },
   {
