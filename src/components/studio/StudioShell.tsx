@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 import { Languages } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
  *
  * The language switch lives here rather than inside each app because the whole
  * point is to flip any screen to Arabic without leaving it.
+ *
+ * ?bare=1 drops the chrome. The canvas loads every screen in its own frame and
+ * the studio header has no business appearing forty two times inside itself.
  */
 
 const tabs = [
@@ -24,6 +27,15 @@ const tabs = [
 
 export function StudioShell() {
   const { t, locale, toggleLocale } = useLocale()
+  const [params] = useSearchParams()
+
+  if (params.get('bare') === '1') {
+    return (
+      <div className="h-screen overflow-hidden bg-surface-sunken">
+        <Outlet />
+      </div>
+    )
+  }
 
   return (
     <div className="flex h-screen flex-col bg-surface-sunken">
