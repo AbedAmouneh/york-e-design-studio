@@ -27,6 +27,14 @@ export const ar: Record<keyof typeof en, string> = {
   navReports: 'التقارير',
   navSettings: 'الإعدادات',
   navActivityLog: 'سجل النشاط',
+  navToday: 'اليوم',
+  navMyClasses: 'صفوفي',
+  navPlanner: 'المخطط',
+  navCalendar: 'التقويم',
+  navNeedsGrading: 'بانتظار التصحيح',
+  navStudents: 'الطلاب',
+  navQuestionBank: 'بنك الأسئلة',
+  navAiTools: 'أدوات الذكاء الاصطناعي',
 
   // School admin overview
   overviewTitle: 'نظرة عامة',
