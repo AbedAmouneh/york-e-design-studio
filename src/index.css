@@ -93,7 +93,13 @@
   */
   .learner-scope {
     --background: var(--learner-surface);
-    --surface: var(--learner-surface);
+    /*
+      --surface has to be a real step away from --background here. Pointing
+      both at learner-surface made every card and answer tile invisible: the
+      shapes were there, nothing was legible as a shape. Cards in this tier
+      carry no border, so the fill is the only thing separating them.
+    */
+    --surface: var(--learner-sidebar);
     --primary: var(--learner-primary);
     --primary-foreground: var(--learner-primary-foreground);
     --radius: var(--radius-learner);
