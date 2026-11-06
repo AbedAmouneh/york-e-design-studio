@@ -40,6 +40,14 @@ export const ar: Record<keyof typeof en, string> = {
   navAssignments: 'الواجبات',
   navMyGrades: 'درجاتي',
   navProgress: 'تقدمي',
+  navUnitPlans: 'خطط الوحدات',
+  navStandards: 'المعايير',
+  navAcrossClasses: 'عبر صفوفي',
+  navFlagged: 'طلاب بحاجة إلى متابعة',
+  navTenants: 'المدارس',
+  navSeats: 'المقاعد والتراخيص',
+  navUsage: 'الاستخدام',
+  navSupport: 'الدعم',
 
   // School admin overview
   overviewTitle: 'نظرة عامة',
