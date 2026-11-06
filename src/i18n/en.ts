@@ -38,6 +38,14 @@ export const en = {
   navAssignments: 'Assignments',
   navMyGrades: 'My grades',
   navProgress: 'My progress',
+  navUnitPlans: 'Unit plans',
+  navStandards: 'Standards',
+  navAcrossClasses: 'Across my classes',
+  navFlagged: 'Flagged students',
+  navTenants: 'Schools',
+  navSeats: 'Seats and licences',
+  navUsage: 'Usage',
+  navSupport: 'Support',
 
   // School admin overview
   overviewTitle: 'Overview',
