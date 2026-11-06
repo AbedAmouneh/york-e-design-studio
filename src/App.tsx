@@ -42,11 +42,37 @@ import { TeacherAnnouncements } from '@/routes/teacher/Announcements'
 import { TeacherAiTools } from '@/routes/teacher/AiTools'
 import { TeacherPresent } from '@/routes/teacher/Present'
 
+import { StudentApp } from '@/routes/student/StudentApp'
+import { StudentDashboard } from '@/routes/student/Dashboard'
+import { StudentMyCourses } from '@/routes/student/MyCourses'
+import { StudentCoursePlayer } from '@/routes/student/CoursePlayer'
+import { StudentAssignments } from '@/routes/student/Assignments'
+import { StudentGrades } from '@/routes/student/Grades'
+import { StudentProgress } from '@/routes/student/Progress'
+import { StudentCalendar } from '@/routes/student/Calendar'
+import { StudentAnnouncements } from '@/routes/student/Announcements'
+import { StudentTakeQuiz } from '@/routes/student/TakeQuiz'
+import { StudentQuizResults } from '@/routes/student/QuizResults'
+
+import { EarlyApp } from '@/routes/student/early/EarlyApp'
+import { EarlyHome } from '@/routes/student/early/Home'
+import { EarlyActivities } from '@/routes/student/early/Activities'
+import { EarlyDoActivity } from '@/routes/student/early/DoActivity'
+import { EarlyWellDone } from '@/routes/student/early/WellDone'
+import { EarlyStickers } from '@/routes/student/early/Stickers'
+
 export default function App() {
   return (
     <Routes>
-      {/* Present mode is outside the studio shell on purpose: it is projected. */}
+      {/*
+        Three screens sit outside the studio shell because each one takes the
+        whole display in real use: a projected lesson, a student mid
+        assessment, and a six year old's reward moment.
+      */}
       <Route path="/teacher/present" element={<TeacherPresent />} />
+      <Route path="/student/quiz/:assignmentId" element={<StudentTakeQuiz />} />
+      <Route path="/student/early/activity/:activityId" element={<EarlyDoActivity />} />
+      <Route path="/student/early/done" element={<EarlyWellDone />} />
 
       <Route element={<StudioShell />}>
         <Route index element={<Navigate to="/school-admin" replace />} />
@@ -101,10 +127,23 @@ export default function App() {
           path="coordinator"
           element={<Placeholder title="Coordinator" note="Five screens planned." />}
         />
-        <Route
-          path="student"
-          element={<Placeholder title="Student" note="Fifteen screens across two age tiers." />}
-        />
+        <Route path="student" element={<StudentApp />}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="courses" element={<StudentMyCourses />} />
+          <Route path="courses/:courseId" element={<StudentCoursePlayer />} />
+          <Route path="assignments" element={<StudentAssignments />} />
+          <Route path="quiz/:assignmentId/results" element={<StudentQuizResults />} />
+          <Route path="grades" element={<StudentGrades />} />
+          <Route path="progress" element={<StudentProgress />} />
+          <Route path="calendar" element={<StudentCalendar />} />
+          <Route path="announcements" element={<StudentAnnouncements />} />
+        </Route>
+
+        <Route path="student/early" element={<EarlyApp />}>
+          <Route index element={<EarlyHome />} />
+          <Route path="activities" element={<EarlyActivities />} />
+          <Route path="stickers" element={<EarlyStickers />} />
+        </Route>
         <Route path="parent" element={<Placeholder title="Parent" note="Eight screens planned." />} />
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
