@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { useStudentDue, useStudentReleased } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
 import {
@@ -46,7 +47,7 @@ export function ParentChildOverview() {
     <Page>
       <PageHeader
         title={fullNameOf(child)}
-        subtitle={t('parClassTermWeek').replace('{c}', group?.name ?? '')}
+        subtitle={t('parClassTermWeek').replace('{c}', groupName(group, locale))}
         actions={
           <Button variant="outline" size="sm" asChild>
             <Link to="/parent/messages">
