@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { courses, skills } from '@/data/seed'
 import { classById } from '@/data/teacher'
@@ -74,7 +75,7 @@ export function TeacherCoursePlayer() {
       <PageHeader
         title={locale === 'ar' ? course.titleAr : course.title}
         subtitle={t('tchCourseSubtitle')
-          .replace('{c}', classGroup?.name ?? '')
+          .replace('{c}', groupName(classGroup, locale))
           .replace('{n}', String(course.units.length))}
         actions={
           <div className="flex items-center gap-2">
