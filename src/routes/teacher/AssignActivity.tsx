@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
 import { useStudioState } from '@/lib/studioState'
 import type { StringKey } from '@/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { coursesForClass, studentsInClass, teacherClasses, fullName } from '@/data/teacher'
 
@@ -90,7 +91,7 @@ export function TeacherAssignActivity() {
     <Page>
       <PageHeader
         title={t('tchAssignActivity')}
-        subtitle={classGroup.name}
+        subtitle={groupName(classGroup, locale)}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/teacher/classes/${classId}`}>
@@ -143,7 +144,7 @@ export function TeacherAssignActivity() {
                       setStudentIds(new Set())
                     }}
                   >
-                    {item.name}
+                    {groupName(item, locale)}
                   </Button>
                 ))}
               </div>
@@ -228,7 +229,7 @@ export function TeacherAssignActivity() {
                 <span className="mt-0.5 block text-caption text-muted-foreground">
                   {t('tchAllNStudentsIn')
                     .replace('{n}', String(members.length))
-                    .replace('{c}', classGroup.name)}
+                    .replace('{c}', groupName(classGroup, locale))}
                 </span>
               </button>
               <button
@@ -437,7 +438,7 @@ export function TeacherAssignActivity() {
             <p className="max-w-[56ch] text-small text-muted-foreground">
               {t(attempts > 1 ? 'tchAssignSummaryMany' : 'tchAssignSummaryOne')
                 .replace('{n}', String(recipients))
-                .replace('{c}', classGroup.name)
+                .replace('{c}', groupName(classGroup, locale))
                 .replace('{d}', dueOn)
                 .replace('{a}', String(attempts))}{' '}
               {release === 'manual' ? t('tchResultsHeld') : t('tchResultsImmediate')}
