@@ -385,7 +385,7 @@ export const teacher = {
   tchNotYetCovered: { en: '{n} not yet covered', ar: '{n} لم يُغطَّ بعد' },
   tchPlannerAiHint: {
     en: 'Grade 6 Maple is one lesson behind Cedar on the same unit. Thursday has room to catch up before the end of unit check.',
-    ar: 'صف Grade 6 Maple متأخر بدرس واحد عن Cedar في الوحدة نفسها. ويوم الخميس يتسع للحاق قبل اختبار نهاية الوحدة.',
+    ar: 'الصف السادس، شعبة القيقب متأخر بدرس واحد عن شعبة الأرز في الوحدة نفسها. ويوم الخميس يتسع للحاق قبل اختبار نهاية الوحدة.',
   },
   tchBuildTheLesson: { en: 'Build the lesson', ar: 'جهّز الدرس' },
 
