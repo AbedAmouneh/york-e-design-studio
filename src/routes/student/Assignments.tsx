@@ -6,8 +6,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { useStudentWork } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
-import { upperStudent, workFor } from '@/data/student'
+import { upperStudent } from '@/data/student'
 
 /**
  * Assignments and due dates.
@@ -25,7 +26,7 @@ type Tab = 'todo' | 'handed-in' | 'marked'
 export function StudentAssignments() {
   const { t, locale } = useLocale()
   const [tab, setTab] = useState<Tab>('todo')
-  const all = workFor(upperStudent)
+  const all = useStudentWork(upperStudent)
 
   const todo = all.filter(
     (item) => !item.submission || item.submission.state === 'not-started',

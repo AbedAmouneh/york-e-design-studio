@@ -12,8 +12,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { useStudentReleased, useStudentWork } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
-import { coursesOf, standingOf, upperStudent, visibleWork, workFor } from '@/data/student'
+import { coursesOf, standingOf, upperStudent } from '@/data/student'
 
 /**
  * My grades.
@@ -30,8 +31,8 @@ import { coursesOf, standingOf, upperStudent, visibleWork, workFor } from '@/dat
 export function StudentGrades() {
   const { t, locale } = useLocale()
   const standing = standingOf(upperStudent)
-  const released = visibleWork(upperStudent)
-  const all = workFor(upperStudent)
+  const released = useStudentReleased(upperStudent)
+  const all = useStudentWork(upperStudent)
   const waiting = all.filter(
     (item) => item.submission && !item.submission.released && item.submission.state !== 'not-started',
   ).length

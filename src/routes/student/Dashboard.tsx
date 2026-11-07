@@ -5,14 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { useStudentDue, useStudentReleased } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
 import {
   classOf,
   coursesOf,
-  dueWork,
   standingOf,
   upperStudent,
-  visibleWork,
 } from '@/data/student'
 import { studentAnnouncements } from '@/data/student'
 
@@ -31,8 +30,8 @@ export function StudentDashboard() {
   const { t, locale } = useLocale()
   const group = classOf(upperStudent)
   const standing = standingOf(upperStudent)
-  const due = dueWork(upperStudent)
-  const done = visibleWork(upperStudent)
+  const due = useStudentDue(upperStudent)
+  const done = useStudentReleased(upperStudent)
   const myCourses = coursesOf(upperStudent)
 
   const recent = done.slice(0, 3)
