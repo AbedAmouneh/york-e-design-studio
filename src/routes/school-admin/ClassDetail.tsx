@@ -50,7 +50,7 @@ export function SchoolAdminClassDetail() {
   if (!classGroup) {
     return (
       <Page>
-        <PageHeader title="Class not found" />
+        <PageHeader title={t('admClassNotFound')} />
       </Page>
     )
   }
@@ -77,7 +77,9 @@ export function SchoolAdminClassDetail() {
     <Page>
       <PageHeader
         title={classGroup.name}
-        subtitle={`Grade ${classGroup.grade} · ${classGroup.studentIds.length} students`}
+        subtitle={t('admClassSubtitle')
+          .replace('{g}', String(classGroup.grade))
+          .replace('{n}', String(classGroup.studentIds.length))}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/school-admin/classes">
@@ -90,9 +92,9 @@ export function SchoolAdminClassDetail() {
 
       <Tabs defaultValue="roster">
         <TabsList>
-          <TabsTrigger value="roster">Roster</TabsTrigger>
+          <TabsTrigger value="roster">{t('admTabRoster')}</TabsTrigger>
           <TabsTrigger value="courses">{t('navCourses')}</TabsTrigger>
-          <TabsTrigger value="teachers">Teachers</TabsTrigger>
+          <TabsTrigger value="teachers">{t('admTabTeachers')}</TabsTrigger>
           <TabsTrigger value="attendance">{t('navAttendance')}</TabsTrigger>
         </TabsList>
 
@@ -138,7 +140,7 @@ export function SchoolAdminClassDetail() {
                       </TableCell>
                       <TableCell>
                         {classGroup.ageTier === 'early' ? (
-                          <Badge variant="neutral">Keep going</Badge>
+                          <Badge variant="neutral">{t('admKeepGoing')}</Badge>
                         ) : standing ? (
                           <StatusBadge status={standing.status} label={statusLabel[standing.status]} />
                         ) : null}
@@ -151,8 +153,7 @@ export function SchoolAdminClassDetail() {
           </Card>
           {classGroup.ageTier === 'early' ? (
             <p className="mt-3 text-caption text-muted-foreground">
-              This is a K1 to Grade 3 class, so students see stars and completion. Percentages and
-              at risk are shown to staff only.
+              {t('admEarlyRosterNote')}
             </p>
           ) : null}
         </TabsContent>
@@ -160,19 +161,19 @@ export function SchoolAdminClassDetail() {
         <TabsContent value="courses" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Assigned courses</CardTitle>
+              <CardTitle>{t('admAssignedCourses')}</CardTitle>
               <Button variant="outline" size="sm">
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-                Assign a course
+                {t('admAssignCourse')}
               </Button>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Course</TableHead>
-                    <TableHead className="text-end">Units</TableHead>
-                    <TableHead className="text-end">Activities</TableHead>
+                    <TableHead>{t('colCourse')}</TableHead>
+                    <TableHead className="text-end">{t('admColUnits')}</TableHead>
+                    <TableHead className="text-end">{t('admColActivities')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -196,10 +197,10 @@ export function SchoolAdminClassDetail() {
         <TabsContent value="teachers" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Teachers</CardTitle>
+              <CardTitle>{t('admTabTeachers')}</CardTitle>
               <Button variant="outline" size="sm">
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-                Add a teacher
+                {t('admAddTeacher')}
               </Button>
             </CardHeader>
             <CardContent className="space-y-0 pb-2">
@@ -220,7 +221,7 @@ export function SchoolAdminClassDetail() {
                     </span>
                   </span>
                   <span className="tabular text-small text-muted-foreground">
-                    {teacher.activeDays} / 30 active days
+                    {t('admActiveDaysOf30').replace('{n}', String(teacher.activeDays))}
                   </span>
                 </div>
               ))}
@@ -230,14 +231,20 @@ export function SchoolAdminClassDetail() {
 
         <TabsContent value="attendance" className="pt-5">
           <div className="grid grid-cols-4 gap-4">
-            <AttendanceStat label="Attendance rate" value={`${attendanceRate}%`} />
-            <AttendanceStat label="Absences" value={String(attendanceSummary.absent)} tone="danger" />
-            <AttendanceStat label="Late" value={String(attendanceSummary.late)} tone="warning" />
-            <AttendanceStat label="Excused" value={String(attendanceSummary.excused)} />
+            <AttendanceStat label={t('admAttendanceRate')} value={`${attendanceRate}%`} />
+            <AttendanceStat
+              label={t('admAbsences')}
+              value={String(attendanceSummary.absent)}
+              tone="danger"
+            />
+            <AttendanceStat
+              label={t('admLate')}
+              value={String(attendanceSummary.late)}
+              tone="warning"
+            />
+            <AttendanceStat label={t('admExcused')} value={String(attendanceSummary.excused)} />
           </div>
-          <p className="mt-3 text-caption text-muted-foreground">
-            Last seven school days. Absence patterns feed the at-risk flag.
-          </p>
+          <p className="mt-3 text-caption text-muted-foreground">{t('admLastSevenDays')}</p>
         </TabsContent>
       </Tabs>
     </Page>

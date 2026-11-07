@@ -9,11 +9,12 @@ import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { announcements } from '@/data/seed'
 import type { Announcement } from '@/types'
+import type { StringKey } from '@/i18n'
 
-const audienceLabel: Record<Announcement['audience'], string> = {
-  school: 'Whole school',
-  class: 'One class',
-  parents: 'Parents',
+const audienceKey: Record<Announcement['audience'], StringKey> = {
+  school: 'admAudienceSchool',
+  class: 'admAudienceClass',
+  parents: 'admAudienceParents',
 }
 
 export function SchoolAdminAnnouncements() {
@@ -49,11 +50,11 @@ export function SchoolAdminAnnouncements() {
     <Page>
       <PageHeader
         title={t('navAnnouncements')}
-        subtitle="Posted to the home page and sent as a notification"
+        subtitle={t('admAnnouncementsSubtitle')}
         actions={
           <Button variant="accent" size="sm" onClick={() => setComposing((value) => !value)}>
             <Plus className="h-3.5 w-3.5" aria-hidden />
-            New announcement
+            {t('admNewAnnouncement')}
           </Button>
         }
       />
@@ -61,24 +62,24 @@ export function SchoolAdminAnnouncements() {
       {composing ? (
         <Card>
           <CardHeader>
-            <CardTitle>New announcement</CardTitle>
+            <CardTitle>{t('admNewAnnouncement')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              placeholder="Title"
+              placeholder={t('admAnnouncementTitle')}
             />
             <textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
-              placeholder="Message"
+              placeholder={t('admAnnouncementBody')}
               rows={3}
               className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-1">
-                {(Object.keys(audienceLabel) as Announcement['audience'][]).map((key) => (
+                {(Object.keys(audienceKey) as Announcement['audience'][]).map((key) => (
                   <button
                     key={key}
                     type="button"
@@ -90,17 +91,17 @@ export function SchoolAdminAnnouncements() {
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                     )}
                   >
-                    {audienceLabel[key]}
+                    {t(audienceKey[key])}
                   </button>
                 ))}
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => setComposing(false)}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button variant="accent" size="sm" onClick={post} disabled={!title.trim()}>
                   <Send className="h-3.5 w-3.5" aria-hidden />
-                  Post
+                  {t('admPost')}
                 </Button>
               </div>
             </div>
@@ -119,7 +120,7 @@ export function SchoolAdminAnnouncements() {
                       <Pin className="h-3.5 w-3.5 text-accent-foreground" aria-hidden />
                     ) : null}
                     <h3 className="text-body font-semibold text-foreground">{item.title}</h3>
-                    <Badge variant="outline">{audienceLabel[item.audience]}</Badge>
+                    <Badge variant="outline">{t(audienceKey[item.audience])}</Badge>
                   </div>
                   <p className="mt-1.5 text-small text-muted-foreground">{item.body}</p>
                   <p className="mt-2 text-caption text-muted-foreground">
@@ -127,7 +128,7 @@ export function SchoolAdminAnnouncements() {
                   </p>
                 </div>
                 <Button variant="ghost" size="sm" className="flex-none text-muted-foreground">
-                  Edit
+                  {t('admEdit')}
                 </Button>
               </div>
             </CardContent>

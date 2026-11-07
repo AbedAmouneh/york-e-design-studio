@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Reports and export.
@@ -17,8 +18,8 @@ import { cn } from '@/lib/utils'
 
 interface ReportDefinition {
   id: string
-  title: string
-  description: string
+  titleKey: StringKey
+  descriptionKey: StringKey
   formats: Array<'csv' | 'xlsx' | 'pdf'>
   proposed?: boolean
 }
@@ -26,45 +27,44 @@ interface ReportDefinition {
 const reports: ReportDefinition[] = [
   {
     id: 'rep-progress',
-    title: 'Progress by class',
-    description: 'Average, completion and status for every class in the term.',
+    titleKey: 'admReportProgress',
+    descriptionKey: 'admReportProgressDesc',
     formats: ['csv', 'xlsx', 'pdf'],
   },
   {
     id: 'rep-gradebook',
-    title: 'Full gradebook',
-    description: 'Every grade for every student, with late flags and overrides.',
+    titleKey: 'admReportGradebook',
+    descriptionKey: 'admReportGradebookDesc',
     formats: ['csv', 'xlsx'],
   },
   {
     id: 'rep-attendance',
-    title: 'Attendance register',
-    description: 'Daily marks across the term, with absence totals per student.',
+    titleKey: 'admReportAttendance',
+    descriptionKey: 'admReportAttendanceDesc',
     formats: ['csv', 'xlsx', 'pdf'],
   },
   {
     id: 'rep-at-risk',
-    title: 'At risk students',
-    description: 'Students below the threshold, with the signals that flagged them.',
+    titleKey: 'admReportAtRisk',
+    descriptionKey: 'admReportAtRiskDesc',
     formats: ['csv', 'pdf'],
   },
   {
     id: 'rep-standards',
-    title: 'Standards coverage',
-    description: 'Which standards have been covered, partially covered or missed.',
+    titleKey: 'admReportStandards',
+    descriptionKey: 'admReportStandardsDesc',
     formats: ['csv', 'pdf'],
   },
   {
     id: 'rep-engagement',
-    title: 'Usage and engagement',
-    description: 'Logins, time on task and feature adoption by role.',
+    titleKey: 'admReportEngagement',
+    descriptionKey: 'admReportEngagementDesc',
     formats: ['csv', 'xlsx'],
   },
   {
     id: 'rep-ministry',
-    title: 'Ministry and head of school report',
-    description:
-      'The school report in the format the local authority expects. Needs a template per market.',
+    titleKey: 'admReportMinistry',
+    descriptionKey: 'admReportMinistryDesc',
     formats: ['pdf'],
     proposed: true,
   },
@@ -84,18 +84,18 @@ export function SchoolAdminReports() {
     <Page>
       <PageHeader
         title={t('navReports')}
-        subtitle="Cedar Valley School · Term 2, 11 January to 2 April 2027"
+        subtitle={t('admReportsSubtitle')}
       />
 
       <div className="grid gap-4 md:grid-cols-2">
         {reports.map((report) => (
           <Card key={report.id} className={cn(report.proposed && 'border-warning/40')}>
             <CardHeader>
-              <CardTitle>{report.title}</CardTitle>
-              {report.proposed ? <Badge variant="warning">Proposed</Badge> : null}
+              <CardTitle>{t(report.titleKey)}</CardTitle>
+              {report.proposed ? <Badge variant="warning">{t('proposed')}</Badge> : null}
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-small text-muted-foreground">{report.description}</p>
+              <p className="text-small text-muted-foreground">{t(report.descriptionKey)}</p>
               <div className="flex flex-wrap items-center gap-2">
                 {report.formats.map((format) => {
                   const Icon = formatIcon[format]
@@ -114,7 +114,7 @@ export function SchoolAdminReports() {
                 {generated?.startsWith(report.id) ? (
                   <span className="flex items-center gap-1.5 text-caption text-success">
                     <Download className="h-3.5 w-3.5" aria-hidden />
-                    Ready
+                    {t('admReportReady')}
                   </span>
                 ) : null}
               </div>
@@ -123,11 +123,7 @@ export function SchoolAdminReports() {
         ))}
       </div>
 
-      <p className="text-caption text-muted-foreground">
-        The ministry report is not in the features sheet. It was raised as a day one need for
-        government curriculum schools and needs a template agreed per market before it can be
-        built.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('admReportsNote')}</p>
     </Page>
   )
 }

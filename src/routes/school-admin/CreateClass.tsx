@@ -55,17 +55,17 @@ export function SchoolAdminCreateClass() {
   const ageTier = grade <= 3 ? 'early' : 'upper'
 
   const steps: Array<{ key: Step; label: string }> = [
-    { key: 'details', label: 'Details' },
-    { key: 'courses', label: 'Courses' },
-    { key: 'people', label: 'Teacher and students' },
-    { key: 'done', label: 'Done' },
+    { key: 'details', label: t('admStepDetails') },
+    { key: 'courses', label: t('navCourses') },
+    { key: 'people', label: t('admStepTeacherStudents') },
+    { key: 'done', label: t('done') },
   ]
   const activeIndex = steps.findIndex((item) => item.key === step)
 
   return (
     <Page>
       <PageHeader
-        title="Create a class"
+        title={t('admCreateClass')}
         subtitle="Cedar Valley School"
         actions={
           <Button variant="ghost" size="sm" asChild>
@@ -103,11 +103,11 @@ export function SchoolAdminCreateClass() {
       {step === 'details' ? (
         <Card>
           <CardHeader>
-            <CardTitle>Class details</CardTitle>
+            <CardTitle>{t('admClassDetails')}</CardTitle>
           </CardHeader>
           <CardContent className="max-w-xl space-y-4">
             <label className="flex flex-col gap-1.5">
-              <span className="text-small font-medium text-foreground">Class name</span>
+              <span className="text-small font-medium text-foreground">{t('admClassName')}</span>
               <Input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
@@ -116,7 +116,7 @@ export function SchoolAdminCreateClass() {
             </label>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-small font-medium text-foreground">Grade</span>
+              <span className="text-small font-medium text-foreground">{t('admGrade')}</span>
               <div className="flex flex-wrap gap-1.5">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((value) => (
                   <button
@@ -147,9 +147,7 @@ export function SchoolAdminCreateClass() {
                   : 'border-border bg-surface text-muted-foreground',
               )}
             >
-              {ageTier === 'early'
-                ? 'Grade 3 and below. Students in this class see stars and completion, never percentages or at risk.'
-                : 'Above Grade 3. Students in this class see scores, feedback and progress.'}
+              {ageTier === 'early' ? t('admEarlyTierBanner') : t('admUpperTierBanner')}
             </div>
 
             <div className="flex justify-end">
@@ -159,7 +157,7 @@ export function SchoolAdminCreateClass() {
                 disabled={!name.trim()}
                 onClick={() => setStep('courses')}
               >
-                Next
+                {t('next')}
               </Button>
             </div>
           </CardContent>
@@ -169,8 +167,8 @@ export function SchoolAdminCreateClass() {
       {step === 'courses' ? (
         <Card>
           <CardHeader>
-            <CardTitle>Assign courses</CardTitle>
-            <Badge variant="outline">Grade {grade}</Badge>
+            <CardTitle>{t('admAssignCourses')}</CardTitle>
+            <Badge variant="outline">{t('admGradeN').replace('{n}', String(grade))}</Badge>
           </CardHeader>
           <CardContent className="space-y-3">
             {gradeCourses.length ? (
@@ -195,25 +193,30 @@ export function SchoolAdminCreateClass() {
                       {locale === 'ar' ? course.titleAr : course.title}
                     </span>
                     <span className="text-caption text-muted-foreground">
-                      {course.units.length} units ·{' '}
-                      {course.units.reduce((sum, unit) => sum + unit.activities.length, 0)}{' '}
-                      activities
+                      {t('admUnitsActivities')
+                        .replace('{n}', String(course.units.length))
+                        .replace(
+                          '{m}',
+                          String(
+                            course.units.reduce((sum, unit) => sum + unit.activities.length, 0),
+                          ),
+                        )}
                     </span>
                   </span>
                 </label>
               ))
             ) : (
               <p className="text-small text-muted-foreground">
-                No courses imported for Grade {grade} yet.
+                {t('admNoCoursesForGrade').replace('{n}', String(grade))}
               </p>
             )}
 
             <div className="flex justify-between">
               <Button variant="ghost" size="sm" onClick={() => setStep('details')}>
-                Back
+                {t('back')}
               </Button>
               <Button variant="accent" size="sm" onClick={() => setStep('people')}>
-                Next
+                {t('next')}
               </Button>
             </div>
           </CardContent>
@@ -224,7 +227,7 @@ export function SchoolAdminCreateClass() {
         <div className="grid gap-4 lg:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Teacher</CardTitle>
+              <CardTitle>{t('admTeacherCard')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {schoolTeachers.map((teacher) => (
@@ -255,8 +258,10 @@ export function SchoolAdminCreateClass() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Students</CardTitle>
-              <Badge variant="outline">{studentIds.size} selected</Badge>
+              <CardTitle>{t('admStudentsCard')}</CardTitle>
+              <Badge variant="outline">
+                {t('admNSelected').replace('{n}', String(studentIds.size))}
+              </Badge>
             </CardHeader>
             <CardContent className="space-y-3">
               <SearchInput
@@ -292,7 +297,7 @@ export function SchoolAdminCreateClass() {
 
           <div className="flex justify-between lg:col-span-2">
             <Button variant="ghost" size="sm" onClick={() => setStep('courses')}>
-              Back
+              {t('back')}
             </Button>
             <Button
               variant="accent"
@@ -300,7 +305,7 @@ export function SchoolAdminCreateClass() {
               disabled={!teacherId || studentIds.size === 0}
               onClick={() => setStep('done')}
             >
-              Create the class
+              {t('admCreateTheClass')}
             </Button>
           </div>
         </div>
@@ -312,14 +317,17 @@ export function SchoolAdminCreateClass() {
             <span className="grid h-11 w-11 place-items-center rounded-full bg-success-tint">
               <Check className="h-5 w-5 text-success" aria-hidden />
             </span>
-            <p className="text-subheading font-semibold text-foreground">{name} created</p>
+            <p className="text-subheading font-semibold text-foreground">
+              {t('admClassCreated').replace('{c}', name)}
+            </p>
             <p className="max-w-[52ch] text-small text-muted-foreground">
-              {studentIds.size} students enrolled, {courseIds.size} courses assigned. It is on the
-              teacher's My classes now.
+              {t('admClassCreatedSummary')
+                .replace('{n}', String(studentIds.size))
+                .replace('{m}', String(courseIds.size))}
             </p>
             <div className="mt-2 flex items-center gap-2">
               <Button variant="accent" size="sm" asChild>
-                <Link to="/school-admin/classes">View classes</Link>
+                <Link to="/school-admin/classes">{t('admViewClasses')}</Link>
               </Button>
               <Button
                 variant="outline"
@@ -332,7 +340,7 @@ export function SchoolAdminCreateClass() {
                   setTeacherId(null)
                 }}
               >
-                Create another
+                {t('admCreateAnother')}
               </Button>
             </div>
           </CardContent>

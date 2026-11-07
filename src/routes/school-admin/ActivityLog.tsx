@@ -40,7 +40,7 @@ export function SchoolAdminActivityLog() {
     <Page>
       <PageHeader
         title={t('navActivityLog')}
-        subtitle="Logins, submissions, grade changes and content views"
+        subtitle={t('admActivityLogSubtitle')}
         actions={
           <Button variant="outline" size="sm">
             <Download className="h-3.5 w-3.5" aria-hidden />
@@ -63,17 +63,17 @@ export function SchoolAdminActivityLog() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>When</TableHead>
-                  <TableHead>Who</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead>Target</TableHead>
+                  <TableHead>{t('colWhen')}</TableHead>
+                  <TableHead>{t('admColWho')}</TableHead>
+                  <TableHead>{t('admColAction')}</TableHead>
+                  <TableHead>{t('admColTarget')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {rows.map((entry) => (
                   <TableRow key={entry.id}>
                     <TableCell className="tabular whitespace-nowrap text-muted-foreground">
-                      {entry.at.slice(8, 10)} Feb · {entry.at.slice(11, 16)}
+                      {entry.at.slice(8, 10)} {t('admMonthFeb')} · {entry.at.slice(11, 16)}
                     </TableCell>
                     <TableCell className="font-medium text-foreground">{entry.actorName}</TableCell>
                     <TableCell>{entry.action}</TableCell>

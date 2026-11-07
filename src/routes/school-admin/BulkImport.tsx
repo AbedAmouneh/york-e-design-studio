@@ -13,7 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Flow 4 of 8: bulk import users.
@@ -32,7 +34,11 @@ interface ParsedRow {
   email: string
   role: string
   className: string
-  problem?: { field: string; message: string; severity: 'error' | 'warning' }
+  /**
+   * `field` is matched against the column it highlights, so it stays an English
+   * identifier rather than display copy. Only `messageKey` is rendered.
+   */
+  problem?: { field: string; messageKey: StringKey; severity: 'error' | 'warning' }
 }
 
 const parsedRows: ParsedRow[] = [
@@ -44,7 +50,7 @@ const parsedRows: ParsedRow[] = [
     email: 'sara.mansour',
     role: 'Student',
     className: 'Grade 6 Cedar',
-    problem: { field: 'Email', message: 'Not a valid email address', severity: 'error' },
+    problem: { field: 'Email', messageKey: 'admProblemEmailInvalid', severity: 'error' },
   },
   { line: 5, name: 'Karim Nasr', email: 'karim.nasr@example-school.test', role: 'Student', className: 'Grade 6 Maple' },
   {
@@ -53,7 +59,7 @@ const parsedRows: ParsedRow[] = [
     email: 'jana.abouzeid@example-school.test',
     role: 'Student',
     className: 'Grade 6 Oak',
-    problem: { field: 'Class', message: 'No class called Grade 6 Oak', severity: 'error' },
+    problem: { field: 'Class', messageKey: 'admProblemNoSuchClass', severity: 'error' },
   },
   {
     line: 7,
@@ -61,7 +67,7 @@ const parsedRows: ParsedRow[] = [
     email: 'layla.haddad@example-school.test',
     role: 'Student',
     className: 'Grade 7 Jasmine',
-    problem: { field: 'Email', message: 'Already used on line 2', severity: 'error' },
+    problem: { field: 'Email', messageKey: 'admProblemEmailDuplicate', severity: 'error' },
   },
   {
     line: 8,
@@ -69,12 +75,13 @@ const parsedRows: ParsedRow[] = [
     email: 'nour.dagher@example-school.test',
     role: 'Studnet',
     className: 'Grade 7 Jasmine',
-    problem: { field: 'Role', message: 'Unknown role, did you mean Student', severity: 'warning' },
+    problem: { field: 'Role', messageKey: 'admProblemUnknownRole', severity: 'warning' },
   },
   { line: 9, name: 'Rami Chidiac', email: 'rami.chidiac@example-school.test', role: 'Student', className: 'Grade 7 Laurel' },
 ]
 
 export function SchoolAdminBulkImport() {
+  const { t } = useLocale()
   const [step, setStep] = useState<Step>('upload')
   const [fixed, setFixed] = useState<Set<number>>(new Set())
 
@@ -85,13 +92,13 @@ export function SchoolAdminBulkImport() {
   return (
     <Page>
       <PageHeader
-        title="Bulk import users"
+        title={t('admBulkImportTitle')}
         subtitle="Cedar Valley School"
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/school-admin/users">
               <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              Back to users
+              {t('admBackToUsers')}
             </Link>
           </Button>
         }
@@ -104,19 +111,17 @@ export function SchoolAdminBulkImport() {
           <CardContent className="p-6">
             <div className="flex flex-col items-center justify-center gap-3 rounded border border-dashed border-border-strong bg-surface p-12 text-center">
               <FileSpreadsheet className="h-7 w-7 text-muted-foreground" aria-hidden />
-              <p className="text-body font-medium text-foreground">
-                Drop a CSV or XLSX file here
-              </p>
+              <p className="text-body font-medium text-foreground">{t('admDropFile')}</p>
               <p className="max-w-[46ch] text-small text-muted-foreground">
-                Columns: name, email, role, class. The first row is treated as headers.
+                {t('admFileColumns')}
               </p>
               <div className="mt-2 flex items-center gap-2">
                 <Button variant="accent" size="sm" onClick={() => setStep('review')}>
                   <Upload className="h-3.5 w-3.5" aria-hidden />
-                  Choose a file
+                  {t('admChooseFile')}
                 </Button>
                 <Button variant="outline" size="sm">
-                  Download the template
+                  {t('admDownloadTemplate')}
                 </Button>
               </div>
             </div>
@@ -127,9 +132,13 @@ export function SchoolAdminBulkImport() {
       {step === 'review' ? (
         <>
           <div className="grid grid-cols-3 gap-4">
-            <Summary label="Rows in the file" value={String(parsedRows.length)} />
-            <Summary label="Ready to import" value={String(importable)} tone="success" />
-            <Summary label="Need fixing" value={String(errors.length)} tone={errors.length ? 'danger' : 'success'} />
+            <Summary label={t('admRowsInFile')} value={String(parsedRows.length)} />
+            <Summary label={t('admReadyToImport')} value={String(importable)} tone="success" />
+            <Summary
+              label={t('admNeedFixing')}
+              value={String(errors.length)}
+              tone={errors.length ? 'danger' : 'success'}
+            />
           </div>
 
           {errors.length ? (
@@ -137,40 +146,37 @@ export function SchoolAdminBulkImport() {
               <AlertTriangle className="mt-0.5 h-4 w-4 flex-none text-danger" aria-hidden />
               <div>
                 <p className="text-small font-semibold text-danger">
-                  {errors.length} rows cannot be imported
+                  {t('admRowsCannotImport').replace('{n}', String(errors.length))}
                 </p>
-                <p className="mt-0.5 text-small text-danger/90">
-                  Fix them here or in the file and upload again. Rows without errors import either
-                  way.
-                </p>
+                <p className="mt-0.5 text-small text-danger/90">{t('admFixHereOrInFile')}</p>
               </div>
             </div>
           ) : (
             <div className="flex items-start gap-2.5 rounded border border-success/30 bg-success-tint px-4 py-3">
               <Check className="mt-0.5 h-4 w-4 flex-none text-success" aria-hidden />
-              <p className="text-small font-semibold text-success">
-                Every row is ready to import
-              </p>
+              <p className="text-small font-semibold text-success">{t('admEveryRowReady')}</p>
             </div>
           )}
 
           <Card>
             <CardHeader>
-              <CardTitle>Rows</CardTitle>
+              <CardTitle>{t('admRows')}</CardTitle>
               {warnings.length ? (
-                <Badge variant="warning">{warnings.length} warnings</Badge>
+                <Badge variant="warning">
+                  {t('admNWarnings').replace('{n}', String(warnings.length))}
+                </Badge>
               ) : null}
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12 text-end">Line</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Class</TableHead>
-                    <TableHead>Problem</TableHead>
+                    <TableHead className="w-12 text-end">{t('admColLine')}</TableHead>
+                    <TableHead>{t('admColName')}</TableHead>
+                    <TableHead>{t('admColEmail')}</TableHead>
+                    <TableHead>{t('admColRole')}</TableHead>
+                    <TableHead>{t('colClass')}</TableHead>
+                    <TableHead>{t('admColProblem')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -222,7 +228,7 @@ export function SchoolAdminBulkImport() {
                                   problem.severity === 'error' ? 'text-danger' : 'text-warning',
                                 )}
                               >
-                                {problem.message}
+                                {t(problem.messageKey)}
                               </span>
                               <Button
                                 size="sm"
@@ -232,11 +238,11 @@ export function SchoolAdminBulkImport() {
                                   setFixed((current) => new Set(current).add(row.line))
                                 }
                               >
-                                Fix
+                                {t('admFix')}
                               </Button>
                             </span>
                           ) : isFixed ? (
-                            <Badge variant="success">Fixed</Badge>
+                            <Badge variant="success">{t('admFixed')}</Badge>
                           ) : (
                             <span className="text-caption text-muted-foreground">—</span>
                           )}
@@ -251,7 +257,7 @@ export function SchoolAdminBulkImport() {
 
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => setStep('upload')}>
-              Upload a different file
+              {t('admUploadDifferentFile')}
             </Button>
             <Button
               variant="accent"
@@ -259,7 +265,7 @@ export function SchoolAdminBulkImport() {
               disabled={errors.length > 0}
               onClick={() => setStep('done')}
             >
-              Import {importable} users
+              {t('admImportNUsers').replace('{n}', String(importable))}
             </Button>
           </div>
         </>
@@ -272,18 +278,17 @@ export function SchoolAdminBulkImport() {
               <Check className="h-5 w-5 text-success" aria-hidden />
             </span>
             <p className="text-subheading font-semibold text-foreground">
-              {parsedRows.length} users imported
+              {t('admNUsersImported').replace('{n}', String(parsedRows.length))}
             </p>
             <p className="max-w-[46ch] text-small text-muted-foreground">
-              They can sign in now. Welcome emails have not been sent, you choose when to send
-              those.
+              {t('admCanSignInNow')}
             </p>
             <div className="mt-2 flex items-center gap-2">
               <Button variant="accent" size="sm" asChild>
-                <Link to="/school-admin/users">View the roster</Link>
+                <Link to="/school-admin/users">{t('admViewRoster')}</Link>
               </Button>
               <Button variant="outline" size="sm">
-                Send welcome emails
+                {t('admSendWelcomeEmails')}
               </Button>
             </div>
           </CardContent>
@@ -294,10 +299,11 @@ export function SchoolAdminBulkImport() {
 }
 
 function Steps({ step }: { step: Step }) {
+  const { t } = useLocale()
   const items: Array<{ key: Step; label: string }> = [
-    { key: 'upload', label: 'Upload' },
-    { key: 'review', label: 'Review and fix' },
-    { key: 'done', label: 'Import' },
+    { key: 'upload', label: t('admStepUpload') },
+    { key: 'review', label: t('admStepReviewFix') },
+    { key: 'done', label: t('admStepImport') },
   ]
   const activeIndex = items.findIndex((item) => item.key === step)
 

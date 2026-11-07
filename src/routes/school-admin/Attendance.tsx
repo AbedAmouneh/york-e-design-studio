@@ -16,22 +16,43 @@ import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { attendance, classesForSchool, DEFAULT_SCHOOL_ID, students } from '@/data/seed'
 import type { AttendanceRecord } from '@/types'
+import type { StringKey } from '@/i18n'
 
-const days = [
-  { date: '2027-02-02', label: 'Tue 2' },
-  { date: '2027-02-03', label: 'Wed 3' },
-  { date: '2027-02-04', label: 'Thu 4' },
-  { date: '2027-02-05', label: 'Fri 5' },
-  { date: '2027-02-08', label: 'Mon 8' },
-  { date: '2027-02-09', label: 'Tue 9' },
-  { date: '2027-02-10', label: 'Wed 10' },
+const days: Array<{ date: string; labelKey: StringKey }> = [
+  { date: '2027-02-02', labelKey: 'admDayTue2' },
+  { date: '2027-02-03', labelKey: 'admDayWed3' },
+  { date: '2027-02-04', labelKey: 'admDayThu4' },
+  { date: '2027-02-05', labelKey: 'admDayFri5' },
+  { date: '2027-02-08', labelKey: 'admDayMon8' },
+  { date: '2027-02-09', labelKey: 'admDayTue9' },
+  { date: '2027-02-10', labelKey: 'admDayWed10' },
 ]
 
-const stateMark: Record<AttendanceRecord['state'], { glyph: string; className: string; label: string }> = {
-  present: { glyph: '·', className: 'text-muted-foreground', label: 'Present' },
-  absent: { glyph: 'A', className: 'bg-danger-tint text-danger font-semibold', label: 'Absent' },
-  late: { glyph: 'L', className: 'bg-warning-tint text-warning font-semibold', label: 'Late' },
-  excused: { glyph: 'E', className: 'bg-muted text-muted-foreground font-semibold', label: 'Excused' },
+/**
+ * The glyph stays Latin in both languages. A, L and E are read as a legend
+ * against the key above the table, not as words, and a one letter Arabic
+ * abbreviation would collide across حاضر, غائب and بعذر.
+ */
+const stateMark: Record<
+  AttendanceRecord['state'],
+  { glyph: string; className: string; labelKey: StringKey }
+> = {
+  present: { glyph: '·', className: 'text-muted-foreground', labelKey: 'admStatePresent' },
+  absent: {
+    glyph: 'A',
+    className: 'bg-danger-tint text-danger font-semibold',
+    labelKey: 'admStateAbsent',
+  },
+  late: {
+    glyph: 'L',
+    className: 'bg-warning-tint text-warning font-semibold',
+    labelKey: 'admStateLate',
+  },
+  excused: {
+    glyph: 'E',
+    className: 'bg-muted text-muted-foreground font-semibold',
+    labelKey: 'admStateExcused',
+  },
 }
 
 export function SchoolAdminAttendance() {
@@ -68,7 +89,7 @@ export function SchoolAdminAttendance() {
     <Page>
       <PageHeader
         title={t('navAttendance')}
-        subtitle="Last seven school days. Absence patterns feed the at-risk flag."
+        subtitle={t('admLastSevenDays')}
         actions={
           <Button variant="outline" size="sm">
             <Download className="h-3.5 w-3.5" aria-hidden />
@@ -98,7 +119,8 @@ export function SchoolAdminAttendance() {
               ))}
             </div>
             <span className="text-small text-muted-foreground">
-              Attendance rate <span className="tabular font-semibold text-foreground">{rate}%</span>
+              {t('admAttendanceRate')}{' '}
+              <span className="tabular font-semibold text-foreground">{rate}%</span>
             </span>
           </div>
 
@@ -113,7 +135,9 @@ export function SchoolAdminAttendance() {
                 >
                   {stateMark[state].glyph}
                 </span>
-                <span className="text-caption text-muted-foreground">{stateMark[state].label}</span>
+                <span className="text-caption text-muted-foreground">
+                  {t(stateMark[state].labelKey)}
+                </span>
               </span>
             ))}
           </div>
@@ -125,10 +149,10 @@ export function SchoolAdminAttendance() {
                   <TableHead>{t('colStudent')}</TableHead>
                   {days.map((day) => (
                     <TableHead key={day.date} className="w-14 text-center">
-                      {day.label}
+                      {t(day.labelKey)}
                     </TableHead>
                   ))}
-                  <TableHead className="text-end">Absences</TableHead>
+                  <TableHead className="text-end">{t('admAbsences')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -147,7 +171,7 @@ export function SchoolAdminAttendance() {
                               'mx-auto grid h-6 w-6 place-items-center rounded text-caption',
                               mark.className,
                             )}
-                            title={mark.label}
+                            title={t(mark.labelKey)}
                           >
                             {mark.glyph}
                           </span>

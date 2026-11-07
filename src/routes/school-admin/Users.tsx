@@ -51,12 +51,12 @@ export function SchoolAdminUsers() {
   }, [school.id, filter, query])
 
   const roleLabel: Record<Role, string> = {
-    'super-admin': 'Super admin',
-    'school-admin': 'School admin',
-    coordinator: 'Coordinator',
-    teacher: 'Teacher',
-    student: 'Student',
-    parent: 'Parent',
+    'super-admin': t('tabSuperAdmin'),
+    'school-admin': t('tabSchoolAdmin'),
+    coordinator: t('tabCoordinator'),
+    teacher: t('tabTeacher'),
+    student: t('tabStudent'),
+    parent: t('tabParent'),
   }
 
   const allSelected = people.length > 0 && people.every((person) => selected.has(person.id))
@@ -81,10 +81,22 @@ export function SchoolAdminUsers() {
   }
 
   const filters: Array<{ key: Filter; label: string; count: number }> = [
-    { key: 'student', label: 'Students', count: students.filter((s) => s.schoolId === school.id).length },
-    { key: 'teacher', label: 'Teachers', count: teachers.filter((s) => s.schoolId === school.id).length },
-    { key: 'parent', label: 'Parents', count: guardians.filter((s) => s.schoolId === school.id).length },
-    { key: 'all', label: 'Everyone', count: 0 },
+    {
+      key: 'student',
+      label: t('admFilterStudents'),
+      count: students.filter((s) => s.schoolId === school.id).length,
+    },
+    {
+      key: 'teacher',
+      label: t('teachersCount'),
+      count: teachers.filter((s) => s.schoolId === school.id).length,
+    },
+    {
+      key: 'parent',
+      label: t('admFilterParents'),
+      count: guardians.filter((s) => s.schoolId === school.id).length,
+    },
+    { key: 'all', label: t('admFilterEveryone'), count: 0 },
   ]
 
   return (
@@ -96,7 +108,7 @@ export function SchoolAdminUsers() {
           <Button variant="accent" size="sm" asChild>
             <Link to="/school-admin/users/import">
               <Upload className="h-3.5 w-3.5" aria-hidden />
-              Bulk import
+              {t('admBulkImport')}
             </Link>
           </Button>
         }
@@ -139,15 +151,15 @@ export function SchoolAdminUsers() {
           {someSelected ? (
             <div className="flex items-center justify-between gap-3 rounded border border-border bg-surface px-4 py-2.5">
               <span className="text-small font-medium text-foreground">
-                {selected.size} selected
+                {selected.size} {t('selected')}
               </span>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="outline">
                   <Mail className="h-3.5 w-3.5" aria-hidden />
-                  Message
+                  {t('admMessage')}
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>
-                  Clear
+                  {t('clear')}
                 </Button>
               </div>
             </div>
@@ -161,13 +173,13 @@ export function SchoolAdminUsers() {
                     <Checkbox
                       checked={allSelected ? true : someSelected ? 'indeterminate' : false}
                       onCheckedChange={toggleAll}
-                      aria-label="Select all"
+                      aria-label={t('admSelectAll')}
                     />
                   </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Role</TableHead>
+                  <TableHead>{t('admColName')}</TableHead>
+                  <TableHead>{t('admColRole')}</TableHead>
                   <TableHead>{t('colClass')}</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead>{t('admColEmail')}</TableHead>
                   <TableHead className="text-end">{t('colLastActive')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -181,7 +193,7 @@ export function SchoolAdminUsers() {
                         <Checkbox
                           checked={selected.has(person.id)}
                           onCheckedChange={() => toggleOne(person.id)}
-                          aria-label={`Select ${person.firstName}`}
+                          aria-label={t('admSelectPerson').replace('{n}', person.firstName)}
                         />
                       </TableCell>
                       <TableCell>
@@ -203,7 +215,7 @@ export function SchoolAdminUsers() {
                       </TableCell>
                       <TableCell className="text-muted-foreground">{person.email}</TableCell>
                       <TableCell className="text-end text-muted-foreground">
-                        {person.lastActiveOn ? '10 Feb' : 'Never'}
+                        {person.lastActiveOn ? t('admFeb10') : t('admNever')}
                       </TableCell>
                     </TableRow>
                   )

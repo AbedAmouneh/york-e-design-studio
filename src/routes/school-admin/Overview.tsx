@@ -220,7 +220,7 @@ export function SchoolAdminOverview() {
           <div className="flex items-center gap-2 border-t border-border px-5 py-3">
             <Users className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
             <span className="text-caption text-muted-foreground">
-              Select students to message them together
+              {t('admSelectToMessage')}
             </span>
           </div>
         </Card>
@@ -304,7 +304,7 @@ export function SchoolAdminOverview() {
                 <TableRow>
                   <TableHead>{t('colTeacher')}</TableHead>
                   <TableHead className="text-end">{t('colLastActive')}</TableHead>
-                  <TableHead className="text-end">Active days</TableHead>
+                  <TableHead className="text-end">{t('admActiveDays')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -313,7 +313,9 @@ export function SchoolAdminOverview() {
                     <TableCell className="font-medium text-foreground">
                       {teacher.firstName} {teacher.lastName}
                     </TableCell>
-                    <TableCell className="text-end text-muted-foreground">10 Feb</TableCell>
+                    <TableCell className="text-end text-muted-foreground">
+                      {t('admFeb10')}
+                    </TableCell>
                     <TableCell className="tabular text-end">
                       <span className={cn(teacher.activeDays < 10 && 'text-warning font-semibold')}>
                         {teacher.activeDays} / 30

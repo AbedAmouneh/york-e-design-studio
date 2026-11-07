@@ -46,30 +46,32 @@ export function SchoolAdminCourses() {
     <Page>
       <PageHeader
         title={t('navCourses')}
-        subtitle="Imported from the authoring platform. Licences are counted per learner."
+        subtitle={t('admCoursesSubtitle')}
         actions={
           <Button variant="accent" size="sm">
             <Plus className="h-3.5 w-3.5" aria-hidden />
-            Import a course
+            {t('admImportCourse')}
           </Button>
         }
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Course catalogue</CardTitle>
-          <Badge variant="outline">{courses.length} courses</Badge>
+          <CardTitle>{t('admCourseCatalogue')}</CardTitle>
+          <Badge variant="outline">
+            {t('admNCourses').replace('{n}', String(courses.length))}
+          </Badge>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Course</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead className="text-end">Grade</TableHead>
-                <TableHead className="text-end">Activities</TableHead>
-                <TableHead>Assigned to</TableHead>
-                <TableHead className="w-48">Licences</TableHead>
+                <TableHead>{t('colCourse')}</TableHead>
+                <TableHead>{t('admColSubject')}</TableHead>
+                <TableHead className="text-end">{t('admColGrade')}</TableHead>
+                <TableHead className="text-end">{t('admColActivities')}</TableHead>
+                <TableHead>{t('admColAssignedTo')}</TableHead>
+                <TableHead className="w-48">{t('admColLicences')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -98,7 +100,7 @@ export function SchoolAdminCourses() {
                     <TableCell className="text-muted-foreground">
                       {row.assigned.length
                         ? row.assigned.map((item) => item.name).join(', ')
-                        : 'Not assigned'}
+                        : t('admNotAssigned')}
                     </TableCell>
                     <TableCell>
                       <span className="flex items-center gap-2.5">
@@ -129,10 +131,7 @@ export function SchoolAdminCourses() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        A course cannot be assigned to another class once its licences are used. Buying more goes
-        through York Press, which is why the super admin owns the seat count.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('admLicencesNote')}</p>
     </Page>
   )
 }

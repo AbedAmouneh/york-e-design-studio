@@ -72,7 +72,7 @@ export function SchoolAdminClasses() {
           <Button variant="accent" size="sm" asChild>
             <Link to="/school-admin/classes/new">
               <Plus className="h-3.5 w-3.5" aria-hidden />
-              Create a class
+              {t('admCreateClass')}
             </Link>
           </Button>
         }
@@ -94,7 +94,7 @@ export function SchoolAdminClasses() {
                 <TableRow>
                   <TableHead>{t('colClass')}</TableHead>
                   <TableHead>{t('colTeacher')}</TableHead>
-                  <TableHead className="text-end">Students</TableHead>
+                  <TableHead className="text-end">{t('admColStudents')}</TableHead>
                   <TableHead>{t('navCourses')}</TableHead>
                   <TableHead className="text-end">{t('colAverage')}</TableHead>
                   <TableHead>{t('colStatus')}</TableHead>
@@ -112,7 +112,7 @@ export function SchoolAdminClasses() {
                       </Link>
                       {row.classGroup.ageTier === 'early' ? (
                         <Badge variant="outline" className="ms-2">
-                          K1 to G3
+                          {t('admEarlyTierBadge')}
                         </Badge>
                       ) : null}
                     </TableCell>
@@ -123,7 +123,7 @@ export function SchoolAdminClasses() {
                       {row.classGroup.studentIds.length}
                       {row.atRisk > 0 ? (
                         <span className="ms-2 text-caption font-semibold text-danger">
-                          {row.atRisk} {t('atRisk').toLowerCase()}
+                          {t('admAtRiskCount').replace('{n}', String(row.atRisk))}
                         </span>
                       ) : null}
                     </TableCell>

@@ -61,23 +61,23 @@ export function SchoolAdminAnalytics() {
         .flatMap((item) => item.studentIds)
       const rows = ids.map((id) => standingById.get(id)).filter(Boolean)
       return {
-        grade: `Grade ${grade}`,
+        grade: t('admGradeN').replace('{n}', String(grade)),
         below: rows.filter((row) => (row?.average ?? 0) < 60).length,
         onTrack: rows.filter((row) => (row?.average ?? 0) >= 60 && (row?.average ?? 0) < 85).length,
         above: rows.filter((row) => (row?.average ?? 0) >= 85).length,
       }
     })
-  }, [schoolClasses, standingById])
+  }, [schoolClasses, standingById, t])
 
   const unitProgress = useMemo(() => {
     const mathCourse = courses.find((course) => course.id === 'crs-math-g6')
     if (!mathCourse) return []
     return mathCourse.units.map((_unit, index) => ({
-      unit: `Unit ${index + 1}`,
+      unit: t('admUnitN').replace('{n}', String(index + 1)),
       completion: [92, 84, 61, 23][index] ?? 0,
       average: [81, 77, 64, 58][index] ?? 0,
     }))
-  }, [])
+  }, [t])
 
   const skillRows = useMemo(() => {
     const bySkill = new Map<string, { total: number; count: number; attempts: number }>()
@@ -102,6 +102,8 @@ export function SchoolAdminAnalytics() {
       .sort((a, b) => a.average - b.average)
   }, [])
 
+  // Week labels stay as W1 to W6 in both languages: they are axis ticks, and a
+  // translated form would not fit the tick width at 11px.
   const engagement = [
     { week: 'W1', logins: 412, minutes: 38 },
     { week: 'W2', logins: 448, minutes: 41 },
@@ -121,7 +123,7 @@ export function SchoolAdminAnalytics() {
     <Page>
       <PageHeader
         title={t('navAnalytics')}
-        subtitle="Cedar Valley School · Term 2"
+        subtitle={t('admAnalyticsSubtitle')}
         actions={
           <Button variant="outline" size="sm">
             <Download className="h-3.5 w-3.5" aria-hidden />
@@ -132,28 +134,32 @@ export function SchoolAdminAnalytics() {
 
       <Tabs defaultValue="progress">
         <TabsList>
-          <TabsTrigger value="progress">Progress</TabsTrigger>
-          <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="engagement">Engagement</TabsTrigger>
-          <TabsTrigger value="standards">Standards</TabsTrigger>
+          <TabsTrigger value="progress">{t('admTabProgress')}</TabsTrigger>
+          <TabsTrigger value="skills">{t('admTabSkills')}</TabsTrigger>
+          <TabsTrigger value="engagement">{t('admTabEngagement')}</TabsTrigger>
+          <TabsTrigger value="standards">{t('admTabStandards')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="progress" className="space-y-4 pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Below, on track, above, by grade</CardTitle>
+              <CardTitle>{t('admBandsByGrade')}</CardTitle>
               <span className="flex items-center gap-3">
-                {([['below', 'Below'], ['onTrack', 'On track'], ['above', 'Above']] as const).map(
-                  ([key, label]) => (
-                    <span key={key} className="flex items-center gap-1.5">
-                      <span
-                        className="h-2.5 w-2.5 rounded-sm"
-                        style={{ background: bandColours[key] }}
-                      />
-                      <span className="text-caption text-muted-foreground">{label}</span>
-                    </span>
-                  ),
-                )}
+                {(
+                  [
+                    ['below', 'admBandBelow'],
+                    ['onTrack', 'onTrack'],
+                    ['above', 'admBandAbove'],
+                  ] as const
+                ).map(([key, labelKey]) => (
+                  <span key={key} className="flex items-center gap-1.5">
+                    <span
+                      className="h-2.5 w-2.5 rounded-sm"
+                      style={{ background: bandColours[key] }}
+                    />
+                    <span className="text-caption text-muted-foreground">{t(labelKey)}</span>
+                  </span>
+                ))}
               </span>
             </CardHeader>
             <CardContent>
@@ -187,14 +193,14 @@ export function SchoolAdminAnalytics() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Progress by unit, Mathematics Grade 6</CardTitle>
-              <Badge variant="outline">Drill down to chapter and skill</Badge>
+              <CardTitle>{t('admProgressByUnit')}</CardTitle>
+              <Badge variant="outline">{t('admDrillDownHint')}</Badge>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Unit</TableHead>
+                    <TableHead>{t('admColUnit')}</TableHead>
                     <TableHead className="w-1/3">{t('colCompletion')}</TableHead>
                     <TableHead className="text-end">{t('colAverage')}</TableHead>
                     <TableHead>{t('colStatus')}</TableHead>
@@ -238,8 +244,8 @@ export function SchoolAdminAnalytics() {
         <TabsContent value="skills" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Mastery by skill, weakest first</CardTitle>
-              <Badge variant="outline">Click a skill to see the questions</Badge>
+              <CardTitle>{t('admMasteryBySkill')}</CardTitle>
+              <Badge variant="outline">{t('admClickSkillHint')}</Badge>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <Table>
@@ -247,8 +253,8 @@ export function SchoolAdminAnalytics() {
                   <TableRow>
                     <TableHead>{t('colSkill')}</TableHead>
                     <TableHead className="w-1/3">{t('colMastery')}</TableHead>
-                    <TableHead className="text-end">Learners</TableHead>
-                    <TableHead className="text-end">Attempts each</TableHead>
+                    <TableHead className="text-end">{t('learners')}</TableHead>
+                    <TableHead className="text-end">{t('admColAttemptsEach')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -290,7 +296,7 @@ export function SchoolAdminAnalytics() {
         <TabsContent value="engagement" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Logins and time on task</CardTitle>
+              <CardTitle>{t('admLoginsAndTime')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-[260px] w-full">
@@ -313,7 +319,7 @@ export function SchoolAdminAnalytics() {
                     <Line
                       type="monotone"
                       dataKey="logins"
-                      name="Logins"
+                      name={t('admLogins')}
                       stroke="hsl(var(--foreground))"
                       strokeWidth={2}
                       dot={false}
@@ -321,7 +327,7 @@ export function SchoolAdminAnalytics() {
                     <Line
                       type="monotone"
                       dataKey="minutes"
-                      name="Minutes per learner"
+                      name={t('admMinutesPerLearner')}
                       stroke="hsl(var(--success))"
                       strokeWidth={2}
                       dot={false}
@@ -336,8 +342,8 @@ export function SchoolAdminAnalytics() {
         <TabsContent value="standards" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>Standards coverage</CardTitle>
-              <Badge variant="warning">Scope not agreed</Badge>
+              <CardTitle>{t('admReportStandards')}</CardTitle>
+              <Badge variant="warning">{t('admScopeNotAgreed')}</Badge>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-10 gap-1.5">
@@ -353,14 +359,13 @@ export function SchoolAdminAnalytics() {
                         partial && 'bg-warning',
                         !covered && !partial && 'bg-muted',
                       )}
-                      title={`Standard ${index + 1}`}
+                      title={t('admStandardN').replace('{n}', String(index + 1))}
                     />
                   )
                 })}
               </div>
               <p className="mt-4 text-small text-muted-foreground">
-                27 of 40 standards covered, 6 partially, 7 not started. The features sheet marks
-                this screen as needing scope definition, so this is a proposal.
+                {t('admStandardsCoverageNote')}
               </p>
             </CardContent>
           </Card>

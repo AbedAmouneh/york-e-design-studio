@@ -11,6 +11,7 @@ import {
   UsersRound,
 } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
+import { useLocale } from '@/lib/i18n'
 import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 
 const nav: NavItem[] = [
@@ -27,13 +28,14 @@ const nav: NavItem[] = [
 ]
 
 export function SchoolAdminApp() {
+  const { t } = useLocale()
   const school = schools.find((s) => s.id === DEFAULT_SCHOOL_ID)!
   return (
     <AppShell
       nav={nav}
       schoolName={school.name}
       userName="Nadine Khoury"
-      userRole="School admin"
+      userRole={t('tabSchoolAdmin')}
     />
   )
 }
