@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 
 const nav: NavItem[] = [
@@ -28,12 +29,13 @@ const nav: NavItem[] = [
 ]
 
 export function SchoolAdminApp() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const school = schools.find((s) => s.id === DEFAULT_SCHOOL_ID)!
+  const schoolLabel = schoolName(school, locale)
   return (
     <AppShell
       nav={nav}
-      schoolName={school.name}
+      schoolName={schoolLabel}
       userName="Nadine Khoury"
       userRole={t('tabSchoolAdmin')}
     />
