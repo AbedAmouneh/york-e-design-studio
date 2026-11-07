@@ -20,6 +20,7 @@ export const common = {
   tabStudent: { en: 'Student', ar: 'الطالب' },
   tabParent: { en: 'Parent', ar: 'ولي الأمر' },
   tabShared: { en: 'Shared', ar: 'شاشات مشتركة' },
+  tabDesignSystem: { en: 'Design system', ar: 'نظام التصميم' },
   switchToArabic: { en: 'العربية', ar: 'العربية' },
   switchToEnglish: { en: 'English', ar: 'English' },
 
