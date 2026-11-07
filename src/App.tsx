@@ -102,6 +102,10 @@ import { EarlyHelp } from '@/routes/student/early/Help'
 import { SuperAdminBranding } from '@/routes/super-admin/Branding'
 import { TeacherCourseSearch } from '@/routes/teacher/CourseSearch'
 
+import { DesignApp } from '@/routes/design/DesignApp'
+import { DesignComponents } from '@/routes/design/Components'
+import { DesignTokens } from '@/routes/design/Tokens'
+
 export default function App() {
   return (
     <Routes>
@@ -227,6 +231,12 @@ export default function App() {
           <Route path="error" element={<SharedErrorState />} />
           <Route path="help" element={<SharedHelpCentre />} />
           <Route path="support" element={<SharedSupportTicket />} />
+        </Route>
+
+        <Route path="design" element={<DesignApp />}>
+          <Route index element={<Navigate to="/design/components" replace />} />
+          <Route path="components" element={<DesignComponents />} />
+          <Route path="tokens" element={<DesignTokens />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
