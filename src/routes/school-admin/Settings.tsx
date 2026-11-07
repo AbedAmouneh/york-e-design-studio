@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { DEFAULT_SCHOOL_ID, schools, terms } from '@/data/seed'
 import type { GradingScale, Role, School } from '@/types'
@@ -59,14 +60,14 @@ const schoolStatusKey: Record<School['status'], StringKey> = {
 }
 
 export function SchoolAdminSettings() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)!
   const schoolTerms = terms.filter((term) => term.schoolId === school.id)
   const [scale, setScale] = useState<GradingScale>(school.gradingScale)
 
   return (
     <Page>
-      <PageHeader title={t('navSettings')} subtitle={school.name} />
+      <PageHeader title={t('navSettings')} subtitle={schoolName(school, locale)} />
 
       <Tabs defaultValue="profile">
         <TabsList>
@@ -82,9 +83,17 @@ export function SchoolAdminSettings() {
               <CardTitle>{t('admTabProfile')}</CardTitle>
             </CardHeader>
             <CardContent className="grid max-w-2xl gap-4 sm:grid-cols-2">
-              <Field label={t('admFieldSchoolName')} value={school.name} />
-              <Field label={t('admFieldCity')} value={school.city} />
-              <Field label={t('admFieldCountry')} value={school.country} />
+              {/*
+                City and country carry their own labels here, so this is the
+                one screen that cannot use schoolPlace. Read each on its own
+                the way courses and skills read theirs.
+              */}
+              <Field label={t('admFieldSchoolName')} value={schoolName(school, locale)} />
+              <Field label={t('admFieldCity')} value={locale === 'ar' ? school.cityAr : school.city} />
+              <Field
+                label={t('admFieldCountry')}
+                value={locale === 'ar' ? school.countryAr : school.country}
+              />
               <Field
                 label={t('admFieldDefaultLanguage')}
                 value={school.locale === 'ar' ? t('admLangArabic') : t('admLangEnglish')}
