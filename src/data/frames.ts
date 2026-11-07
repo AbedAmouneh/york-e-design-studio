@@ -197,6 +197,18 @@ export const frameSections: FrameSection[] = [
       f('shFrameSupportTicket', '/shared/support'),
     ],
   },
+  {
+    // Last on the canvas deliberately. A reviewer should meet the product
+    // before the parts list, and a developer looking for the parts list has a
+    // tab in the studio header and does not come through here at all.
+    id: 'design-system',
+    titleKey: 'tabDesignSystem',
+    blurbKey: 'shSectionDesignSystemBlurb',
+    frames: [
+      f('dsComponents', '/design/components', { noteKey: 'shFrameNoteSpec' }),
+      f('dsTokens', '/design/tokens', { noteKey: 'shFrameNoteSpec' }),
+    ],
+  },
 ]
 
 export const allFrames = frameSections.flatMap((section) => section.frames)
