@@ -16,8 +16,15 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { useStudioState } from '@/lib/studioState'
 import { cn } from '@/lib/utils'
-import { fullName, standingById, studentsInClass, teacherClasses } from '@/data/teacher'
+import {
+  demoTeacher,
+  fullName,
+  standingById,
+  studentsInClass,
+  teacherClasses,
+} from '@/data/teacher'
 import type { ProgressStatus, Trend } from '@/types'
 
 /**
@@ -51,6 +58,7 @@ export function TeacherStudents() {
   const [classFilter, setClassFilter] = useState('all')
   const [status, setStatus] = useState<StatusFilter>('all')
   const [query, setQuery] = useState('')
+  const messageFamilies = useStudioState((state) => state.messageFamilies)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [sent, setSent] = useState<string | null>(null)
 
@@ -182,7 +190,24 @@ export function TeacherStudents() {
             <Badge variant="accent">
               {selected.size} {t('selected')}
             </Badge>
-            <Button variant="outline" size="sm" onClick={() => setSent('message')}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                /*
+                 * One message, many families. Writing it here is what puts it
+                 * in the parent's inbox rather than only on this screen.
+                 */
+                messageFamilies({
+                  id: `msg-live-${Date.now()}`,
+                  studentIds: Array.from(selected),
+                  bodyKey: 'tchBulkMessageBody',
+                  from: fullName(demoTeacher),
+                  at: 'Just now',
+                })
+                setSent('message')
+              }}
+            >
               <Megaphone className="h-3.5 w-3.5" aria-hidden />
               {t('tchMessageParents')}
             </Button>
