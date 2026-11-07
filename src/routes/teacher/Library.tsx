@@ -35,7 +35,7 @@ const kindIcon = {
 type Facet = 'all' | 'lesson' | 'quiz' | 'manipulative' | 'assignment' | 'interactive-book'
 
 export function TeacherLibrary() {
-  const { locale } = useLocale()
+  const { t, locale } = useLocale()
   const [query, setQuery] = useState('')
   const [facet, setFacet] = useState<Facet>('all')
   const [subjectId, setSubjectId] = useState('all')
@@ -76,19 +76,19 @@ export function TeacherLibrary() {
   }, [reachable, query, facet, subjectId])
 
   const facets: Array<{ key: Facet; label: string }> = [
-    { key: 'all', label: 'Everything' },
-    { key: 'lesson', label: 'Lessons' },
-    { key: 'interactive-book', label: 'Books' },
-    { key: 'quiz', label: 'Quizzes' },
-    { key: 'manipulative', label: 'Manipulatives' },
-    { key: 'assignment', label: 'Assignments' },
+    { key: 'all', label: t('tchFacetEverything') },
+    { key: 'lesson', label: t('tchFacetLessons') },
+    { key: 'interactive-book', label: t('tchFacetBooks') },
+    { key: 'quiz', label: t('tchFacetQuizzes') },
+    { key: 'manipulative', label: t('tchFacetManipulatives') },
+    { key: 'assignment', label: t('tchFacetAssignments') },
   ]
 
   return (
     <Page>
       <PageHeader
-        title="Content library"
-        subtitle="Search every course you teach, by title or by skill"
+        title={t('tchContentLibrary')}
+        subtitle={t('tchLibrarySubtitle')}
       />
 
       <Card>
@@ -97,7 +97,7 @@ export function TeacherLibrary() {
             <SearchInput
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Try a skill, such as common denominators"
+              placeholder={t('tchLibraryPlaceholder')}
             />
           </div>
 
@@ -121,7 +121,7 @@ export function TeacherLibrary() {
                 size="sm"
                 onClick={() => setSubjectId('all')}
               >
-                All subjects
+                {t('tchAllSubjects')}
               </Button>
               {subjects
                 .filter((subject) => reachable.some((c) => c.subjectId === subject.id))
@@ -141,7 +141,9 @@ export function TeacherLibrary() {
       </Card>
 
       <p className="text-caption text-muted-foreground">
-        {results.length} results across {reachable.length} courses
+        {t('tchResultsAcross')
+          .replace('{n}', String(results.length))
+          .replace('{m}', String(reachable.length))}
       </p>
 
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
@@ -174,17 +176,17 @@ export function TeacherLibrary() {
                     </Badge>
                   ))
                 ) : (
-                  <Badge variant="outline">Not tagged</Badge>
+                  <Badge variant="outline">{t('tchNotTagged')}</Badge>
                 )}
               </div>
 
               <div className={cn('mt-auto flex gap-2')}>
                 <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/teacher/assign">Assign</Link>
+                  <Link to="/teacher/assign">{t('tchAssign')}</Link>
                 </Button>
                 <Button variant="ghost" size="sm" asChild>
                   <Link to={`/teacher/classes/${teacherClasses[1].id}/course/${course.id}`}>
-                    Open
+                    {t('open')}
                   </Link>
                 </Button>
               </div>
@@ -195,7 +197,7 @@ export function TeacherLibrary() {
 
       {results.length === 0 ? (
         <p className="py-12 text-center text-small text-muted-foreground">
-          Nothing matches. Try a skill name rather than a title.
+          {t('tchNoLibraryMatch')}
         </p>
       ) : null}
     </Page>

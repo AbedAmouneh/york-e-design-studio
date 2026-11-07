@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { skills } from '@/data/seed'
 
@@ -25,39 +26,45 @@ import { skills } from '@/data/seed'
 
 interface Draft {
   id: string
-  stem: string
-  type: string
+  stemKey: StringKey
+  typeKey: StringKey
   marks: number
   skillId: string
 }
 
 const bank: Draft[] = [
-  { id: 'b1', stem: '1/3 + 1/4 =', type: 'Numerical', marks: 2, skillId: 'skl-1' },
+  {
+    id: 'b1',
+    stemKey: 'tchQAddThirdQuarter',
+    typeKey: 'tchQtNumerical',
+    marks: 2,
+    skillId: 'skl-1',
+  },
   {
     id: 'b2',
-    stem: 'Which pair has a common denominator of 12?',
-    type: 'Multiple choice',
+    stemKey: 'tchQCommonDenom12',
+    typeKey: 'tchQtMultipleChoice',
     marks: 2,
     skillId: 'skl-2',
   },
   {
     id: 'b3',
-    stem: 'Drag each fraction onto the number line',
-    type: 'Drag and drop onto image',
+    stemKey: 'tchQDragFractionsLine',
+    typeKey: 'tchQtDragOntoImage',
     marks: 4,
     skillId: 'skl-5',
   },
   {
     id: 'b4',
-    stem: 'Explain why 2/6 and 1/3 are the same amount',
-    type: 'Essay',
+    stemKey: 'tchQExplainEquivalence',
+    typeKey: 'tchQtEssay',
     marks: 5,
     skillId: 'skl-1',
   },
   {
     id: 'b5',
-    stem: 'The place value of 7 in 4,721 is',
-    type: 'Multiple choice',
+    stemKey: 'tchQPlaceValue7',
+    typeKey: 'tchQtMultipleChoice',
     marks: 1,
     skillId: 'skl-3',
   },
@@ -65,7 +72,8 @@ const bank: Draft[] = [
 
 export function TeacherCreateQuiz() {
   const { t, locale } = useLocale()
-  const [title, setTitle] = useState('Fractions, end of unit check')
+  // Null rather than a seeded string, so an untouched title follows the locale.
+  const [title, setTitle] = useState<string | null>(null)
   const [chosen, setChosen] = useState<Draft[]>([bank[0], bank[1]])
   const [shuffle, setShuffle] = useState(true)
   const [onePerPage, setOnePerPage] = useState(false)
@@ -83,8 +91,10 @@ export function TeacherCreateQuiz() {
   return (
     <Page>
       <PageHeader
-        title="Create a quiz"
-        subtitle={`${chosen.length} questions · ${totalMarks} marks`}
+        title={t('tchCreateQuiz')}
+        subtitle={t('tchQuizSubtitle')
+          .replace('{n}', String(chosen.length))
+          .replace('{m}', String(totalMarks))}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
@@ -94,7 +104,7 @@ export function TeacherCreateQuiz() {
               </Link>
             </Button>
             <Button variant="accent" size="sm" disabled={chosen.length === 0} asChild>
-              <Link to="/teacher/assign">Save and assign</Link>
+              <Link to="/teacher/assign">{t('tchSaveAndAssign')}</Link>
             </Button>
           </div>
         }
@@ -103,8 +113,11 @@ export function TeacherCreateQuiz() {
       <Card>
         <CardContent className="p-4">
           <label className="flex flex-col gap-1.5">
-            <span className="text-small font-medium text-foreground">Title</span>
-            <Input value={title} onChange={(event) => setTitle(event.target.value)} />
+            <span className="text-small font-medium text-foreground">{t('tchTitle')}</span>
+            <Input
+              value={title ?? t('tchQuizDefaultTitle')}
+              onChange={(event) => setTitle(event.target.value)}
+            />
           </label>
         </CardContent>
       </Card>
@@ -112,8 +125,8 @@ export function TeacherCreateQuiz() {
       <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <Card>
           <CardHeader>
-            <CardTitle>Questions in this quiz</CardTitle>
-            <Badge variant="outline">{totalMarks} marks</Badge>
+            <CardTitle>{t('tchQuestionsInQuiz')}</CardTitle>
+            <Badge variant="outline">{t('tchNMarks').replace('{n}', String(totalMarks))}</Badge>
           </CardHeader>
           <CardContent className="space-y-2">
             {chosen.map((question, index) => {
@@ -132,22 +145,26 @@ export function TeacherCreateQuiz() {
                   </span>
                   <span className="min-w-0 flex-1 leading-tight">
                     <span className="block text-small font-medium text-foreground">
-                      {question.stem}
+                      {t(question.stemKey)}
                     </span>
                     <span className="mt-1 flex flex-wrap items-center gap-1.5">
-                      <Badge variant="outline">{question.type}</Badge>
+                      <Badge variant="outline">{t(question.typeKey)}</Badge>
                       <Badge variant="neutral">
-                        {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : 'Not tagged'}
+                        {skill
+                          ? locale === 'ar'
+                            ? skill.nameAr
+                            : skill.name
+                          : t('tchNotTagged')}
                       </Badge>
                       <span className="text-caption text-muted-foreground">
-                        {question.marks} marks
+                        {t('tchNMarks').replace('{n}', String(question.marks))}
                       </span>
                     </span>
                   </span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    aria-label="Remove"
+                    aria-label={t('tchRemove')}
                     onClick={() => remove(question.id)}
                   >
                     <Trash2 className="h-3.5 w-3.5" aria-hidden />
@@ -158,18 +175,18 @@ export function TeacherCreateQuiz() {
 
             {chosen.length === 0 ? (
               <p className="py-10 text-center text-small text-muted-foreground">
-                Nothing added yet. Pull a question from the bank on the right.
+                {t('tchNothingAddedYet')}
               </p>
             ) : null}
 
             <div className="flex flex-wrap gap-2 border-t border-border pt-3">
               <Button variant="outline" size="sm">
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-                Write a new question
+                {t('tchWriteNewQuestion')}
               </Button>
               <Button variant="ghost" size="sm">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden />
-                Suggest questions for this unit
+                {t('tchSuggestQuestions')}
               </Button>
             </div>
           </CardContent>
@@ -178,7 +195,7 @@ export function TeacherCreateQuiz() {
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>From the bank</CardTitle>
+              <CardTitle>{t('tchFromTheBank')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1.5">
               {bank.map((question) => {
@@ -198,9 +215,13 @@ export function TeacherCreateQuiz() {
                   >
                     <Plus className="mt-0.5 h-3.5 w-3.5 flex-none text-muted-foreground" aria-hidden />
                     <span className="min-w-0 flex-1 leading-tight">
-                      <span className="block text-small text-foreground">{question.stem}</span>
+                      <span className="block text-small text-foreground">
+                        {t(question.stemKey)}
+                      </span>
                       <span className="block text-caption text-muted-foreground">
-                        {question.type} · {question.marks} marks
+                        {t('tchTypeAndMarks')
+                          .replace('{t}', t(question.typeKey))
+                          .replace('{n}', String(question.marks))}
                       </span>
                     </span>
                   </button>
@@ -211,15 +232,15 @@ export function TeacherCreateQuiz() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Settings</CardTitle>
+              <CardTitle>{t('navSettings')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <label className="flex items-center justify-between gap-3">
-                <span className="text-small text-foreground">Shuffle the questions</span>
+                <span className="text-small text-foreground">{t('tchShuffleQuestions')}</span>
                 <Switch checked={shuffle} onCheckedChange={setShuffle} />
               </label>
               <label className="flex items-center justify-between gap-3">
-                <span className="text-small text-foreground">One question per page</span>
+                <span className="text-small text-foreground">{t('tchOnePerPage')}</span>
                 <Switch checked={onePerPage} onCheckedChange={setOnePerPage} />
               </label>
             </CardContent>
@@ -227,7 +248,7 @@ export function TeacherCreateQuiz() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Skills covered</CardTitle>
+              <CardTitle>{t('tchSkillsCovered')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
               {covered.map((id) => {
@@ -239,7 +260,7 @@ export function TeacherCreateQuiz() {
                 )
               })}
               {covered.length === 0 ? (
-                <span className="text-caption text-muted-foreground">Nothing yet</span>
+                <span className="text-caption text-muted-foreground">{t('tchNothingYet')}</span>
               ) : null}
             </CardContent>
           </Card>

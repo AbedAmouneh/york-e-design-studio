@@ -49,7 +49,7 @@ export function TeacherClassHome() {
   if (!classGroup) {
     return (
       <Page>
-        <PageHeader title="Class not found" subtitle="It may have been archived." />
+        <PageHeader title={t('tchClassNotFound')} subtitle={t('tchClassArchived')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/teacher/classes">{t('navMyClasses')}</Link>
         </Button>
@@ -65,16 +65,18 @@ export function TeacherClassHome() {
   const classAssignments = assignmentsForClass(classGroup.id)
 
   const statusLabel: Record<ProgressStatus, string> = {
-    'on-track': early ? 'Going well' : t('onTrack'),
-    watch: early ? 'Keep going' : t('watch'),
-    'at-risk': early ? 'Needs time with you' : t('atRisk'),
+    'on-track': early ? t('tchGoingWell') : t('onTrack'),
+    watch: early ? t('tchKeepGoing') : t('watch'),
+    'at-risk': early ? t('tchNeedsTimeWithYou') : t('atRisk'),
   }
 
   return (
     <Page>
       <PageHeader
         title={classGroup.name}
-        subtitle={`Grade ${classGroup.grade} · ${members.length} students · Term 2`}
+        subtitle={t('tchClassSubtitle')
+          .replace('{g}', String(classGroup.grade))
+          .replace('{n}', String(members.length))}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
@@ -86,7 +88,7 @@ export function TeacherClassHome() {
             <Button variant="accent" size="sm" asChild>
               <Link to={`/teacher/assign?class=${classGroup.id}`}>
                 <Plus className="h-3.5 w-3.5" aria-hidden />
-                Assign an activity
+                {t('tchAssignActivity')}
               </Link>
             </Button>
           </div>
@@ -96,28 +98,35 @@ export function TeacherClassHome() {
       {early ? (
         <Card className="border-learner-primary/30 bg-learner-surface">
           <CardContent className="p-4 text-small text-foreground">
-            This is a K1 to Grade 3 class. You see the real scores so you can act on them. The
-            children see stars and completion only, never a percentage and never the words at risk.
+            {t('tchEarlyClassBanner')}
           </CardContent>
         </Card>
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Students" value={String(members.length)} />
-        <StatCard label={t('colAverage')} value={`${average}%`} hint="Class average this term" />
+        <StatCard label={t('navStudents')} value={String(members.length)} />
         <StatCard
-          label={early ? 'Needs time with you' : t('atRisk')}
+          label={t('colAverage')}
+          value={`${average}%`}
+          hint={t('tchClassAverageHint')}
+        />
+        <StatCard
+          label={early ? t('tchNeedsTimeWithYou') : t('atRisk')}
           value={String(atRisk.length)}
           emphasis={atRisk.length > 0}
         />
-        <StatCard label="Assignments" value={String(classAssignments.length)} hint="This term" />
+        <StatCard
+          label={t('tchAssignments')}
+          value={String(classAssignments.length)}
+          hint={t('tchThisTerm')}
+        />
       </div>
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="students">{t('navStudents')}</TabsTrigger>
-          <TabsTrigger value="content">Content</TabsTrigger>
-          <TabsTrigger value="assignments">Assignments</TabsTrigger>
+          <TabsTrigger value="content">{t('tchContent')}</TabsTrigger>
+          <TabsTrigger value="assignments">{t('tchAssignments')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="students" className="pt-4">
@@ -184,7 +193,7 @@ export function TeacherClassHome() {
                     {locale === 'ar' ? course.titleAr : course.title}
                   </span>
                   <span className="block text-caption text-muted-foreground">
-                    {course.units.length} units
+                    {t('tchNUnits').replace('{n}', String(course.units.length))}
                   </span>
                 </span>
               </Link>
@@ -195,18 +204,18 @@ export function TeacherClassHome() {
         <TabsContent value="assignments" className="pt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Assignments</CardTitle>
+              <CardTitle>{t('tchAssignments')}</CardTitle>
               <Badge variant="outline">{classAssignments.length}</Badge>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Activity</TableHead>
-                    <TableHead>Due</TableHead>
-                    <TableHead className="text-end">Submitted</TableHead>
-                    <TableHead className="text-end">Waiting</TableHead>
-                    <TableHead>Release</TableHead>
+                    <TableHead>{t('colActivity')}</TableHead>
+                    <TableHead>{t('colDue')}</TableHead>
+                    <TableHead className="text-end">{t('tchSubmitted')}</TableHead>
+                    <TableHead className="text-end">{t('tchWaiting')}</TableHead>
+                    <TableHead>{t('tchRelease')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -242,7 +251,9 @@ export function TeacherClassHome() {
                               assignment.releaseMode === 'immediate' ? 'neutral' : 'outline'
                             }
                           >
-                            {assignment.releaseMode === 'immediate' ? 'Immediate' : 'Manual'}
+                            {assignment.releaseMode === 'immediate'
+                              ? t('tchImmediate')
+                              : t('tchManual')}
                           </Badge>
                         </TableCell>
                       </TableRow>

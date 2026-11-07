@@ -38,7 +38,7 @@ export function TeacherMyClasses() {
     <Page>
       <PageHeader
         title={t('navMyClasses')}
-        subtitle={`${teacherClasses.length} classes · Term 2`}
+        subtitle={t('tchClassesTerm').replace('{n}', String(teacherClasses.length))}
         actions={
           <div className="flex items-center gap-1 rounded border border-border p-0.5">
             <Button
@@ -47,7 +47,7 @@ export function TeacherMyClasses() {
               onClick={() => setView('by-class')}
             >
               <Rows3 className="h-3.5 w-3.5" aria-hidden />
-              Group by class
+              {t('tchGroupByClass')}
             </Button>
             <Button
               variant={view === 'all-courses' ? 'outline' : 'ghost'}
@@ -55,7 +55,7 @@ export function TeacherMyClasses() {
               onClick={() => setView('all-courses')}
             >
               <LayoutGrid className="h-3.5 w-3.5" aria-hidden />
-              All courses
+              {t('tchAllCourses')}
             </Button>
           </div>
         }
@@ -80,10 +80,14 @@ export function TeacherMyClasses() {
                       {classGroup.name}
                     </Link>
                   </CardTitle>
-                  {early ? <Badge variant="outline">K1 to G3</Badge> : null}
+                  {early ? <Badge variant="outline">{t('tchK1ToG3')}</Badge> : null}
                   <span className="ms-auto flex items-center gap-3 text-caption text-muted-foreground">
-                    <span>{classGroup.studentIds.length} students</span>
-                    <span className="tabular">{average}% average</span>
+                    <span>
+                      {t('tchNStudents').replace('{n}', String(classGroup.studentIds.length))}
+                    </span>
+                    <span className="tabular">
+                      {t('tchPercentAverage').replace('{n}', String(average))}
+                    </span>
                     {atRisk > 0 ? (
                       <span className="font-semibold text-danger">
                         {atRisk} {t('atRisk').toLowerCase()}
@@ -111,16 +115,24 @@ export function TeacherMyClasses() {
                           {locale === 'ar' ? course.titleAr : course.title}
                         </span>
                         <span className="block text-caption text-muted-foreground">
-                          {course.units.length} units ·{' '}
-                          {course.units.reduce((sum, unit) => sum + unit.activities.length, 0)}{' '}
-                          activities
+                          {t('tchUnitsActivities')
+                            .replace('{n}', String(course.units.length))
+                            .replace(
+                              '{m}',
+                              String(
+                                course.units.reduce(
+                                  (sum, unit) => sum + unit.activities.length,
+                                  0,
+                                ),
+                              ),
+                            )}
                         </span>
                       </span>
                     </Link>
                   ))}
                   {classCourses.length === 0 ? (
                     <p className="text-small text-muted-foreground">
-                      No courses assigned to this class yet.
+                      {t('tchNoCoursesForClass')}
                     </p>
                   ) : null}
                 </CardContent>
@@ -131,7 +143,7 @@ export function TeacherMyClasses() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>All courses</CardTitle>
+            <CardTitle>{t('tchAllCourses')}</CardTitle>
             <Badge variant="outline">{flatCourses.length}</Badge>
           </CardHeader>
           <CardContent className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
@@ -158,10 +170,7 @@ export function TeacherMyClasses() {
         </Card>
       )}
 
-      <p className="text-caption text-muted-foreground">
-        Grouping by class is the default because a teacher thinks in classes, not courses. The flat
-        view is kept for the teacher who carries one subject across many classes.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('tchMyClassesNote')}</p>
     </Page>
   )
 }

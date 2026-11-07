@@ -57,7 +57,7 @@ export function TeacherStudentDetail() {
   if (!student || !standing) {
     return (
       <Page>
-        <PageHeader title="Student not found" subtitle="They may have moved class." />
+        <PageHeader title={t('tchStudentNotFound')} subtitle={t('tchMayHaveMovedClass')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/teacher/students">{t('navStudents')}</Link>
         </Button>
@@ -74,7 +74,9 @@ export function TeacherStudentDetail() {
     const assignment = teacherAssignments.find((item) => item.id === submission.assignmentId)
     const activity = assignment ? activityById(assignment.activityId) : undefined
     return {
-      label: activity?.title ?? `Task ${index + 1}`,
+      label:
+        (locale === 'ar' ? activity?.titleAr : activity?.title) ??
+        t('tchTaskN').replace('{n}', String(index + 1)),
       score: submission.score ?? 0,
     }
   })
@@ -90,10 +92,10 @@ export function TeacherStudentDetail() {
 
   const statusLabel = early
     ? standing.status === 'at-risk'
-      ? 'Needs time with you'
+      ? t('tchNeedsTimeWithYou')
       : standing.status === 'watch'
-        ? 'Keep going'
-        : 'Going well'
+        ? t('tchKeepGoing')
+        : t('tchGoingWell')
     : t(
         standing.status === 'at-risk'
           ? 'atRisk'
@@ -106,7 +108,9 @@ export function TeacherStudentDetail() {
     <Page>
       <PageHeader
         title={fullName(student)}
-        subtitle={`${classGroup?.name ?? ''} · Grade ${classGroup?.grade ?? ''}`}
+        subtitle={t('tchStudentSubtitle')
+          .replace('{c}', classGroup?.name ?? '')
+          .replace('{g}', String(classGroup?.grade ?? ''))}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
@@ -117,7 +121,7 @@ export function TeacherStudentDetail() {
             </Button>
             <Button variant="outline" size="sm">
               <Mail className="h-3.5 w-3.5" aria-hidden />
-              Message the parent
+              {t('tchMessageParent')}
             </Button>
           </div>
         }
@@ -130,23 +134,34 @@ export function TeacherStudentDetail() {
         <span className="min-w-0 flex-1 leading-tight">
           <span className="block text-small font-medium text-foreground">{student.email}</span>
           <span className="block text-caption text-muted-foreground">
-            Parent: {fullName(guardian)} · {guardian?.email}
+            {t('tchParentLine')
+              .replace('{n}', fullName(guardian))
+              .replace('{m}', guardian?.email ?? '')}
           </span>
         </span>
         <StatusBadge status={standing.status} label={statusLabel} />
-        {early ? <Badge variant="outline">K1 to G3 view</Badge> : null}
+        {early ? <Badge variant="outline">{t('tchEarlyView')}</Badge> : null}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label={t('colAverage')} value={`${standing.average}%`} />
         <StatCard label={t('colCompletion')} value={`${standing.completion}%`} />
-        <StatCard label="Absences" value={String(absences)} hint="This term" emphasis={absences > 2} />
-        <StatCard label="Late arrivals" value={String(lates)} hint="This term" />
+        <StatCard
+          label={t('tchAbsences')}
+          value={String(absences)}
+          hint={t('tchThisTerm')}
+          emphasis={absences > 2}
+        />
+        <StatCard
+          label={t('tchLateArrivals')}
+          value={String(lates)}
+          hint={t('tchThisTerm')}
+        />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Scores over time</CardTitle>
+          <CardTitle>{t('tchScoresOverTime')}</CardTitle>
           <Badge
             variant={
               standing.trend === 'rising'
@@ -190,7 +205,7 @@ export function TeacherStudentDetail() {
                   stroke="hsl(var(--danger))"
                   strokeDasharray="4 4"
                   label={{
-                    value: 'Needs help below here',
+                    value: t('tchNeedsHelpBelow'),
                     fontSize: 10,
                     fill: 'hsl(var(--danger))',
                     position: dir === 'rtl' ? 'insideLeft' : 'insideRight',
@@ -212,16 +227,16 @@ export function TeacherStudentDetail() {
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Work this term</CardTitle>
+            <CardTitle>{t('tchWorkThisTerm')}</CardTitle>
           </CardHeader>
           <CardContent className="px-0 pb-0">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Activity</TableHead>
+                  <TableHead>{t('colActivity')}</TableHead>
                   <TableHead>{t('colClass')}</TableHead>
-                  <TableHead className="text-end">Score</TableHead>
-                  <TableHead>State</TableHead>
+                  <TableHead className="text-end">{t('colScore')}</TableHead>
+                  <TableHead>{t('colStatus')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -239,7 +254,7 @@ export function TeacherStudentDetail() {
                             ? locale === 'ar'
                               ? activity.titleAr
                               : activity.title
-                            : 'Activity'}
+                            : t('colActivity')}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {assignment ? classById(assignment.classId)?.name : '—'}
@@ -249,13 +264,13 @@ export function TeacherStudentDetail() {
                         </TableCell>
                         <TableCell>
                           {submission.state === 'needs-grading' ? (
-                            <Badge variant="warning">Waiting</Badge>
+                            <Badge variant="warning">{t('tchWaiting')}</Badge>
                           ) : submission.state === 'not-started' ? (
-                            <Badge variant="outline">Not started</Badge>
+                            <Badge variant="outline">{t('tchNotStarted')}</Badge>
                           ) : submission.released ? (
-                            <Badge variant="success">Released</Badge>
+                            <Badge variant="success">{t('tchReleased')}</Badge>
                           ) : (
-                            <Badge variant="outline">Held</Badge>
+                            <Badge variant="outline">{t('tchHeld')}</Badge>
                           )}
                         </TableCell>
                       </TableRow>
@@ -268,9 +283,9 @@ export function TeacherStudentDetail() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Weakest skills</CardTitle>
+            <CardTitle>{t('tchWeakestSkills')}</CardTitle>
             <Button variant="ghost" size="sm" asChild>
-              <Link to={`/teacher/students/${student.id}/skills`}>Drill down</Link>
+              <Link to={`/teacher/students/${student.id}/skills`}>{t('tchDrillDown')}</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -278,7 +293,7 @@ export function TeacherStudentDetail() {
               <div key={record.skillId} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3">
                   <span className="min-w-0 truncate text-small text-foreground">
-                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : 'Skill'}
+                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('colSkill')}
                   </span>
                   <span className="tabular flex-none text-caption text-muted-foreground">
                     {record.mastery}%
@@ -306,12 +321,9 @@ export function TeacherStudentDetail() {
       <Card className="border-accent/40">
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
           <Sparkles className="h-4 w-4 flex-none text-foreground" aria-hidden />
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            The drop started after Unit 2, which is where common denominators are introduced. Assign
-            the Unit 2 practice set before moving on.
-          </span>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('tchStudentAiHint')}</span>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/teacher/assign">Assign practice</Link>
+            <Link to="/teacher/assign">{t('tchAssignPractice')}</Link>
           </Button>
         </CardContent>
       </Card>

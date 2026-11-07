@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { skills } from '@/data/seed'
 
@@ -28,147 +29,162 @@ import { skills } from '@/data/seed'
  * promised a question type she cannot find loses trust in the whole tool.
  */
 
-const builtTypes = [
-  'True or false',
-  'Multiple choice',
-  'Short answer',
-  'Essay',
-  'Drag and drop into text',
-  'Drag and drop onto image',
-  'Freehand drawing',
-  'Image sequencing',
-  'Multiple hotspots',
-  'Numerical',
-  'Fill in the blanks',
-  'Select correct words',
-  'Text sequencing',
-  'Fill in the blanks on image',
-  'Highlight correct words',
-  'Record audio',
-  'Text classification',
-  'Image classification',
-  'Matching',
-  'Crossword',
-]
+const builtTypeKeys = [
+  'tchQtTrueFalse',
+  'tchQtMultipleChoice',
+  'tchQtShortAnswer',
+  'tchQtEssay',
+  'tchQtDragIntoText',
+  'tchQtDragOntoImage',
+  'tchQtFreehandDrawing',
+  'tchQtImageSequencing',
+  'tchQtMultipleHotspots',
+  'tchQtNumerical',
+  'tchQtFillBlanks',
+  'tchQtSelectCorrectWords',
+  'tchQtTextSequencing',
+  'tchQtFillBlanksImage',
+  'tchQtHighlightWords',
+  'tchQtRecordAudio',
+  'tchQtTextClassification',
+  'tchQtImageClassification',
+  'tchQtMatching',
+  'tchQtCrossword',
+] as const
 
-const plannedTypes = [
-  'Dropdown',
-  'Speak the words',
-  'Dialog cards',
-  'Memory game',
-  'Word search',
-  'AI chat',
-  'Course presentation',
-  'Interactive video',
-]
+const plannedTypeKeys = [
+  'tchQtDropdown',
+  'tchQtSpeakWords',
+  'tchQtDialogCards',
+  'tchQtMemoryGame',
+  'tchQtWordSearch',
+  'tchQtAiChat',
+  'tchQtCoursePresentation',
+  'tchQtInteractiveVideo',
+] as const
+
+type Difficulty = 'foundation' | 'core' | 'stretch'
+
+const difficultyKey: Record<Difficulty, StringKey> = {
+  foundation: 'tchDiffFoundation',
+  core: 'tchDiffCore',
+  stretch: 'tchDiffStretch',
+}
 
 interface Question {
   id: string
-  stem: string
-  type: string
+  stemKey: StringKey
+  typeKey: StringKey
   skillId: string
-  difficulty: 'Foundation' | 'Core' | 'Stretch'
+  difficulty: Difficulty
   usedTimes: number
-  source: 'York Press' | 'Mine'
+  source: 'york-press' | 'mine'
 }
 
 const questions: Question[] = [
   {
     id: 'qb-1',
-    stem: '1/3 + 1/4 =',
-    type: 'Numerical',
+    stemKey: 'tchQAddThirdQuarter',
+    typeKey: 'tchQtNumerical',
     skillId: 'skl-1',
-    difficulty: 'Core',
+    difficulty: 'core',
     usedTimes: 14,
-    source: 'York Press',
+    source: 'york-press',
   },
   {
     id: 'qb-2',
-    stem: 'Which pair has a common denominator of 12?',
-    type: 'Multiple choice',
+    stemKey: 'tchQCommonDenom12',
+    typeKey: 'tchQtMultipleChoice',
     skillId: 'skl-2',
-    difficulty: 'Core',
+    difficulty: 'core',
     usedTimes: 9,
-    source: 'York Press',
+    source: 'york-press',
   },
   {
     id: 'qb-3',
-    stem: 'Drag each fraction onto the right place on the number line',
-    type: 'Drag and drop onto image',
+    stemKey: 'tchQDragFractionsLineLong',
+    typeKey: 'tchQtDragOntoImage',
     skillId: 'skl-5',
-    difficulty: 'Stretch',
+    difficulty: 'stretch',
     usedTimes: 4,
-    source: 'York Press',
+    source: 'york-press',
   },
   {
     id: 'qb-4',
-    stem: 'Explain why 2/6 and 1/3 are the same amount',
-    type: 'Essay',
+    stemKey: 'tchQExplainEquivalence',
+    typeKey: 'tchQtEssay',
     skillId: 'skl-1',
-    difficulty: 'Stretch',
+    difficulty: 'stretch',
     usedTimes: 2,
-    source: 'Mine',
+    source: 'mine',
   },
   {
     id: 'qb-5',
-    stem: 'The place value of 7 in 4,721 is',
-    type: 'Multiple choice',
+    stemKey: 'tchQPlaceValue7',
+    typeKey: 'tchQtMultipleChoice',
     skillId: 'skl-3',
-    difficulty: 'Foundation',
+    difficulty: 'foundation',
     usedTimes: 21,
-    source: 'York Press',
+    source: 'york-press',
   },
   {
     id: 'qb-6',
-    stem: 'Record yourself reading the number 3,408 aloud',
-    type: 'Record audio',
+    stemKey: 'tchQRecordNumber',
+    typeKey: 'tchQtRecordAudio',
     skillId: 'skl-3',
-    difficulty: 'Foundation',
+    difficulty: 'foundation',
     usedTimes: 3,
-    source: 'Mine',
+    source: 'mine',
   },
 ]
 
 const rubrics = [
   {
     id: 'rb-1',
-    name: 'Mathematical working, 20 marks',
-    rows: ['Method is correct', 'Working is shown', 'Answer and units'],
-    sharedWith: 'Grade 6 team',
+    nameKey: 'tchRubricMathWorking',
+    rowKeys: ['tchRubricMethod', 'tchRubricWorking', 'tchRubricAnswerUnits'],
+    sharedWithKey: 'tchSharedGrade6',
   },
   {
     id: 'rb-2',
-    name: 'Short written explanation, 10 marks',
-    rows: ['Uses the right vocabulary', 'Reasoning is complete', 'Clear to read'],
-    sharedWith: 'Only me',
+    nameKey: 'tchRubricShortExplanation',
+    rowKeys: ['tchRubricVocabulary', 'tchRubricReasoning', 'tchRubricClarity'],
+    sharedWithKey: 'tchSharedOnlyMe',
   },
-]
+] as const
 
 export function TeacherQuestionBank() {
   const { t, locale } = useLocale()
   const [query, setQuery] = useState('')
-  const [source, setSource] = useState<'all' | 'York Press' | 'Mine'>('all')
+  const [source, setSource] = useState<'all' | 'york-press' | 'mine'>('all')
 
   const rows = useMemo(
     () =>
       questions
         .filter((question) => (source === 'all' ? true : question.source === source))
         .filter((question) =>
-          query ? question.stem.toLowerCase().includes(query.toLowerCase()) : true,
+          query ? t(question.stemKey).toLowerCase().includes(query.toLowerCase()) : true,
         ),
-    [query, source],
+    [query, source, t],
   )
+
+  const sourceLabel = (key: 'all' | 'york-press' | 'mine') =>
+    key === 'all'
+      ? t('tchAllQuestions')
+      : key === 'york-press'
+        ? t('tchSourceYorkPress')
+        : t('tchSourceMine')
 
   return (
     <Page>
       <PageHeader
         title={t('navQuestionBank')}
-        subtitle="Questions you can reuse, and the rubrics you mark with"
+        subtitle={t('tchQuestionBankSubtitle')}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/teacher/question-bank/new">
               <Plus className="h-3.5 w-3.5" aria-hidden />
-              Create a quiz
+              {t('tchCreateQuiz')}
             </Link>
           </Button>
         }
@@ -176,9 +192,9 @@ export function TeacherQuestionBank() {
 
       <Tabs defaultValue="questions">
         <TabsList>
-          <TabsTrigger value="questions">Questions</TabsTrigger>
-          <TabsTrigger value="rubrics">Rubrics</TabsTrigger>
-          <TabsTrigger value="types">Question types</TabsTrigger>
+          <TabsTrigger value="questions">{t('tchQuestions')}</TabsTrigger>
+          <TabsTrigger value="rubrics">{t('tchRubrics')}</TabsTrigger>
+          <TabsTrigger value="types">{t('tchQuestionTypes')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="questions" className="pt-4">
@@ -193,14 +209,14 @@ export function TeacherQuestionBank() {
                   />
                 </div>
                 <div className="flex items-center gap-1">
-                  {(['all', 'York Press', 'Mine'] as const).map((item) => (
+                  {(['all', 'york-press', 'mine'] as const).map((item) => (
                     <Button
                       key={item}
                       variant={source === item ? 'outline' : 'ghost'}
                       size="sm"
                       onClick={() => setSource(item)}
                     >
-                      {item === 'all' ? 'All questions' : item}
+                      {sourceLabel(item)}
                     </Button>
                   ))}
                 </div>
@@ -210,12 +226,12 @@ export function TeacherQuestionBank() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Question</TableHead>
-                      <TableHead>Type</TableHead>
+                      <TableHead>{t('tchQuestion')}</TableHead>
+                      <TableHead>{t('tchType')}</TableHead>
                       <TableHead>{t('colSkill')}</TableHead>
-                      <TableHead>Difficulty</TableHead>
-                      <TableHead className="text-end">Used</TableHead>
-                      <TableHead>Source</TableHead>
+                      <TableHead>{t('tchDifficulty')}</TableHead>
+                      <TableHead className="text-end">{t('tchUsed')}</TableHead>
+                      <TableHead>{t('tchSource')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -224,28 +240,30 @@ export function TeacherQuestionBank() {
                       return (
                         <TableRow key={question.id}>
                           <TableCell className="max-w-[320px] font-medium text-foreground">
-                            {question.stem}
+                            {t(question.stemKey)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">{question.type}</TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {t(question.typeKey)}
+                          </TableCell>
                           <TableCell className="text-muted-foreground">
                             {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : '—'}
                           </TableCell>
                           <TableCell>
                             <Badge
                               variant={
-                                question.difficulty === 'Stretch'
+                                question.difficulty === 'stretch'
                                   ? 'warning'
-                                  : question.difficulty === 'Foundation'
+                                  : question.difficulty === 'foundation'
                                     ? 'neutral'
                                     : 'outline'
                               }
                             >
-                              {question.difficulty}
+                              {t(difficultyKey[question.difficulty])}
                             </Badge>
                           </TableCell>
                           <TableCell className="tabular text-end">{question.usedTimes}</TableCell>
                           <TableCell className="text-muted-foreground">
-                            {question.source}
+                            {sourceLabel(question.source)}
                           </TableCell>
                         </TableRow>
                       )
@@ -262,16 +280,16 @@ export function TeacherQuestionBank() {
             {rubrics.map((rubric) => (
               <Card key={rubric.id}>
                 <CardHeader>
-                  <CardTitle>{rubric.name}</CardTitle>
-                  <Badge variant="outline">{rubric.sharedWith}</Badge>
+                  <CardTitle>{t(rubric.nameKey)}</CardTitle>
+                  <Badge variant="outline">{t(rubric.sharedWithKey)}</Badge>
                 </CardHeader>
                 <CardContent className="space-y-1.5">
-                  {rubric.rows.map((row) => (
+                  {rubric.rowKeys.map((rowKey) => (
                     <div
-                      key={row}
+                      key={rowKey}
                       className="rounded border border-border px-3 py-2 text-small text-foreground"
                     >
-                      {row}
+                      {t(rowKey)}
                     </div>
                   ))}
                 </CardContent>
@@ -283,13 +301,15 @@ export function TeacherQuestionBank() {
         <TabsContent value="types" className="space-y-4 pt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Available now</CardTitle>
-              <Badge variant="success">{builtTypes.length} built</Badge>
+              <CardTitle>{t('tchAvailableNow')}</CardTitle>
+              <Badge variant="success">
+                {t('tchNBuilt').replace('{n}', String(builtTypeKeys.length))}
+              </Badge>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
-              {builtTypes.map((type) => (
-                <Badge key={type} variant="neutral">
-                  {type}
+              {builtTypeKeys.map((key) => (
+                <Badge key={key} variant="neutral">
+                  {t(key)}
                 </Badge>
               ))}
             </CardContent>
@@ -297,22 +317,21 @@ export function TeacherQuestionBank() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Planned</CardTitle>
-              <Badge variant="outline">{plannedTypes.length} not built yet</Badge>
+              <CardTitle>{t('tchPlanned')}</CardTitle>
+              <Badge variant="outline">
+                {t('tchNNotBuilt').replace('{n}', String(plannedTypeKeys.length))}
+              </Badge>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
-              {plannedTypes.map((type) => (
-                <Badge key={type} variant="outline" className={cn('opacity-60')}>
-                  {type}
+              {plannedTypeKeys.map((key) => (
+                <Badge key={key} variant="outline" className={cn('opacity-60')}>
+                  {t(key)}
                 </Badge>
               ))}
             </CardContent>
           </Card>
 
-          <p className="text-caption text-muted-foreground">
-            Twenty eight question types in total. The planned eight are shown so a teacher never
-            goes looking for something that does not exist yet.
-          </p>
+          <p className="text-caption text-muted-foreground">{t('tchQuestionTypesNote')}</p>
         </TabsContent>
       </Tabs>
     </Page>

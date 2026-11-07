@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn, initials } from '@/lib/utils'
 import { fullName, teacherClasses } from '@/data/teacher'
 import { guardians, students } from '@/data/seed'
@@ -27,10 +28,10 @@ import { guardians, students } from '@/data/seed'
 
 interface Post {
   id: string
-  title: string
-  body: string
+  titleKey: StringKey
+  bodyKey: StringKey
   audience: string
-  postedOn: string
+  postedOnKey: StringKey
   pinned: boolean
   readBy: number
   total: number
@@ -39,35 +40,51 @@ interface Post {
 const posts: Post[] = [
   {
     id: 'p1',
-    title: 'End of unit check on Friday',
-    body: 'We finish fractions this week. Friday is a short check on everything from Unit 2, in class, no revision needed beyond the practice we have already done.',
+    titleKey: 'tchPost1Title',
+    bodyKey: 'tchPost1Body',
     audience: 'Grade 6 Cedar, Grade 6 Maple',
-    postedOn: '9 February',
+    postedOnKey: 'tchPost1Date',
     pinned: true,
     readBy: 44,
     total: 51,
   },
   {
     id: 'p2',
-    title: 'Bring a ruler on Tuesday',
-    body: 'We start measuring next week. A ruler with centimetres is enough.',
+    titleKey: 'tchPost2Title',
+    bodyKey: 'tchPost2Body',
     audience: 'Grade 2 Olive',
-    postedOn: '6 February',
+    postedOnKey: 'tchPost2Date',
     pinned: false,
     readBy: 19,
     total: 22,
   },
   {
     id: 'p3',
-    title: 'Extra practice is open until Sunday',
-    body: 'The practice set on common denominators stays open until Sunday night for anyone who wants another go.',
+    titleKey: 'tchPost3Title',
+    bodyKey: 'tchPost3Body',
     audience: 'Grade 6 Cedar',
-    postedOn: '4 February',
+    postedOnKey: 'tchPost3Date',
     pinned: false,
     readBy: 24,
     total: 26,
   },
 ]
+
+const threadMessageKeys = [
+  'tchThread1',
+  'tchThread2',
+  'tchThread3',
+  'tchThread4',
+  'tchThread5',
+] as const
+
+const threadTimeKeys = [
+  null,
+  'tchYesterday',
+  'tchYesterday',
+  'tchFeb6Short',
+  'tchFeb4Short',
+] as const
 
 export function TeacherAnnouncements() {
   const { t } = useLocale()
@@ -97,15 +114,10 @@ export function TeacherAnnouncements() {
       id: student.id,
       parent: fullName(guardian),
       about: fullName(student),
-      last: [
-        'Thank you, that explains the mark.',
-        'Will she need the textbook at home?',
-        'Noted, we will practise over the weekend.',
-        'Can we talk at pickup on Thursday?',
-        'Thank you for letting us know.',
-      ][index],
+      last: t(threadMessageKeys[index]),
       unread: index < 2,
-      at: ['09:40', 'Yesterday', 'Yesterday', '6 Feb', '4 Feb'][index],
+      // The first thread is from this morning, so it keeps a clock time.
+      at: threadTimeKeys[index] ? t(threadTimeKeys[index]) : '09:40',
     }
   })
 
@@ -113,14 +125,14 @@ export function TeacherAnnouncements() {
     <Page>
       <PageHeader
         title={t('navAnnouncements')}
-        subtitle="One message to a class, or a private thread with a parent"
+        subtitle={t('tchAnnouncementsSubtitle')}
       />
 
       <Tabs defaultValue="announcements">
         <TabsList>
-          <TabsTrigger value="announcements">Announcements</TabsTrigger>
+          <TabsTrigger value="announcements">{t('navAnnouncements')}</TabsTrigger>
           <TabsTrigger value="messages">
-            Messages
+            {t('tchMessages')}
             <Badge variant="warning" className="ms-2">
               2
             </Badge>
@@ -130,7 +142,7 @@ export function TeacherAnnouncements() {
         <TabsContent value="announcements" className="space-y-4 pt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Write an announcement</CardTitle>
+              <CardTitle>{t('tchWriteAnnouncement')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Input
@@ -139,7 +151,7 @@ export function TeacherAnnouncements() {
                   setTitle(event.target.value)
                   setSent(false)
                 }}
-                placeholder="Title"
+                placeholder={t('tchTitle')}
               />
               <textarea
                 value={body}
@@ -148,12 +160,12 @@ export function TeacherAnnouncements() {
                   setBody(event.target.value)
                   setSent(false)
                 }}
-                placeholder="What do they need to know?"
+                placeholder={t('tchAnnouncementPlaceholder')}
                 className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
 
               <div className="space-y-2">
-                <span className="text-small font-medium text-foreground">Who sees it</span>
+                <span className="text-small font-medium text-foreground">{t('tchWhoSeesIt')}</span>
                 <div className="flex flex-wrap gap-2">
                   {teacherClasses.map((item) => (
                     <button
@@ -179,9 +191,7 @@ export function TeacherAnnouncements() {
                       setSent(false)
                     }}
                   />
-                  <span className="text-small text-foreground">
-                    Send to parents as well as students
-                  </span>
+                  <span className="text-small text-foreground">{t('tchSendToParentsToo')}</span>
                 </label>
               </div>
 
@@ -193,16 +203,18 @@ export function TeacherAnnouncements() {
                   onClick={() => setSent(true)}
                 >
                   <Send className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-                  Post to {reach} students
+                  {t('tchPostToNStudents').replace('{n}', String(reach))}
                 </Button>
                 {sent ? (
                   <span className="text-small text-success">
-                    Posted. {reach} students{toParents ? ' and their parents' : ''} have been
-                    notified.
+                    {t(toParents ? 'tchPostedStudentsParents' : 'tchPostedStudents').replace(
+                      '{n}',
+                      String(reach),
+                    )}
                   </span>
                 ) : (
                   <span className="text-caption text-muted-foreground">
-                    Students see it on their dashboard. Parents get it by email as well.
+                    {t('tchAnnouncementHint')}
                   </span>
                 )}
               </div>
@@ -220,15 +232,15 @@ export function TeacherAnnouncements() {
                       ) : (
                         <Megaphone className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
                       )}
-                      {post.title}
+                      {t(post.titleKey)}
                     </span>
                   </CardTitle>
                   <span className="ms-auto text-caption text-muted-foreground">
-                    {post.postedOn}
+                    {t(post.postedOnKey)}
                   </span>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <p className="text-small text-muted-foreground">{post.body}</p>
+                  <p className="text-small text-muted-foreground">{t(post.bodyKey)}</p>
                   <div className="flex flex-wrap items-center gap-3">
                     <Badge variant="outline">{post.audience}</Badge>
                     <span className="flex items-center gap-2 text-caption text-muted-foreground">
@@ -238,7 +250,9 @@ export function TeacherAnnouncements() {
                           style={{ width: `${(post.readBy / post.total) * 100}%` }}
                         />
                       </span>
-                      read by {post.readBy} of {post.total}
+                      {t('tchReadByOf')
+                        .replace('{n}', String(post.readBy))
+                        .replace('{m}', String(post.total))}
                     </span>
                   </div>
                 </CardContent>
@@ -265,7 +279,7 @@ export function TeacherAnnouncements() {
                         {thread.parent}
                       </span>
                       <span className="flex-none text-caption text-muted-foreground">
-                        about {thread.about}
+                        {t('tchAboutStudent').replace('{n}', thread.about)}
                       </span>
                     </span>
                     <span className="block truncate text-caption text-muted-foreground">
@@ -281,10 +295,7 @@ export function TeacherAnnouncements() {
             </CardContent>
           </Card>
 
-          <p className="mt-3 text-caption text-muted-foreground">
-            Messages are one to one with a parent and always attached to a child, so there is a
-            record and nothing happens off the platform.
-          </p>
+          <p className="mt-3 text-caption text-muted-foreground">{t('tchMessagesNote')}</p>
         </TabsContent>
       </Tabs>
     </Page>

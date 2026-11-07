@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { fullName, studentsInClass, teacherClasses } from '@/data/teacher'
 
 /**
@@ -32,12 +33,12 @@ interface ChangeRecord {
   id: string
   studentId: string
   classId: string
-  activity: string
+  activityKey: StringKey
   from: number | null
   to: number
-  reason: string
-  by: string
-  at: string
+  reasonKey: StringKey
+  by: 'you' | 'coordinator'
+  atKey: StringKey
 }
 
 function buildChanges(): ChangeRecord[] {
@@ -50,45 +51,45 @@ function buildChanges(): ChangeRecord[] {
       id: 'chg-1',
       studentId: cedar[2]?.id ?? '',
       classId: 'cls-3',
-      activity: 'Check 2.3',
+      activityKey: 'tchActCheck23',
       from: 54,
       to: 68,
-      reason: 'Marked down in error, the second working was correct',
-      by: 'You',
-      at: '10 Feb, 09:12',
+      reasonKey: 'tchAuditReason1',
+      by: 'you',
+      atKey: 'tchAuditAt1',
     },
     {
       id: 'chg-2',
       studentId: cedar[7]?.id ?? '',
       classId: 'cls-3',
-      activity: 'Apply 1.5',
+      activityKey: 'tchActApply15',
       from: null,
       to: 72,
-      reason: 'Sat the paper late after an authorised absence',
-      by: 'You',
-      at: '9 Feb, 14:40',
+      reasonKey: 'tchAuditReason2',
+      by: 'you',
+      atKey: 'tchAuditAt2',
     },
     {
       id: 'chg-3',
       studentId: maple[4]?.id ?? '',
       classId: 'cls-4',
-      activity: 'Check 1.3',
+      activityKey: 'tchActCheck13',
       from: 81,
       to: 73,
-      reason: 'Late penalty applied after the deadline was confirmed',
-      by: 'You',
-      at: '9 Feb, 11:05',
+      reasonKey: 'tchAuditReason3',
+      by: 'you',
+      atKey: 'tchAuditAt3',
     },
     {
       id: 'chg-4',
       studentId: jasmine[1]?.id ?? '',
       classId: 'cls-5',
-      activity: 'Apply 2.5',
+      activityKey: 'tchActApply25',
       from: 40,
       to: 55,
-      reason: 'Remarked after the student queried question 4',
-      by: 'Coordinator',
-      at: '6 Feb, 16:22',
+      reasonKey: 'tchAuditReason4',
+      by: 'coordinator',
+      atKey: 'tchAuditAt4',
     },
   ]
 }
@@ -109,8 +110,8 @@ export function TeacherGradeAudit() {
   return (
     <Page>
       <PageHeader
-        title="Grade changes"
-        subtitle="Every manual override in your classes this term"
+        title={t('tchGradeChanges')}
+        subtitle={t('tchGradeChangesSubtitle')}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/teacher/gradebook">
@@ -137,11 +138,11 @@ export function TeacherGradeAudit() {
                 <TableRow>
                   <TableHead>{t('colStudent')}</TableHead>
                   <TableHead>{t('colClass')}</TableHead>
-                  <TableHead>Activity</TableHead>
-                  <TableHead>Change</TableHead>
-                  <TableHead>Reason</TableHead>
-                  <TableHead>By</TableHead>
-                  <TableHead>When</TableHead>
+                  <TableHead>{t('colActivity')}</TableHead>
+                  <TableHead>{t('tchChange')}</TableHead>
+                  <TableHead>{t('tchReason')}</TableHead>
+                  <TableHead>{t('tchBy')}</TableHead>
+                  <TableHead>{t('colWhen')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,11 +154,13 @@ export function TeacherGradeAudit() {
                     <TableCell className="text-muted-foreground">
                       {classFor(change.classId)}
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{change.activity}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {t(change.activityKey)}
+                    </TableCell>
                     <TableCell>
                       <span className="flex items-center gap-1.5">
                         <span className="tabular text-muted-foreground line-through">
-                          {change.from ?? 'not marked'}
+                          {change.from ?? t('tchNotMarked')}
                         </span>
                         <ArrowRight
                           className="h-3.5 w-3.5 text-muted-foreground rtl:-scale-x-100"
@@ -167,15 +170,15 @@ export function TeacherGradeAudit() {
                       </span>
                     </TableCell>
                     <TableCell className="max-w-[280px] text-muted-foreground">
-                      {change.reason}
+                      {t(change.reasonKey)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={change.by === 'You' ? 'neutral' : 'outline'}>
-                        {change.by}
+                      <Badge variant={change.by === 'you' ? 'neutral' : 'outline'}>
+                        {change.by === 'you' ? t('tchByYou') : t('tabCoordinator')}
                       </Badge>
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-muted-foreground">
-                      {change.at}
+                      {t(change.atKey)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -185,10 +188,7 @@ export function TeacherGradeAudit() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        A reason is required before a mark can be overridden, so this list has no blanks. The school
-        admin sees the same records for every teacher.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('tchGradeAuditNote')}</p>
     </Page>
   )
 }

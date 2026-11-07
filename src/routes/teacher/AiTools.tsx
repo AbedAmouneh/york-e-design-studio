@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 
 /**
@@ -34,9 +35,9 @@ import { cn } from '@/lib/utils'
 interface Tool {
   id: string
   icon: typeof Sparkles
-  name: string
-  what: string
-  grounding: string
+  nameKey: StringKey
+  whatKey: StringKey
+  groundingKey: StringKey
   status: 'ready' | 'later'
 }
 
@@ -44,52 +45,59 @@ const tools: Tool[] = [
   {
     id: 'reteach',
     icon: Wand2,
-    name: 'Build a reteach',
-    what: 'Turns the misconceptions your class actually showed into a ten minute lesson.',
-    grounding: 'Reads the question level results for this class and pulls from the course content.',
+    nameKey: 'tchToolReteach',
+    whatKey: 'tchToolReteachWhat',
+    groundingKey: 'tchToolReteachGround',
     status: 'ready',
   },
   {
     id: 'quiz',
     icon: FileText,
-    name: 'Draft a quiz',
-    what: 'Suggests questions from the bank that cover the skills you have just taught.',
-    grounding: 'Uses the skill tags on your unit plan and the question bank you can already see.',
+    nameKey: 'tchToolQuiz',
+    whatKey: 'tchToolQuizWhat',
+    groundingKey: 'tchToolQuizGround',
     status: 'ready',
   },
   {
     id: 'feedback',
     icon: MessageSquare,
-    name: 'Draft feedback',
-    what: 'Writes a first pass of feedback on written work, which you edit before releasing.',
-    grounding: 'Reads the submission and the rubric you selected. Never released without you.',
+    nameKey: 'tchToolFeedback',
+    whatKey: 'tchToolFeedbackWhat',
+    groundingKey: 'tchToolFeedbackGround',
     status: 'ready',
   },
   {
     id: 'differentiate',
     icon: Scale,
-    name: 'Differentiate an activity',
-    what: 'Produces a foundation and a stretch version of something you already assign.',
-    grounding: 'Rewrites the existing activity rather than inventing new content.',
+    nameKey: 'tchToolDifferentiate',
+    whatKey: 'tchToolDifferentiateWhat',
+    groundingKey: 'tchToolDifferentiateGround',
     status: 'ready',
   },
   {
     id: 'parent',
     icon: MessageSquare,
-    name: 'Draft a parent message',
-    what: 'Turns what the data shows into a message a parent will understand.',
-    grounding: 'Uses the results for that one child only. You send it, not the platform.',
+    nameKey: 'tchToolParentMessage',
+    whatKey: 'tchToolParentMessageWhat',
+    groundingKey: 'tchToolParentMessageGround',
     status: 'ready',
   },
   {
     id: 'translate',
     icon: Languages,
-    name: 'Translate a message',
-    what: 'English to Arabic and back, for families who read one and not the other.',
-    grounding: 'Translation only. It does not change what you wrote.',
+    nameKey: 'tchToolTranslate',
+    whatKey: 'tchToolTranslateWhat',
+    groundingKey: 'tchToolTranslateGround',
     status: 'later',
   },
 ]
+
+const reteachStepKeys = [
+  'tchReteachStep1',
+  'tchReteachStep2',
+  'tchReteachStep3',
+  'tchReteachStep4',
+] as const
 
 export function TeacherAiTools() {
   const { t } = useLocale()
@@ -99,17 +107,13 @@ export function TeacherAiTools() {
     <Page>
       <PageHeader
         title={t('navAiTools')}
-        subtitle="Drafts for you to edit, grounded in your own course content"
+        subtitle={t('tchAiToolsSubtitle')}
       />
 
       <Card className="border-accent/40">
         <CardContent className="flex flex-wrap items-start gap-3 p-4">
           <Sparkles className="mt-0.5 h-4 w-4 flex-none text-foreground" aria-hidden />
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            These tools are for teachers. There is no AI tutor or AI examiner facing students in
-            this release, which supersedes the student chatbot in the older features sheet. Nothing
-            on this page reaches a student until you approve it.
-          </span>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('tchAiToolsBanner')}</span>
         </CardContent>
       </Card>
 
@@ -136,12 +140,14 @@ export function TeacherAiTools() {
                   <Icon className="h-4 w-4 text-foreground" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1 text-small font-medium text-foreground">
-                  {tool.name}
+                  {t(tool.nameKey)}
                 </span>
-                {later ? <Badge variant="outline">Later</Badge> : null}
+                {later ? <Badge variant="outline">{t('tchLater')}</Badge> : null}
               </span>
-              <span className="text-small text-muted-foreground">{tool.what}</span>
-              <span className="mt-auto text-caption text-muted-foreground">{tool.grounding}</span>
+              <span className="text-small text-muted-foreground">{t(tool.whatKey)}</span>
+              <span className="mt-auto text-caption text-muted-foreground">
+                {t(tool.groundingKey)}
+              </span>
             </button>
           )
         })}
@@ -150,38 +156,30 @@ export function TeacherAiTools() {
       {active === 'reteach' ? (
         <Card>
           <CardHeader>
-            <CardTitle>Build a reteach</CardTitle>
+            <CardTitle>{t('tchToolReteach')}</CardTitle>
             <Badge variant="outline">Grade 6 Cedar</Badge>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded border border-border bg-surface p-4">
               <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
-                What the results show
+                {t('tchWhatResultsShow')}
               </p>
-              <p className="mt-1.5 text-small text-foreground">
-                Six students added numerators and denominators separately on three different
-                questions. Four of the six were on track last month.
-              </p>
+              <p className="mt-1.5 text-small text-foreground">{t('tchReteachFindings')}</p>
             </div>
 
             <div className="space-y-2">
               <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
-                Suggested ten minute reteach
+                {t('tchSuggestedReteach')}
               </p>
-              {[
-                'Open with 1/2 + 1/2, which they will all get right, and ask why the answer is not 2/4.',
-                'Use the number line manipulative from Unit 2 to show the two halves meeting at one.',
-                'Work 1/3 + 1/4 together, naming the common denominator step out loud.',
-                'Set the three practice questions from Unit 2, the foundation version.',
-              ].map((line, index) => (
+              {reteachStepKeys.map((key, index) => (
                 <div
-                  key={index}
+                  key={key}
                   className="flex items-start gap-3 rounded border border-border px-4 py-3"
                 >
                   <span className="tabular mt-0.5 flex-none text-caption font-semibold text-muted-foreground">
                     {index + 1}
                   </span>
-                  <span className="text-small text-foreground">{line}</span>
+                  <span className="text-small text-foreground">{t(key)}</span>
                 </div>
               ))}
             </div>
@@ -189,22 +187,19 @@ export function TeacherAiTools() {
             <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
               <Button variant="accent" size="sm" asChild>
                 <Link to="/teacher/planner">
-                  Add to Thursday
+                  {t('tchAddToThursday')}
                   <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
                 </Link>
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link to="/teacher/assign">Assign the practice to the six</Link>
+                <Link to="/teacher/assign">{t('tchAssignToSix')}</Link>
               </Button>
               <Button variant="ghost" size="sm">
-                Try again
+                {t('tchTryAgain')}
               </Button>
             </div>
 
-            <p className="text-caption text-muted-foreground">
-              Every step above points at content that already exists in your course. The tool
-              arranges it, it does not write new teaching material.
-            </p>
+            <p className="text-caption text-muted-foreground">{t('tchAiToolsNote')}</p>
           </CardContent>
         </Card>
       ) : null}

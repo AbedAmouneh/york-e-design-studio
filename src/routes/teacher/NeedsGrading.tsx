@@ -32,7 +32,9 @@ export function TeacherNeedsGrading() {
     <Page>
       <PageHeader
         title={t('navNeedsGrading')}
-        subtitle={`${totalWaiting} pieces of work waiting across ${queue.length} activities`}
+        subtitle={t('tchNeedsGradingSubtitle')
+          .replace('{n}', String(totalWaiting))
+          .replace('{m}', String(queue.length))}
       />
 
       {oldest ? (
@@ -40,15 +42,20 @@ export function TeacherNeedsGrading() {
           <CardContent className="flex flex-wrap items-center gap-4 p-4">
             <span className="min-w-0 flex-1">
               <span className="block text-small font-medium text-foreground">
-                Start here: {oldest.activity?.title}
+                {t('tchStartHere').replace(
+                  '{t}',
+                  (locale === 'ar' ? oldest.activity?.titleAr : oldest.activity?.title) ?? '',
+                )}
               </span>
               <span className="block text-caption text-muted-foreground">
-                {oldest.classGroup?.name} · {oldest.waiting} waiting · oldest has been{' '}
-                {oldest.oldestDays} days
+                {t('tchOldestLine')
+                  .replace('{c}', oldest.classGroup?.name ?? '')
+                  .replace('{n}', String(oldest.waiting))
+                  .replace('{d}', String(oldest.oldestDays))}
               </span>
             </span>
             <Button variant="accent" size="sm" asChild>
-              <Link to={`/teacher/grading/${oldest.assignment.id}`}>Mark now</Link>
+              <Link to={`/teacher/grading/${oldest.assignment.id}`}>{t('tchMarkNow')}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -60,7 +67,7 @@ export function TeacherNeedsGrading() {
           size="sm"
           onClick={() => setClassFilter('all')}
         >
-          All classes
+          {t('allClasses')}
         </Button>
         {teacherClasses.map((item) => (
           <Button
@@ -76,7 +83,7 @@ export function TeacherNeedsGrading() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Queue</CardTitle>
+          <CardTitle>{t('tchQueue')}</CardTitle>
           <Badge variant="outline">{queue.length}</Badge>
         </CardHeader>
         <CardContent className="space-y-1.5">
@@ -92,21 +99,21 @@ export function TeacherNeedsGrading() {
                     ? locale === 'ar'
                       ? item.activity.titleAr
                       : item.activity.title
-                    : 'Activity'}
+                    : t('colActivity')}
                 </span>
                 <span className="block truncate text-caption text-muted-foreground">
-                  {item.classGroup?.name} · due {item.assignment.dueOn}
+                  {item.classGroup?.name} · {t('tchDueOn').replace('{d}', item.assignment.dueOn)}
                 </span>
               </span>
 
               {item.activity?.kind === 'quiz' ? (
                 <Badge variant="outline" className="flex-none">
                   <Sparkles className="me-1 h-3 w-3" aria-hidden />
-                  Auto marked, needs review
+                  {t('tchAutoMarked')}
                 </Badge>
               ) : (
                 <Badge variant="outline" className="flex-none">
-                  Marked by hand
+                  {t('tchMarkedByHand')}
                 </Badge>
               )}
 
@@ -117,7 +124,7 @@ export function TeacherNeedsGrading() {
                 )}
               >
                 <Clock className="h-3.5 w-3.5" aria-hidden />
-                waiting {item.oldestDays} days
+                {t('tchWaitingDays').replace('{d}', String(item.oldestDays))}
               </span>
 
               <span className="tabular w-16 flex-none text-end text-small font-semibold text-foreground">
@@ -128,16 +135,13 @@ export function TeacherNeedsGrading() {
 
           {queue.length === 0 ? (
             <p className="py-10 text-center text-small text-muted-foreground">
-              Nothing waiting in this class. The queue is clear.
+              {t('tchQueueClearClass')}
             </p>
           ) : null}
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Quizzes are marked by the platform and appear here only so you can check the borderline
-        answers. Written work is here because it needs you.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('tchNeedsGradingNote')}</p>
     </Page>
   )
 }

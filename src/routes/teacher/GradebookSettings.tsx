@@ -27,15 +27,15 @@ import { teacherClasses } from '@/data/teacher'
 
 interface Category {
   id: string
-  name: string
+  nameKey: 'tchCatQuizzes' | 'tchCatAssignments' | 'tchCatUnitTests'
   weight: number
   dropLowest: boolean
 }
 
 const initialCategories: Category[] = [
-  { id: 'cat-quiz', name: 'Quizzes', weight: 30, dropLowest: true },
-  { id: 'cat-assign', name: 'Assignments', weight: 40, dropLowest: false },
-  { id: 'cat-exam', name: 'End of unit tests', weight: 30, dropLowest: false },
+  { id: 'cat-quiz', nameKey: 'tchCatQuizzes', weight: 30, dropLowest: true },
+  { id: 'cat-assign', nameKey: 'tchCatAssignments', weight: 40, dropLowest: false },
+  { id: 'cat-exam', nameKey: 'tchCatUnitTests', weight: 30, dropLowest: false },
 ]
 
 export function TeacherGradebookSettings() {
@@ -59,8 +59,8 @@ export function TeacherGradebookSettings() {
   return (
     <Page>
       <PageHeader
-        title="Gradebook settings"
-        subtitle="Weighting, dropped scores and how late work counts"
+        title={t('tchGradebookSettings')}
+        subtitle={t('tchGradebookSettingsSubtitle')}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/teacher/gradebook">
@@ -86,7 +86,7 @@ export function TeacherGradebookSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Weighting</CardTitle>
+          <CardTitle>{t('tchWeighting')}</CardTitle>
           <Badge variant={balanced ? 'success' : 'danger'}>{total}%</Badge>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -96,11 +96,11 @@ export function TeacherGradebookSettings() {
               className="flex flex-wrap items-center gap-4 rounded border border-border px-4 py-3"
             >
               <span className="min-w-[140px] flex-1 text-small font-medium text-foreground">
-                {category.name}
+                {t(category.nameKey)}
               </span>
 
               <label className="flex items-center gap-2">
-                <span className="text-caption text-muted-foreground">Weight</span>
+                <span className="text-caption text-muted-foreground">{t('tchWeight')}</span>
                 <Input
                   type="number"
                   value={category.weight}
@@ -115,7 +115,7 @@ export function TeacherGradebookSettings() {
               </label>
 
               <label className="flex items-center gap-2">
-                <span className="text-caption text-muted-foreground">Drop the lowest</span>
+                <span className="text-caption text-muted-foreground">{t('tchDropLowest')}</span>
                 <Switch
                   checked={category.dropLowest}
                   onCheckedChange={(checked) => update(category.id, { dropLowest: checked })}
@@ -127,8 +127,7 @@ export function TeacherGradebookSettings() {
           {!balanced ? (
             <p className="flex items-start gap-2 rounded border border-danger/30 bg-danger-tint px-4 py-3 text-small text-danger">
               <Info className="mt-0.5 h-4 w-4 flex-none" aria-hidden />
-              Weights add up to {total}%. They have to total 100% before this can be saved,
-              otherwise a student's average is not comparable with anyone else's.
+              {t('tchWeightsWarning').replace('{n}', String(total))}
             </p>
           ) : null}
         </CardContent>
@@ -136,14 +135,14 @@ export function TeacherGradebookSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Late work</CardTitle>
+          <CardTitle>{t('tchLateWork')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {(
             [
-              { key: 'none', label: 'Accept late work at full marks' },
-              { key: 'percent', label: 'Deduct 10% per day, to a floor of 50%' },
-              { key: 'zero', label: 'Score zero once the assignment closes' },
+              { key: 'none', label: t('tchLateNone') },
+              { key: 'percent', label: t('tchLatePercent') },
+              { key: 'zero', label: t('tchLateZero') },
             ] as const
           ).map((option) => (
             <button
@@ -178,15 +177,14 @@ export function TeacherGradebookSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Calculation</CardTitle>
+          <CardTitle>{t('tchCalculation')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <label className="flex items-center justify-between gap-4 rounded border border-border px-4 py-3">
             <span className="min-w-0 text-small text-foreground">
-              Count work that has not been submitted as zero
+              {t('tchCountUngraded')}
               <span className="mt-0.5 block text-caption text-muted-foreground">
-                Off means an average reflects only what a student has actually handed in, which
-                looks kinder mid term but hides a child who has stopped working.
+                {t('tchCountUngradedHint')}
               </span>
             </span>
             <Switch
@@ -200,29 +198,24 @@ export function TeacherGradebookSettings() {
 
           <div className="flex items-center justify-between gap-4 rounded border border-border bg-surface px-4 py-3">
             <span className="min-w-0 text-small text-foreground">
-              Grading scale
+              {t('tchGradingScale')}
               <span className="mt-0.5 block text-caption text-muted-foreground">
-                Percentage. Set by the school so that reports across classes mean the same thing. A
-                school admin can change it.
+                {t('tchGradingScaleHint')}
               </span>
             </span>
-            <Badge variant="outline">School setting</Badge>
+            <Badge variant="outline">{t('tchSchoolSetting')}</Badge>
           </div>
         </CardContent>
       </Card>
 
       <div className="flex items-center gap-3">
         <Button variant="accent" size="sm" disabled={!balanced} onClick={() => setSaved(true)}>
-          Save and recalculate
+          {t('tchSaveRecalculate')}
         </Button>
         {saved ? (
-          <span className="text-small text-success">
-            Saved. Every average in this class has been recalculated.
-          </span>
+          <span className="text-small text-success">{t('tchSavedRecalculated')}</span>
         ) : (
-          <span className="text-small text-muted-foreground">
-            Nothing changes until you save. Averages recalculate for this class only.
-          </span>
+          <span className="text-small text-muted-foreground">{t('tchNothingUntilSave')}</span>
         )}
       </div>
     </Page>

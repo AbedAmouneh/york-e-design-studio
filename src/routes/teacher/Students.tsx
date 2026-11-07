@@ -110,7 +110,7 @@ export function TeacherStudents() {
   }
 
   const filters: Array<{ key: StatusFilter; label: string; count: number }> = [
-    { key: 'all', label: 'All', count: counts.total },
+    { key: 'all', label: t('tchAll'), count: counts.total },
     { key: 'at-risk', label: t('atRisk'), count: counts['at-risk'] },
     { key: 'watch', label: t('watch'), count: counts.watch },
     { key: 'on-track', label: t('onTrack'), count: counts['on-track'] },
@@ -120,7 +120,9 @@ export function TeacherStudents() {
     <Page>
       <PageHeader
         title={t('navStudents')}
-        subtitle={`${counts.total} students across ${teacherClasses.length} classes`}
+        subtitle={t('tchStudentsSubtitle')
+          .replace('{n}', String(counts.total))
+          .replace('{m}', String(teacherClasses.length))}
       />
 
       <div className="flex flex-wrap items-center gap-3">
@@ -130,7 +132,7 @@ export function TeacherStudents() {
             size="sm"
             onClick={() => setClassFilter('all')}
           >
-            All classes
+            {t('allClasses')}
           </Button>
           {teacherClasses.map((item) => (
             <Button
@@ -177,28 +179,30 @@ export function TeacherStudents() {
       {selected.size > 0 ? (
         <Card className="border-accent/50">
           <CardContent className="flex flex-wrap items-center gap-3 p-3">
-            <Badge variant="accent">{selected.size} selected</Badge>
+            <Badge variant="accent">
+              {selected.size} {t('selected')}
+            </Badge>
             <Button variant="outline" size="sm" onClick={() => setSent('message')}>
               <Megaphone className="h-3.5 w-3.5" aria-hidden />
-              Message the parents
+              {t('tchMessageParents')}
             </Button>
             <Button variant="outline" size="sm" onClick={() => setSent('assign')}>
               <UserPlus className="h-3.5 w-3.5" aria-hidden />
-              Assign extra practice
+              {t('tchAssignExtraPractice')}
             </Button>
             <Button variant="outline" size="sm" onClick={() => setSent('flag')}>
-              Flag to the coordinator
+              {t('tchFlagToCoordinator')}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}>
-              Clear
+              {t('clear')}
             </Button>
             {sent ? (
               <span className="text-small text-success">
                 {sent === 'message'
-                  ? `One message drafted for ${selected.size} families.`
+                  ? t('tchDraftedForFamilies').replace('{n}', String(selected.size))
                   : sent === 'assign'
-                    ? `Extra practice queued for ${selected.size} students.`
-                    : `${selected.size} students flagged to the coordinator.`}
+                    ? t('tchPracticeQueued').replace('{n}', String(selected.size))
+                    : t('tchFlaggedToCoordinator').replace('{n}', String(selected.size))}
               </span>
             ) : null}
           </CardContent>
@@ -228,11 +232,11 @@ export function TeacherStudents() {
                 const TrendMark = trendIcon[standing.trend]
                 const label =
                   early && standing.status === 'at-risk'
-                    ? 'Needs time with you'
+                    ? t('tchNeedsTimeWithYou')
                     : early && standing.status === 'watch'
-                      ? 'Keep going'
+                      ? t('tchKeepGoing')
                       : early
-                        ? 'Going well'
+                        ? t('tchGoingWell')
                         : t(
                             standing.status === 'at-risk'
                               ? 'atRisk'
@@ -281,11 +285,7 @@ export function TeacherStudents() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Sorted by lowest average first, because the list exists to find the children who need you.
-        Selecting the at risk filter and then the header checkbox is the two click path to
-        messaging every struggling family at once.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('tchStudentsNote')}</p>
     </Page>
   )
 }

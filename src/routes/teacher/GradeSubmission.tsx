@@ -31,17 +31,17 @@ import {
  */
 
 const rubric = [
-  { id: 'r1', label: 'Method is correct', points: 8 },
-  { id: 'r2', label: 'Working is shown', points: 6 },
-  { id: 'r3', label: 'Answer and units', points: 6 },
-]
+  { id: 'r1', labelKey: 'tchRubricMethod', points: 8 },
+  { id: 'r2', labelKey: 'tchRubricWorking', points: 6 },
+  { id: 'r3', labelKey: 'tchRubricAnswerUnits', points: 6 },
+] as const
 
-const quickComments = [
-  'Good working, check your units next time.',
-  'Right method, arithmetic slipped at the last step.',
-  'Show your working so I can give method marks.',
-  'Strong improvement on last week.',
-]
+const quickCommentKeys = [
+  'tchQuickComment1',
+  'tchQuickComment2',
+  'tchQuickComment3',
+  'tchQuickComment4',
+] as const
 
 export function TeacherGradeSubmission() {
   const { assignmentId = '' } = useParams()
@@ -68,10 +68,7 @@ export function TeacherGradeSubmission() {
   if (!assignment || waiting.length === 0) {
     return (
       <Page>
-        <PageHeader
-          title="Nothing to mark here"
-          subtitle="Every submission for this activity has been marked."
-        />
+        <PageHeader title={t('tchNothingToMark')} subtitle={t('tchAllMarked')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/teacher/grading">{t('navNeedsGrading')}</Link>
         </Button>
@@ -93,28 +90,31 @@ export function TeacherGradeSubmission() {
   if (done) {
     return (
       <Page>
-        <PageHeader title="Set marked" subtitle={activity?.title} />
+        <PageHeader
+          title={t('tchSetMarked')}
+          subtitle={locale === 'ar' ? activity?.titleAr : activity?.title}
+        />
         <Card>
           <CardContent className="flex flex-col items-center gap-3 p-12 text-center">
             <span className="grid h-11 w-11 place-items-center rounded-full bg-success-tint">
               <Check className="h-5 w-5 text-success" aria-hidden />
             </span>
             <p className="text-subheading font-semibold text-foreground">
-              {marked} of {waiting.length} marked
+              {t('tchMarkedCount')
+                .replace('{n}', String(marked))
+                .replace('{m}', String(waiting.length))}
             </p>
             <p className="max-w-[52ch] text-small text-muted-foreground">
-              {releaseNow
-                ? 'Marks and feedback are visible to students and their parents now.'
-                : 'Marks are held. Nothing is visible to students until you release them.'}
+              {releaseNow ? t('tchReleasedNow') : t('tchMarksHeld')}
             </p>
             <div className="mt-2 flex items-center gap-2">
               {!releaseNow ? (
                 <Button variant="accent" size="sm" onClick={() => setReleaseNow(true)}>
-                  Release to students
+                  {t('tchReleaseToStudents')}
                 </Button>
               ) : null}
               <Button variant="outline" size="sm" asChild>
-                <Link to="/teacher/grading">Back to the queue</Link>
+                <Link to="/teacher/grading">{t('tchBackToQueue')}</Link>
               </Button>
             </div>
           </CardContent>
@@ -126,8 +126,11 @@ export function TeacherGradeSubmission() {
   return (
     <Page>
       <PageHeader
-        title={activity ? (locale === 'ar' ? activity.titleAr : activity.title) : 'Marking'}
-        subtitle={`${classGroup?.name} · out of ${activity?.points ?? 20} · ${waiting.length - index} left`}
+        title={activity ? (locale === 'ar' ? activity.titleAr : activity.title) : t('tchMarking')}
+        subtitle={t('tchMarkingSubtitle')
+          .replace('{c}', classGroup?.name ?? '')
+          .replace('{p}', String(activity?.points ?? 20))
+          .replace('{n}', String(waiting.length - index))}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/teacher/grading">
@@ -160,27 +163,26 @@ export function TeacherGradeSubmission() {
               {current.late ? (
                 <Badge variant="warning">
                   <Clock className="me-1 h-3 w-3" aria-hidden />
-                  Late
+                  {t('tchLate')}
                 </Badge>
               ) : null}
               <span className="ms-auto text-caption text-muted-foreground">
-                Submitted {current.submittedOn} · attempt {current.attempt}
+                {t('tchSubmittedAttempt')
+                  .replace('{d}', current.submittedOn ?? '')
+                  .replace('{n}', String(current.attempt))}
               </span>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="rounded border border-border bg-surface p-4">
                 <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
-                  The question
+                  {t('tchTheQuestion')}
                 </p>
-                <p className="mt-1.5 text-body text-foreground">
-                  A recipe needs 3/4 of a cup of flour. You are making the recipe one and a half
-                  times. How much flour do you need? Show your working.
-                </p>
+                <p className="mt-1.5 text-body text-foreground">{t('tchSampleQuestion')}</p>
               </div>
 
               <div className="rounded border border-border p-4">
                 <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
-                  The answer
+                  {t('tchTheAnswer')}
                 </p>
                 <p className="mt-1.5 whitespace-pre-line text-body text-foreground">
                   {'3/4 x 1 1/2\n= 3/4 x 3/2\n= 9/8\n= 1 and 1/8 cups'}
@@ -189,17 +191,14 @@ export function TeacherGradeSubmission() {
 
               <div className="flex items-start gap-2.5 rounded border border-accent/40 bg-surface p-4">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-foreground" aria-hidden />
-                <p className="text-small text-foreground">
-                  Suggested 18 out of 20. Method and working are right, the units are missing from
-                  the first two lines. You decide the mark.
-                </p>
+                <p className="text-small text-foreground">{t('tchSuggestedMark')}</p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Mark</CardTitle>
+              <CardTitle>{t('tchMarkTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -208,9 +207,9 @@ export function TeacherGradeSubmission() {
                     key={row.id}
                     className="flex items-center justify-between gap-4 rounded border border-border px-4 py-2.5"
                   >
-                    <span className="text-small text-foreground">{row.label}</span>
+                    <span className="text-small text-foreground">{t(row.labelKey)}</span>
                     <span className="tabular text-caption text-muted-foreground">
-                      out of {row.points}
+                      {t('tchOutOf').replace('{n}', String(row.points))}
                     </span>
                   </div>
                 ))}
@@ -218,7 +217,7 @@ export function TeacherGradeSubmission() {
 
               <div className="flex flex-wrap items-center gap-3">
                 <label className="flex items-center gap-2">
-                  <span className="text-small font-medium text-foreground">Score</span>
+                  <span className="text-small font-medium text-foreground">{t('colScore')}</span>
                   <Input
                     type="number"
                     min={0}
@@ -234,7 +233,7 @@ export function TeacherGradeSubmission() {
                     }
                   />
                   <span className="text-small text-muted-foreground">
-                    out of {activity?.points ?? 20}
+                    {t('tchOutOf').replace('{n}', String(activity?.points ?? 20))}
                   </span>
                 </label>
                 <Button
@@ -244,32 +243,32 @@ export function TeacherGradeSubmission() {
                     setScores((current_) => ({ ...current_, [current.id]: 18 }))
                   }
                 >
-                  Accept the suggestion
+                  {t('tchAcceptSuggestion')}
                 </Button>
               </div>
 
               <div className="space-y-2">
-                <span className="text-small font-medium text-foreground">Feedback</span>
+                <span className="text-small font-medium text-foreground">{t('tchFeedback')}</span>
                 <textarea
                   value={comment}
                   rows={3}
                   onChange={(event) =>
                     setFeedback((current_) => ({ ...current_, [current.id]: event.target.value }))
                   }
-                  placeholder="What should this student do differently next time?"
+                  placeholder={t('tchFeedbackPlaceholder')}
                   className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
                 <div className="flex flex-wrap gap-1.5">
-                  {quickComments.map((text) => (
+                  {quickCommentKeys.map((key) => (
                     <button
-                      key={text}
+                      key={key}
                       type="button"
                       onClick={() =>
-                        setFeedback((current_) => ({ ...current_, [current.id]: text }))
+                        setFeedback((current_) => ({ ...current_, [current.id]: t(key) }))
                       }
                       className="rounded-full border border-border px-3 py-1 text-caption text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
                     >
-                      {text}
+                      {t(key)}
                     </button>
                   ))}
                 </div>
@@ -279,9 +278,9 @@ export function TeacherGradeSubmission() {
                 <label className="flex items-center gap-2.5">
                   <Switch checked={releaseNow} onCheckedChange={setReleaseNow} />
                   <span className="text-small text-foreground">
-                    Release as I mark
+                    {t('tchReleaseAsIMark')}
                     <span className="block text-caption text-muted-foreground">
-                      Off means nothing is visible until the whole set is done.
+                      {t('tchReleaseAsIMarkHint')}
                     </span>
                   </span>
                 </label>
@@ -293,10 +292,10 @@ export function TeacherGradeSubmission() {
                     disabled={index === 0}
                     onClick={() => setIndex(index - 1)}
                   >
-                    Previous
+                    {t('tchPrevious')}
                   </Button>
                   <Button variant="accent" size="sm" onClick={save} disabled={score === ''}>
-                    Save and next
+                    {t('tchSaveAndNext')}
                     <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
                   </Button>
                 </div>
@@ -307,7 +306,7 @@ export function TeacherGradeSubmission() {
 
         <Card className="h-fit">
           <CardHeader>
-            <CardTitle>Still to mark</CardTitle>
+            <CardTitle>{t('tchStillToMark')}</CardTitle>
             <Badge variant="outline">{waiting.length - marked}</Badge>
           </CardHeader>
           <CardContent className="max-h-[520px] space-y-0.5 overflow-y-auto">

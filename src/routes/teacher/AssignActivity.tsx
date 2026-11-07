@@ -9,8 +9,18 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input, SearchInput } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { coursesForClass, studentsInClass, teacherClasses, fullName } from '@/data/teacher'
+
+/** Activity kinds come off the seed as slugs, so the badge needs a lookup. */
+const kindKey: Record<string, StringKey> = {
+  lesson: 'tchKindLesson',
+  'interactive-book': 'tchKindInteractiveBook',
+  quiz: 'tchKindQuiz',
+  manipulative: 'tchKindManipulative',
+  assignment: 'tchKindAssignment',
+}
 
 /**
  * Flow 7 of 8: assign an activity.
@@ -29,7 +39,7 @@ type Step = 'what' | 'who' | 'when' | 'done'
 
 export function TeacherAssignActivity() {
   const [params] = useSearchParams()
-  const { locale } = useLocale()
+  const { t, locale } = useLocale()
 
   const [step, setStep] = useState<Step>('what')
   const [classId, setClassId] = useState(params.get('class') ?? teacherClasses[1].id)
@@ -66,10 +76,10 @@ export function TeacherAssignActivity() {
   const chosen = candidates.find((item) => item.activity.id === activityId)
 
   const steps: Array<{ key: Step; label: string }> = [
-    { key: 'what', label: 'What' },
-    { key: 'who', label: 'Who' },
-    { key: 'when', label: 'When and how' },
-    { key: 'done', label: 'Done' },
+    { key: 'what', label: t('tchStepWhat') },
+    { key: 'who', label: t('tchStepWho') },
+    { key: 'when', label: t('tchStepWhenHow') },
+    { key: 'done', label: t('done') },
   ]
   const activeIndex = steps.findIndex((item) => item.key === step)
   const recipients = wholeClass ? members.length : studentIds.size
@@ -77,13 +87,13 @@ export function TeacherAssignActivity() {
   return (
     <Page>
       <PageHeader
-        title="Assign an activity"
+        title={t('tchAssignActivity')}
         subtitle={classGroup.name}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/teacher/classes/${classId}`}>
               <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              Back to the class
+              {t('tchBackToClass')}
             </Link>
           </Button>
         }
@@ -115,7 +125,7 @@ export function TeacherAssignActivity() {
       {step === 'what' ? (
         <Card>
           <CardHeader>
-            <CardTitle>Choose the activity</CardTitle>
+            <CardTitle>{t('tchChooseActivity')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
@@ -139,7 +149,7 @@ export function TeacherAssignActivity() {
                 <SearchInput
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search the course"
+                  placeholder={t('tchSearchCourse')}
                 />
               </div>
             </div>
@@ -166,14 +176,14 @@ export function TeacherAssignActivity() {
                     </span>
                   </span>
                   <Badge variant="outline" className="flex-none capitalize">
-                    {activity.kind.replace('-', ' ')}
+                    {t(kindKey[activity.kind] ?? 'tchKindLesson')}
                   </Badge>
                 </button>
               ))}
               {candidates.length === 0 ? (
                 <p className="col-span-full flex items-center gap-2 py-8 text-small text-muted-foreground">
                   <Search className="h-4 w-4" aria-hidden />
-                  Nothing matches that in this class's courses.
+                  {t('tchNoMatchInCourses')}
                 </p>
               ) : null}
             </div>
@@ -185,7 +195,7 @@ export function TeacherAssignActivity() {
                 disabled={!activityId}
                 onClick={() => setStep('who')}
               >
-                Next
+                {t('next')}
               </Button>
             </div>
           </CardContent>
@@ -195,8 +205,10 @@ export function TeacherAssignActivity() {
       {step === 'who' ? (
         <Card>
           <CardHeader>
-            <CardTitle>Who gets it</CardTitle>
-            <Badge variant="outline">{recipients} students</Badge>
+            <CardTitle>{t('tchWhoGetsIt')}</CardTitle>
+            <Badge variant="outline">
+              {t('tchNStudents').replace('{n}', String(recipients))}
+            </Badge>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-2">
@@ -210,9 +222,11 @@ export function TeacherAssignActivity() {
                     : 'border-border text-muted-foreground hover:bg-surface',
                 )}
               >
-                The whole class
+                {t('tchWholeClass')}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  All {members.length} students in {classGroup.name}
+                  {t('tchAllNStudentsIn')
+                    .replace('{n}', String(members.length))
+                    .replace('{c}', classGroup.name)}
                 </span>
               </button>
               <button
@@ -225,9 +239,9 @@ export function TeacherAssignActivity() {
                     : 'border-border text-muted-foreground hover:bg-surface',
                 )}
               >
-                Some students
+                {t('tchSomeStudents')}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  For reteaching or extension, without the rest of the class seeing it
+                  {t('tchSomeStudentsHint')}
                 </span>
               </button>
             </div>
@@ -258,7 +272,7 @@ export function TeacherAssignActivity() {
 
             <div className="flex justify-between">
               <Button variant="ghost" size="sm" onClick={() => setStep('what')}>
-                Back
+                {t('back')}
               </Button>
               <Button
                 variant="accent"
@@ -266,7 +280,7 @@ export function TeacherAssignActivity() {
                 disabled={recipients === 0}
                 onClick={() => setStep('when')}
               >
-                Next
+                {t('next')}
               </Button>
             </div>
           </CardContent>
@@ -276,12 +290,12 @@ export function TeacherAssignActivity() {
       {step === 'when' ? (
         <Card>
           <CardHeader>
-            <CardTitle>When and how it is marked</CardTitle>
+            <CardTitle>{t('tchWhenAndHowMarked')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
-                <span className="text-small font-medium text-foreground">Due</span>
+                <span className="text-small font-medium text-foreground">{t('colDue')}</span>
                 <Input
                   type="date"
                   value={dueOn}
@@ -289,7 +303,9 @@ export function TeacherAssignActivity() {
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="text-small font-medium text-foreground">Attempts allowed</span>
+                <span className="text-small font-medium text-foreground">
+                  {t('tchAttemptsAllowed')}
+                </span>
                 <Input
                   type="number"
                   min={1}
@@ -302,9 +318,9 @@ export function TeacherAssignActivity() {
 
             <label className="flex items-center justify-between gap-4 rounded border border-border px-4 py-3">
               <span className="min-w-0 text-small text-foreground">
-                This counts towards the grade
+                {t('tchCountsTowardsGrade')}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  Off makes it practice. It still appears in progress, but never in the gradebook.
+                  {t('tchCountsHint')}
                 </span>
               </span>
               <Switch checked={graded} onCheckedChange={setGraded} />
@@ -312,19 +328,19 @@ export function TeacherAssignActivity() {
 
             <div className="space-y-2">
               <span className="text-small font-medium text-foreground">
-                When students see their result
+                {t('tchWhenStudentsSee')}
               </span>
               {(
                 [
                   {
                     key: 'immediate',
-                    label: 'As soon as it is marked',
-                    hint: 'Good for self marking quizzes where the feedback is the point.',
+                    label: t('tchReleaseImmediate'),
+                    hint: t('tchReleaseImmediateHint'),
                   },
                   {
                     key: 'manual',
-                    label: 'When I release it',
-                    hint: 'Nothing is visible until you choose, so the class sees results together.',
+                    label: t('tchReleaseManual'),
+                    hint: t('tchReleaseManualHint'),
                   },
                 ] as const
               ).map((option) => (
@@ -347,9 +363,9 @@ export function TeacherAssignActivity() {
 
             <label className="flex items-center justify-between gap-4 rounded border border-border px-4 py-3">
               <span className="min-w-0 text-small text-foreground">
-                Show the worked solution after the last attempt
+                {t('tchShowSolutions')}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  Off keeps the questions usable for a retake or a different class.
+                  {t('tchShowSolutionsHint')}
                 </span>
               </span>
               <Switch checked={showSolutions} onCheckedChange={setShowSolutions} />
@@ -357,17 +373,16 @@ export function TeacherAssignActivity() {
 
             {early ? (
               <p className="rounded border border-learner-primary/30 bg-learner-surface px-4 py-3 text-small text-foreground">
-                This is a K1 to Grade 3 class. Whatever you choose here, the children see stars and
-                a completion message, never a percentage.
+                {t('tchEarlyAssignNote')}
               </p>
             ) : null}
 
             <div className="flex justify-between">
               <Button variant="ghost" size="sm" onClick={() => setStep('who')}>
-                Back
+                {t('back')}
               </Button>
               <Button variant="accent" size="sm" onClick={() => setStep('done')}>
-                Assign to {recipients} students
+                {t('tchAssignToNStudents').replace('{n}', String(recipients))}
               </Button>
             </div>
           </CardContent>
@@ -381,21 +396,29 @@ export function TeacherAssignActivity() {
               <Check className="h-5 w-5 text-success" aria-hidden />
             </span>
             <p className="text-subheading font-semibold text-foreground">
-              {chosen ? chosen.activity.title : 'Activity'} assigned
+              {t('tchAssignedTitle').replace(
+                '{t}',
+                chosen
+                  ? locale === 'ar'
+                    ? chosen.activity.titleAr
+                    : chosen.activity.title
+                  : t('colActivity'),
+              )}
             </p>
             <p className="max-w-[56ch] text-small text-muted-foreground">
-              {recipients} students in {classGroup.name}, due {dueOn}, {attempts} attempt
-              {attempts > 1 ? 's' : ''}.{' '}
-              {release === 'manual'
-                ? 'Results are held until you release them.'
-                : 'Results appear as soon as the work is marked.'}
+              {t(attempts > 1 ? 'tchAssignSummaryMany' : 'tchAssignSummaryOne')
+                .replace('{n}', String(recipients))
+                .replace('{c}', classGroup.name)
+                .replace('{d}', dueOn)
+                .replace('{a}', String(attempts))}{' '}
+              {release === 'manual' ? t('tchResultsHeld') : t('tchResultsImmediate')}
             </p>
             <div className="mt-2 flex items-center gap-2">
               <Button variant="accent" size="sm" asChild>
-                <Link to={`/teacher/classes/${classId}`}>Back to the class</Link>
+                <Link to={`/teacher/classes/${classId}`}>{t('tchBackToClass')}</Link>
               </Button>
               <Button variant="outline" size="sm" onClick={() => setStep('what')}>
-                Assign another
+                {t('tchAssignAnother')}
               </Button>
             </div>
           </CardContent>

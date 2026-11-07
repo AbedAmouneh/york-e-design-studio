@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { studentsInClass, fullName } from '@/data/teacher'
 
@@ -28,28 +29,29 @@ import { studentsInClass, fullName } from '@/data/teacher'
 
 const slides = [
   {
-    title: 'Adding fractions',
-    body: 'When the denominators are different, you cannot add the numerators yet.',
+    titleKey: 'tchSlide1Title',
+    bodyKey: 'tchSlide1Body',
     kind: 'teach' as const,
   },
   {
-    title: 'Find the common denominator',
-    body: '1/3 + 1/4\n\nThe lowest common multiple of 3 and 4 is 12.',
+    titleKey: 'tchSlide2Title',
+    bodyKey: 'tchSlide2Body',
     kind: 'teach' as const,
   },
   {
-    title: 'Your turn',
-    body: '1/2 + 1/6 = ?',
+    titleKey: 'tchSlide3Title',
+    bodyKey: 'tchSlide3Body',
     kind: 'ask' as const,
   },
   {
-    title: 'Together',
-    body: '1/2 = 3/6\n\n3/6 + 1/6 = 4/6 = 2/3',
+    titleKey: 'tchSlide4Title',
+    bodyKey: 'tchSlide4Body',
     kind: 'teach' as const,
   },
-]
+] as const
 
 export function TeacherPresent() {
+  const { t } = useLocale()
   const [index, setIndex] = useState(0)
   const slide = slides[index]
   const members = studentsInClass('cls-3').slice(0, 14)
@@ -62,7 +64,9 @@ export function TeacherPresent() {
       <header className="flex flex-none items-center gap-3 border-b border-background/15 px-5 py-3">
         <Badge variant="accent">Grade 6 Cedar</Badge>
         <span className="text-small text-background/70">
-          Mathematics · Unit 2 · slide {index + 1} of {slides.length}
+          {t('tchPresentMeta')
+            .replace('{n}', String(index + 1))
+            .replace('{m}', String(slides.length))}
         </span>
         <span className="ms-auto flex items-center gap-2 text-small text-background/70">
           <Timer className="h-4 w-4" aria-hidden />
@@ -76,20 +80,20 @@ export function TeacherPresent() {
         >
           <Link to="/teacher">
             <X className="h-4 w-4" aria-hidden />
-            Exit
+            {t('tchExit')}
           </Link>
         </Button>
       </header>
 
       <main className="flex min-h-0 flex-1 flex-col items-center justify-center px-12 text-center">
         <p className="text-caption uppercase tracking-[0.2em] text-accent">
-          {slide.kind === 'ask' ? 'Question' : 'Explanation'}
+          {slide.kind === 'ask' ? t('tchQuestion') : t('tchExplanation')}
         </p>
         <h1 className="mt-4 text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-tight">
-          {slide.title}
+          {t(slide.titleKey)}
         </h1>
         <p className="mt-6 max-w-[24ch] whitespace-pre-line text-[clamp(1.25rem,2.5vw,2rem)] leading-snug text-background/85">
-          {slide.body}
+          {t(slide.bodyKey)}
         </p>
 
         {slide.kind === 'ask' ? (
@@ -97,10 +101,12 @@ export function TeacherPresent() {
             <div className="flex items-center justify-between gap-3">
               <span className="flex items-center gap-2 text-small text-background/70">
                 <Users className="h-4 w-4" aria-hidden />
-                {answered.length} of {members.length} have answered
+                {t('tchHaveAnswered')
+                  .replace('{n}', String(answered.length))
+                  .replace('{m}', String(members.length))}
               </span>
               <Button variant="accent" size="sm">
-                Show the answers
+                {t('tchShowAnswers')}
               </Button>
             </div>
             <div className="mt-4 flex flex-wrap justify-center gap-1.5">
@@ -136,7 +142,7 @@ export function TeacherPresent() {
             onClick={() => setIndex(index - 1)}
           >
             <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
-            Back
+            {t('back')}
           </Button>
           <Button
             variant="ghost"
@@ -145,7 +151,7 @@ export function TeacherPresent() {
             disabled={index === slides.length - 1}
             onClick={() => setIndex(index + 1)}
           >
-            Next
+            {t('next')}
             <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
           </Button>
         </div>
@@ -156,7 +162,7 @@ export function TeacherPresent() {
               key={position}
               type="button"
               onClick={() => setIndex(position)}
-              aria-label={`Slide ${position + 1}`}
+              aria-label={t('tchSlideAria').replace('{n}', String(position + 1))}
               className={cn(
                 'h-1.5 rounded-full transition-all',
                 position === index ? 'w-6 bg-accent' : 'w-1.5 bg-background/30',
@@ -168,11 +174,11 @@ export function TeacherPresent() {
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="text-background hover:bg-background/10">
             <PenLine className="h-4 w-4" aria-hidden />
-            Annotate
+            {t('tchAnnotate')}
           </Button>
           <Button variant="ghost" size="sm" className="text-background hover:bg-background/10">
             <Minimize2 className="h-4 w-4" aria-hidden />
-            Windowed
+            {t('tchWindowed')}
           </Button>
         </div>
       </footer>

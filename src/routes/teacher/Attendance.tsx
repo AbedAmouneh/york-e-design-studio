@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn, initials } from '@/lib/utils'
 import { attendanceForClass, fullName, studentsInClass, teacherClasses } from '@/data/teacher'
 import type { AttendanceRecord } from '@/types'
@@ -24,11 +25,23 @@ import type { AttendanceRecord } from '@/types'
 
 type State = AttendanceRecord['state']
 
-const states: Array<{ key: State; label: string; tone: string }> = [
-  { key: 'present', label: 'Present', tone: 'bg-success-tint text-success border-success/40' },
-  { key: 'late', label: 'Late', tone: 'bg-warning-tint text-warning border-warning/40' },
-  { key: 'absent', label: 'Absent', tone: 'bg-danger-tint text-danger border-danger/40' },
-  { key: 'excused', label: 'Excused', tone: 'bg-muted text-muted-foreground border-border-strong' },
+const states: Array<{ key: State; labelKey: StringKey; tone: string }> = [
+  {
+    key: 'present',
+    labelKey: 'tchStatePresent',
+    tone: 'bg-success-tint text-success border-success/40',
+  },
+  { key: 'late', labelKey: 'tchStateLate', tone: 'bg-warning-tint text-warning border-warning/40' },
+  {
+    key: 'absent',
+    labelKey: 'tchStateAbsent',
+    tone: 'bg-danger-tint text-danger border-danger/40',
+  },
+  {
+    key: 'excused',
+    labelKey: 'tchStateExcused',
+    tone: 'bg-muted text-muted-foreground border-border-strong',
+  },
 ]
 
 export function TeacherAttendance() {
@@ -61,13 +74,13 @@ export function TeacherAttendance() {
     <Page>
       <PageHeader
         title={t('navAttendance')}
-        subtitle="Wednesday, 10 February · Period 1"
+        subtitle={t('tchAttendanceSubtitle')}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label="Previous day">
+            <Button variant="ghost" size="icon" aria-label={t('tchPreviousDay')}>
               <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Next day">
+            <Button variant="ghost" size="icon" aria-label={t('tchNextDay')}>
               <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
             <Button
@@ -75,7 +88,7 @@ export function TeacherAttendance() {
               size="sm"
               onClick={() => setSaved(true)}
             >
-              Save the register
+              {t('tchSaveRegister')}
             </Button>
           </div>
         }
@@ -99,16 +112,22 @@ export function TeacherAttendance() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Present" value={String(counts.present)} />
-        <StatCard label="Late" value={String(counts.late)} />
-        <StatCard label="Absent" value={String(counts.absent)} emphasis={counts.absent > 0} />
-        <StatCard label="Excused" value={String(counts.excused)} />
+        <StatCard label={t('tchStatePresent')} value={String(counts.present)} />
+        <StatCard label={t('tchStateLate')} value={String(counts.late)} />
+        <StatCard
+          label={t('tchStateAbsent')}
+          value={String(counts.absent)}
+          emphasis={counts.absent > 0}
+        />
+        <StatCard label={t('tchStateExcused')} value={String(counts.excused)} />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Register</CardTitle>
-          <Badge variant="outline">{members.length} students</Badge>
+          <CardTitle>{t('tchRegister')}</CardTitle>
+          <Badge variant="outline">
+            {t('tchNStudents').replace('{n}', String(members.length))}
+          </Badge>
           <Button
             variant="ghost"
             size="sm"
@@ -118,7 +137,7 @@ export function TeacherAttendance() {
               setSaved(false)
             }}
           >
-            Reset to all present
+            {t('tchResetAllPresent')}
           </Button>
         </CardHeader>
         <CardContent className="space-y-1.5">
@@ -139,7 +158,7 @@ export function TeacherAttendance() {
 
                 {absences >= 2 ? (
                   <Badge variant="warning" className="flex-none">
-                    {absences} absences this term
+                    {t('tchNAbsencesTerm').replace('{n}', String(absences))}
                   </Badge>
                 ) : null}
 
@@ -156,7 +175,7 @@ export function TeacherAttendance() {
                           : 'border-border text-muted-foreground hover:bg-surface',
                       )}
                     >
-                      {option.label}
+                      {t(option.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -169,13 +188,10 @@ export function TeacherAttendance() {
       {saved ? (
         <p className="flex items-center gap-2 text-small text-success">
           <Check className="h-4 w-4" aria-hidden />
-          Register saved. Parents of absent students are notified automatically.
+          {t('tchRegisterSaved')}
         </p>
       ) : (
-        <p className="text-caption text-muted-foreground">
-          Everyone starts present, so a full class is one tap. Parents of absent students are
-          notified when you save.
-        </p>
+        <p className="text-caption text-muted-foreground">{t('tchAttendanceNote')}</p>
       )}
     </Page>
   )

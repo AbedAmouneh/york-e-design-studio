@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { mastery, skills } from '@/data/seed'
 import { fullName, standingById, studentById } from '@/data/teacher'
@@ -22,10 +23,10 @@ import { fullName, standingById, studentById } from '@/data/teacher'
 
 interface QuestionRecord {
   id: string
-  stem: string
+  stemKey: StringKey
   chosen: string
   correct: string
-  misconception: string
+  misconceptionKey: StringKey | null
   attempts: number
 }
 
@@ -33,36 +34,36 @@ const questionsBySkill: Record<string, QuestionRecord[]> = {
   'skl-1': [
     {
       id: 'q1',
-      stem: '1/3 + 1/4 =',
+      stemKey: 'tchQAddThirdQuarter',
       chosen: '2/7',
       correct: '7/12',
-      misconception: 'Added the numerators and denominators separately',
+      misconceptionKey: 'tchMiscAddedSeparately',
       attempts: 2,
     },
     {
       id: 'q2',
-      stem: '2/5 + 1/5 =',
+      stemKey: 'tchQAddTwoFifths',
       chosen: '3/5',
       correct: '3/5',
-      misconception: '',
+      misconceptionKey: null,
       attempts: 1,
     },
     {
       id: 'q3',
-      stem: '1/2 + 1/6 =',
+      stemKey: 'tchQAddHalfSixth',
       chosen: '2/8',
       correct: '2/3',
-      misconception: 'Added the numerators and denominators separately',
+      misconceptionKey: 'tchMiscAddedSeparately',
       attempts: 3,
     },
   ],
   'skl-2': [
     {
       id: 'q4',
-      stem: 'The lowest common denominator of 4 and 6 is',
+      stemKey: 'tchQLcd46',
       chosen: '24',
       correct: '12',
-      misconception: 'Multiplied the denominators instead of finding the lowest common multiple',
+      misconceptionKey: 'tchMiscMultipliedDenoms',
       attempts: 2,
     },
   ],
@@ -86,7 +87,7 @@ export function TeacherSkillDrilldown() {
   if (!student || !standing) {
     return (
       <Page>
-        <PageHeader title="Student not found" subtitle="They may have moved class." />
+        <PageHeader title={t('tchStudentNotFound')} subtitle={t('tchMayHaveMovedClass')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/teacher/students">{t('navStudents')}</Link>
         </Button>
@@ -95,18 +96,18 @@ export function TeacherSkillDrilldown() {
   }
 
   const wrong = questions.filter((question) => question.chosen !== question.correct)
-  const repeated = wrong[0]?.misconception
+  const repeatedKey = wrong[0]?.misconceptionKey
 
   return (
     <Page>
       <PageHeader
-        title={`${fullName(student)} · skills`}
-        subtitle="Which skill, which question, and what they did instead"
+        title={t('tchSkillsSuffix').replace('{n}', fullName(student))}
+        subtitle={t('tchSkillDrilldownSubtitle')}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/teacher/students/${student.id}`}>
               <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              Back to the student
+              {t('tchBackToStudent')}
             </Link>
           </Button>
         }
@@ -130,7 +131,7 @@ export function TeacherSkillDrilldown() {
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="min-w-0 truncate text-small text-foreground">
-                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : 'Skill'}
+                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('colSkill')}
                   </span>
                   <span
                     className={cn(
@@ -164,20 +165,22 @@ export function TeacherSkillDrilldown() {
         </Card>
 
         <div className="space-y-4">
-          {repeated ? (
+          {repeatedKey ? (
             <Card className="border-warning/40">
               <CardContent className="flex flex-wrap items-start gap-3 p-4">
                 <Sparkles className="mt-0.5 h-4 w-4 flex-none text-warning" aria-hidden />
                 <span className="min-w-0 flex-1">
                   <span className="block text-small font-medium text-foreground">
                     {wrong.length > 1
-                      ? `The same mistake, ${wrong.length} times`
-                      : 'One mistake worth a conversation'}
+                      ? t('tchSameMistakeTimes').replace('{n}', String(wrong.length))
+                      : t('tchOneMistakeWorth')}
                   </span>
-                  <span className="block text-caption text-muted-foreground">{repeated}</span>
+                  <span className="block text-caption text-muted-foreground">
+                    {t(repeatedKey)}
+                  </span>
                 </span>
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/teacher/assign">Assign the reteach</Link>
+                  <Link to="/teacher/assign">{t('tchAssignReteach')}</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -190,10 +193,13 @@ export function TeacherSkillDrilldown() {
                   ? locale === 'ar'
                     ? activeSkill.nameAr
                     : activeSkill.name
-                  : 'Questions'}
+                  : t('tchQuestions')}
               </CardTitle>
               <Badge variant="outline">
-                {questions.length} {questions.length === 1 ? 'question' : 'questions'}
+                {t(questions.length === 1 ? 'tchOneQuestion' : 'tchNQuestions').replace(
+                  '{n}',
+                  String(questions.length),
+                )}
               </Badge>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -209,16 +215,16 @@ export function TeacherSkillDrilldown() {
                   >
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <span className="text-small font-medium text-foreground">
-                        {question.stem}
+                        {t(question.stemKey)}
                       </span>
                       <Badge variant={correct ? 'success' : 'danger'}>
-                        {correct ? 'Correct' : 'Wrong'}
+                        {correct ? t('tchCorrect') : t('tchWrong')}
                       </Badge>
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-6 text-caption">
                       <span className="text-muted-foreground">
-                        They answered{' '}
+                        {t('tchTheyAnswered')}{' '}
                         <span
                           className={cn(
                             'font-semibold',
@@ -230,18 +236,21 @@ export function TeacherSkillDrilldown() {
                       </span>
                       {!correct ? (
                         <span className="text-muted-foreground">
-                          Correct answer{' '}
+                          {t('tchCorrectAnswer')}{' '}
                           <span className="font-semibold text-foreground">{question.correct}</span>
                         </span>
                       ) : null}
                       <span className="text-muted-foreground">
-                        {question.attempts} attempt{question.attempts > 1 ? 's' : ''}
+                        {t(question.attempts > 1 ? 'tchNAttempts' : 'tchOneAttempt').replace(
+                          '{n}',
+                          String(question.attempts),
+                        )}
                       </span>
                     </div>
 
-                    {question.misconception ? (
+                    {question.misconceptionKey ? (
                       <p className="mt-3 rounded bg-background px-3 py-2 text-caption text-muted-foreground">
-                        Tagged misconception: {question.misconception}
+                        {t('tchTaggedMisconception').replace('{n}', t(question.misconceptionKey))}
                       </p>
                     ) : null}
                   </div>
@@ -250,11 +259,7 @@ export function TeacherSkillDrilldown() {
             </CardContent>
           </Card>
 
-          <p className="text-caption text-muted-foreground">
-            The misconception tag comes from the question metadata set in the authoring platform.
-            This screen is only as good as that tagging, which is why the metadata work blocks the
-            authoring sprint rather than the other way round.
-          </p>
+          <p className="text-caption text-muted-foreground">{t('tchSkillDrilldownNote')}</p>
         </div>
       </div>
     </Page>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { teacherClasses } from '@/data/teacher'
 
@@ -28,30 +29,38 @@ const classTone: Record<string, string> = {
 interface Event {
   day: number
   classId: string
-  label: string
+  labelKey: StringKey
   kind: 'lesson' | 'due' | 'assessment'
 }
 
 const events: Event[] = [
-  { day: 2, classId: 'cls-3', label: 'Equivalent fractions', kind: 'lesson' },
-  { day: 2, classId: 'cls-1', label: 'Counting in tens', kind: 'lesson' },
-  { day: 3, classId: 'cls-4', label: 'Common denominators', kind: 'lesson' },
-  { day: 4, classId: 'cls-3', label: 'Check 2.3 due', kind: 'due' },
-  { day: 4, classId: 'cls-5', label: 'Ratio, introduction', kind: 'lesson' },
-  { day: 5, classId: 'cls-3', label: 'Apply 1.5 due', kind: 'due' },
-  { day: 5, classId: 'cls-4', label: 'Apply 1.5 due', kind: 'due' },
-  { day: 9, classId: 'cls-1', label: 'Number line to 100', kind: 'lesson' },
-  { day: 10, classId: 'cls-3', label: 'Adding fractions practice', kind: 'lesson' },
-  { day: 10, classId: 'cls-5', label: 'Ratio practice', kind: 'lesson' },
-  { day: 12, classId: 'cls-3', label: 'End of unit check', kind: 'assessment' },
-  { day: 12, classId: 'cls-4', label: 'End of unit check', kind: 'assessment' },
-  { day: 17, classId: 'cls-5', label: 'Ratio assessment', kind: 'assessment' },
-  { day: 19, classId: 'cls-4', label: 'Practise 2.4 due', kind: 'due' },
-  { day: 19, classId: 'cls-5', label: 'Practise 2.4 due', kind: 'due' },
-  { day: 24, classId: 'cls-1', label: 'Shape and space', kind: 'lesson' },
+  { day: 2, classId: 'cls-3', labelKey: 'tchPlanEquivalentFractions', kind: 'lesson' },
+  { day: 2, classId: 'cls-1', labelKey: 'tchPlanCountingInTens', kind: 'lesson' },
+  { day: 3, classId: 'cls-4', labelKey: 'tchPlanCommonDenominators', kind: 'lesson' },
+  { day: 4, classId: 'cls-3', labelKey: 'tchEvtCheck23Due', kind: 'due' },
+  { day: 4, classId: 'cls-5', labelKey: 'tchPlanRatioIntro', kind: 'lesson' },
+  { day: 5, classId: 'cls-3', labelKey: 'tchEvtApply15Due', kind: 'due' },
+  { day: 5, classId: 'cls-4', labelKey: 'tchEvtApply15Due', kind: 'due' },
+  { day: 9, classId: 'cls-1', labelKey: 'tchPlanNumberLine100', kind: 'lesson' },
+  { day: 10, classId: 'cls-3', labelKey: 'tchEvtAddingFractions', kind: 'lesson' },
+  { day: 10, classId: 'cls-5', labelKey: 'tchEvtRatioPractice', kind: 'lesson' },
+  { day: 12, classId: 'cls-3', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
+  { day: 12, classId: 'cls-4', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
+  { day: 17, classId: 'cls-5', labelKey: 'tchEvtRatioAssessment', kind: 'assessment' },
+  { day: 19, classId: 'cls-4', labelKey: 'tchEvtPractise24Due', kind: 'due' },
+  { day: 19, classId: 'cls-5', labelKey: 'tchEvtPractise24Due', kind: 'due' },
+  { day: 24, classId: 'cls-1', labelKey: 'tchEvtShapeAndSpace', kind: 'lesson' },
 ]
 
-const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const weekdayKeys = [
+  'tchMonShort',
+  'tchTueShort',
+  'tchWedShort',
+  'tchThuShort',
+  'tchFriShort',
+  'tchSatShort',
+  'tchSunShort',
+] as const
 
 export function TeacherCalendar() {
   const { t } = useLocale()
@@ -73,13 +82,13 @@ export function TeacherCalendar() {
     <Page>
       <PageHeader
         title={t('navCalendar')}
-        subtitle="February 2027 · Term 2"
+        subtitle={t('tchCalendarSubtitle')}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label="Previous month">
+            <Button variant="ghost" size="icon" aria-label={t('tchPreviousMonth')}>
               <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Next month">
+            <Button variant="ghost" size="icon" aria-label={t('tchNextMonth')}>
               <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
           </div>
@@ -88,7 +97,7 @@ export function TeacherCalendar() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Show</CardTitle>
+          <CardTitle>{t('tchShow')}</CardTitle>
           <Button
             variant="ghost"
             size="sm"
@@ -100,7 +109,7 @@ export function TeacherCalendar() {
               )
             }
           >
-            {active.size === teacherClasses.length ? 'Clear all' : 'Select all'}
+            {active.size === teacherClasses.length ? t('tchClearAll') : t('tchSelectAll')}
           </Button>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
@@ -133,12 +142,12 @@ export function TeacherCalendar() {
       <Card>
         <CardContent className="p-3">
           <div className="grid grid-cols-7 gap-1.5">
-            {weekdays.map((day) => (
+            {weekdayKeys.map((key) => (
               <div
-                key={day}
+                key={key}
                 className="px-2 py-1.5 text-caption font-medium text-muted-foreground"
               >
-                {day}
+                {t(key)}
               </div>
             ))}
 
@@ -178,10 +187,10 @@ export function TeacherCalendar() {
                               ? classTone[event.classId]
                               : 'border-border text-muted-foreground opacity-35',
                           )}
-                          title={event.label}
+                          title={t(event.labelKey)}
                         >
-                          {event.kind === 'due' ? 'Due: ' : ''}
-                          {event.label}
+                          {event.kind === 'due' ? t('tchDuePrefix') : ''}
+                          {t(event.labelKey)}
                         </div>
                       )
                     })}
@@ -194,11 +203,8 @@ export function TeacherCalendar() {
       </Card>
 
       <div className="flex flex-wrap items-center gap-4 text-caption text-muted-foreground">
-        <Badge variant="outline">Dimmed</Badge>
-        <span>
-          Unselected classes stay on the grid rather than vanishing, so you can still see the day is
-          full before you agree to cover someone.
-        </span>
+        <Badge variant="outline">{t('tchDimmed')}</Badge>
+        <span>{t('tchCalendarNote')}</span>
       </div>
     </Page>
   )

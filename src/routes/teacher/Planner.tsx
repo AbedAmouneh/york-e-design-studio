@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { teacherClasses } from '@/data/teacher'
 
@@ -22,33 +23,43 @@ import { teacherClasses } from '@/data/teacher'
  * answer it from memory.
  */
 
-const days = [
-  { key: 'mon', label: 'Monday', date: '8 Feb' },
-  { key: 'tue', label: 'Tuesday', date: '9 Feb' },
-  { key: 'wed', label: 'Wednesday', date: '10 Feb', today: true },
-  { key: 'thu', label: 'Thursday', date: '11 Feb' },
-  { key: 'fri', label: 'Friday', date: '12 Feb' },
+/*
+ * Typed explicitly rather than inferred. With `as const` alone, `today` only
+ * exists on the one member that sets it, so reading it on any other day is a
+ * type error.
+ */
+const days: Array<{
+  key: string
+  labelKey: StringKey
+  dateKey: StringKey
+  today?: boolean
+}> = [
+  { key: 'mon', labelKey: 'tchMonday', dateKey: 'tchFeb8' },
+  { key: 'tue', labelKey: 'tchTuesday', dateKey: 'tchFeb9' },
+  { key: 'wed', labelKey: 'tchWednesday', dateKey: 'tchFeb10', today: true },
+  { key: 'thu', labelKey: 'tchThursday', dateKey: 'tchFeb11' },
+  { key: 'fri', labelKey: 'tchFriday', dateKey: 'tchFeb12' },
 ]
 
 interface PlanCard {
   day: string
   classId: string
-  title: string
+  titleKey: StringKey
   kind: 'lesson' | 'practice' | 'assessment'
   standard: string
 }
 
 const plan: PlanCard[] = [
-  { day: 'mon', classId: 'cls-3', title: 'Equivalent fractions', kind: 'lesson', standard: '6.NF.1' },
-  { day: 'mon', classId: 'cls-1', title: 'Counting in tens', kind: 'lesson', standard: '2.NBT.2' },
-  { day: 'tue', classId: 'cls-3', title: 'Common denominators', kind: 'lesson', standard: '6.NF.1' },
-  { day: 'tue', classId: 'cls-4', title: 'Common denominators', kind: 'lesson', standard: '6.NF.1' },
-  { day: 'wed', classId: 'cls-3', title: 'Adding fractions, practice', kind: 'practice', standard: '6.NF.2' },
-  { day: 'wed', classId: 'cls-1', title: 'Number line to 100', kind: 'practice', standard: '2.NBT.2' },
-  { day: 'wed', classId: 'cls-5', title: 'Ratio, introduction', kind: 'lesson', standard: '7.RP.1' },
-  { day: 'thu', classId: 'cls-4', title: 'Adding fractions, practice', kind: 'practice', standard: '6.NF.2' },
-  { day: 'fri', classId: 'cls-3', title: 'End of unit check', kind: 'assessment', standard: '6.NF.2' },
-  { day: 'fri', classId: 'cls-4', title: 'End of unit check', kind: 'assessment', standard: '6.NF.2' },
+  { day: 'mon', classId: 'cls-3', titleKey: 'tchPlanEquivalentFractions', kind: 'lesson', standard: '6.NF.1' },
+  { day: 'mon', classId: 'cls-1', titleKey: 'tchPlanCountingInTens', kind: 'lesson', standard: '2.NBT.2' },
+  { day: 'tue', classId: 'cls-3', titleKey: 'tchPlanCommonDenominators', kind: 'lesson', standard: '6.NF.1' },
+  { day: 'tue', classId: 'cls-4', titleKey: 'tchPlanCommonDenominators', kind: 'lesson', standard: '6.NF.1' },
+  { day: 'wed', classId: 'cls-3', titleKey: 'tchPlanAddingFractions', kind: 'practice', standard: '6.NF.2' },
+  { day: 'wed', classId: 'cls-1', titleKey: 'tchPlanNumberLine100', kind: 'practice', standard: '2.NBT.2' },
+  { day: 'wed', classId: 'cls-5', titleKey: 'tchPlanRatioIntro', kind: 'lesson', standard: '7.RP.1' },
+  { day: 'thu', classId: 'cls-4', titleKey: 'tchPlanAddingFractions', kind: 'practice', standard: '6.NF.2' },
+  { day: 'fri', classId: 'cls-3', titleKey: 'tchPlanEndOfUnitCheck', kind: 'assessment', standard: '6.NF.2' },
+  { day: 'fri', classId: 'cls-4', titleKey: 'tchPlanEndOfUnitCheck', kind: 'assessment', standard: '6.NF.2' },
 ]
 
 const kindTone = {
@@ -70,18 +81,18 @@ export function TeacherPlanner() {
     <Page>
       <PageHeader
         title={t('navPlanner')}
-        subtitle="Week 5 · 8 to 12 February · Term 2"
+        subtitle={t('tchPlannerSubtitle')}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label="Previous week">
+            <Button variant="ghost" size="icon" aria-label={t('tchPreviousWeek')}>
               <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Next week">
+            <Button variant="ghost" size="icon" aria-label={t('tchNextWeek')}>
               <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
             <Button variant="accent" size="sm">
               <Plus className="h-3.5 w-3.5" aria-hidden />
-              Add to the week
+              {t('tchAddToWeek')}
             </Button>
           </div>
         }
@@ -89,11 +100,9 @@ export function TeacherPlanner() {
 
       <Card className="border-accent/40">
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
-          <Badge variant="accent">Unit plan</Badge>
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            Grade 6, Unit 2: Fractions. Set by the coordinator, runs 25 January to 19 February.
-          </span>
-          <span className="text-caption text-muted-foreground">Week 3 of 4</span>
+          <Badge variant="accent">{t('tchUnitPlan')}</Badge>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('tchUnitPlanBand')}</span>
+          <span className="text-caption text-muted-foreground">{t('tchWeek3Of4')}</span>
         </CardContent>
       </Card>
 
@@ -103,7 +112,7 @@ export function TeacherPlanner() {
           size="sm"
           onClick={() => setClassFilter('all')}
         >
-          All classes
+          {t('allClasses')}
         </Button>
         {teacherClasses.map((item) => (
           <Button
@@ -128,14 +137,14 @@ export function TeacherPlanner() {
                   day.today ? 'bg-foreground text-background' : 'bg-surface',
                 )}
               >
-                <span className="text-small font-medium">{day.label}</span>
+                <span className="text-small font-medium">{t(day.labelKey)}</span>
                 <span
                   className={cn(
                     'text-caption',
                     day.today ? 'text-background/70' : 'text-muted-foreground',
                   )}
                 >
-                  {day.date}
+                  {t(day.dateKey)}
                 </span>
               </div>
 
@@ -148,13 +157,13 @@ export function TeacherPlanner() {
                       className={cn('rounded border p-3', kindTone[card.kind])}
                     >
                       <p className="text-small font-medium leading-tight text-foreground">
-                        {card.title}
+                        {t(card.titleKey)}
                       </p>
                       <p className="mt-1 text-caption text-muted-foreground">{classGroup?.name}</p>
                       <div className="mt-2 flex items-center gap-1.5">
                         <Badge variant="outline">{card.standard}</Badge>
                         {card.kind === 'assessment' ? (
-                          <Badge variant="accent">Assessed</Badge>
+                          <Badge variant="accent">{t('tchAssessed')}</Badge>
                         ) : null}
                       </div>
                     </div>
@@ -166,7 +175,7 @@ export function TeacherPlanner() {
                   className="flex w-full items-center justify-center gap-1.5 rounded border border-dashed border-border py-2.5 text-caption text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"
                 >
                   <Plus className="h-3.5 w-3.5" aria-hidden />
-                  Add
+                  {t('tchAdd')}
                 </button>
               </div>
             </div>
@@ -177,7 +186,7 @@ export function TeacherPlanner() {
       <div className="grid gap-4 xl:grid-cols-[1fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Standards covered this week</CardTitle>
+            <CardTitle>{t('tchStandardsCovered')}</CardTitle>
             <Badge variant="outline">{coveredStandards.length}</Badge>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-1.5">
@@ -186,7 +195,7 @@ export function TeacherPlanner() {
                 {standard}
               </Badge>
             ))}
-            <Badge variant="outline">6.NF.3 not yet covered</Badge>
+            <Badge variant="outline">{t('tchNotYetCovered').replace('{n}', '6.NF.3')}</Badge>
           </CardContent>
         </Card>
 
@@ -194,11 +203,10 @@ export function TeacherPlanner() {
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
             <Sparkles className="h-4 w-4 flex-none text-foreground" aria-hidden />
             <span className="min-w-0 flex-1 text-small text-foreground">
-              Grade 6 Maple is one lesson behind Cedar on the same unit. Thursday has room to catch
-              up before the end of unit check.
+              {t('tchPlannerAiHint')}
             </span>
             <Button variant="outline" size="sm" asChild>
-              <Link to="/teacher/ai">Build the lesson</Link>
+              <Link to="/teacher/ai">{t('tchBuildTheLesson')}</Link>
             </Button>
           </CardContent>
         </Card>

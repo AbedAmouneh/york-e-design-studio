@@ -96,23 +96,25 @@ export function TeacherGradebook() {
   }, [classId, query, status])
 
   const filters: Array<{ key: StatusFilter; label: string }> = [
-    { key: 'all', label: 'All' },
-    { key: 'on-track', label: early ? 'Going well' : t('onTrack') },
-    { key: 'watch', label: early ? 'Keep going' : t('watch') },
-    { key: 'at-risk', label: early ? 'Needs time' : t('atRisk') },
+    { key: 'all', label: t('tchAll') },
+    { key: 'on-track', label: early ? t('tchGoingWell') : t('onTrack') },
+    { key: 'watch', label: early ? t('tchKeepGoing') : t('watch') },
+    { key: 'at-risk', label: early ? t('tchNeedsTime') : t('atRisk') },
   ]
 
   return (
     <Page>
       <PageHeader
         title={t('navGradebook')}
-        subtitle={`${classGroup.name} · Term 2 · ${columns.length} graded activities`}
+        subtitle={t('tchGradebookSubtitle')
+          .replace('{c}', classGroup.name)
+          .replace('{n}', String(columns.length))}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
               <Link to="/teacher/gradebook/audit">
                 <History className="h-3.5 w-3.5" aria-hidden />
-                Changes
+                {t('tchChanges')}
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
@@ -167,7 +169,9 @@ export function TeacherGradebook() {
             </div>
 
             <span className="ms-auto text-caption text-muted-foreground">
-              {rows.length} of {classGroup.studentIds.length} students
+              {t('tchRowsOfStudents')
+                .replace('{n}', String(rows.length))
+                .replace('{m}', String(classGroup.studentIds.length))}
             </span>
           </div>
 
@@ -195,7 +199,7 @@ export function TeacherGradebook() {
                             : '—'}
                         </span>
                         <span className="text-caption font-normal text-muted-foreground">
-                          out of {column.activity?.points ?? 20}
+                          {t('tchOutOf').replace('{n}', String(column.activity?.points ?? 20))}
                         </span>
                         {/* Per assignment health, so a bad column reads as a bad question. */}
                         <span
@@ -206,7 +210,7 @@ export function TeacherGradebook() {
                             column.health === 'at-risk' && 'bg-danger-tint text-danger',
                           )}
                         >
-                          {column.average}% avg
+                          {t('tchPercentAvgShort').replace('{n}', String(column.average))}
                         </span>
                       </span>
                     </th>
@@ -267,17 +271,17 @@ export function TeacherGradebook() {
       <div className="flex flex-wrap items-center gap-4 text-caption text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-warning" aria-hidden />
-          Waiting to be marked
+          {t('tchWaitingToMark')}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-muted-foreground" aria-hidden />
-          Not started
+          {t('tchNotStarted')}
         </span>
         <span className="flex items-center gap-1.5">
-          <Badge variant="outline">Held</Badge>
-          Marked but not released to the student
+          <Badge variant="outline">{t('tchHeld')}</Badge>
+          {t('tchMarkedNotReleased')}
         </span>
-        <span>L = submitted late</span>
+        <span>{t('tchLateKey')}</span>
       </div>
     </Page>
   )
@@ -296,13 +300,15 @@ function GradeCell({
   late: boolean
   released: boolean
 }) {
+  const { t } = useLocale()
+
   if (state === 'needs-grading') {
     return (
       <Link
         to={`/teacher/grading/${assignmentId}`}
         className="inline-flex items-center gap-1.5 rounded bg-warning-tint px-2 py-0.5 text-caption font-semibold text-warning"
       >
-        Mark
+        {t('tchMark')}
       </Link>
     )
   }
@@ -320,7 +326,7 @@ function GradeCell({
           score < 50 ? 'text-danger' : 'text-foreground',
           !released && 'opacity-55',
         )}
-        title={released ? undefined : 'Marked but not released to the student'}
+        title={released ? undefined : t('tchMarkedNotReleased')}
       >
         {score}
       </span>

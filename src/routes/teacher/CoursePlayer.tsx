@@ -36,6 +36,14 @@ const kindIcon = {
   assignment: PenLine,
 } as const
 
+const kindKey = {
+  lesson: 'tchKindLesson',
+  'interactive-book': 'tchKindInteractiveBook',
+  quiz: 'tchKindQuiz',
+  manipulative: 'tchKindManipulative',
+  assignment: 'tchKindAssignment',
+} as const
+
 export function TeacherCoursePlayer() {
   const { classId = '', courseId = '' } = useParams()
   const { t, locale } = useLocale()
@@ -48,7 +56,7 @@ export function TeacherCoursePlayer() {
   if (!course) {
     return (
       <Page>
-        <PageHeader title="Course not found" subtitle="It may not be assigned to this class." />
+        <PageHeader title={t('tchCourseNotFound')} subtitle={t('tchCourseNotAssigned')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/teacher/classes">{t('navMyClasses')}</Link>
         </Button>
@@ -64,12 +72,14 @@ export function TeacherCoursePlayer() {
     <Page>
       <PageHeader
         title={locale === 'ar' ? course.titleAr : course.title}
-        subtitle={`${classGroup?.name ?? ''} · ${course.units.length} units`}
+        subtitle={t('tchCourseSubtitle')
+          .replace('{c}', classGroup?.name ?? '')
+          .replace('{n}', String(course.units.length))}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/teacher/classes/${classId}`}>
               <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              Back to the class
+              {t('tchBackToClass')}
             </Link>
           </Button>
         }
@@ -97,7 +107,7 @@ export function TeacherCoursePlayer() {
                     {locale === 'ar' ? unit.titleAr : unit.title}
                   </span>
                   <Badge variant="outline" className="flex-none">
-                    {unit.activities.length} activities
+                    {t('tchNActivities').replace('{n}', String(unit.activities.length))}
                   </Badge>
                 </button>
 
@@ -124,11 +134,11 @@ export function TeacherCoursePlayer() {
                           </span>
                           {activity.graded ? (
                             <Badge variant="outline" className="flex-none">
-                              {activity.points} marks
+                              {t('tchNMarks').replace('{n}', String(activity.points))}
                             </Badge>
                           ) : (
                             <span className="flex-none text-caption text-muted-foreground">
-                              Not graded
+                              {t('tchNotGraded')}
                             </span>
                           )}
                         </button>
@@ -143,10 +153,10 @@ export function TeacherCoursePlayer() {
 
         <Card className="h-fit lg:sticky lg:top-4">
           <CardHeader>
-            <CardTitle>Preview</CardTitle>
+            <CardTitle>{t('tchPreview')}</CardTitle>
             {preview ? (
               <Badge variant="outline" className="capitalize">
-                {preview.kind.replace('-', ' ')}
+                {t(kindKey[preview.kind])}
               </Badge>
             ) : null}
           </CardHeader>
@@ -162,17 +172,17 @@ export function TeacherCoursePlayer() {
 
                 <div className="space-y-2 text-small">
                   <div className="flex justify-between gap-4">
-                    <span className="text-muted-foreground">Marks</span>
+                    <span className="text-muted-foreground">{t('tchMarks')}</span>
                     <span className="tabular text-foreground">
-                      {preview.graded ? preview.points : 'Not graded'}
+                      {preview.graded ? preview.points : t('tchNotGraded')}
                     </span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="text-muted-foreground">Expected time</span>
-                    <span className="text-foreground">15 minutes</span>
+                    <span className="text-muted-foreground">{t('tchExpectedTime')}</span>
+                    <span className="text-foreground">{t('tch15Minutes')}</span>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <span className="text-muted-foreground">Skills</span>
+                    <span className="text-muted-foreground">{t('tchSkills')}</span>
                     <span className="text-end text-foreground">
                       {previewSkills.length
                         ? previewSkills
@@ -180,30 +190,29 @@ export function TeacherCoursePlayer() {
                               skill ? (locale === 'ar' ? skill.nameAr : skill.name) : '',
                             )
                             .join(', ')
-                        : 'Not tagged'}
+                        : t('tchNotTagged')}
                     </span>
                   </div>
                 </div>
 
                 {previewSkills.length === 0 ? (
                   <p className="rounded border border-warning/40 bg-warning-tint px-3 py-2 text-caption text-warning">
-                    Nothing tagged here, so this activity cannot feed the skill drill down or
-                    adaptive practice. Tagging happens in the authoring platform.
+                    {t('tchNotTaggedWarning')}
                   </p>
                 ) : null}
 
                 <div className="flex gap-2">
                   <Button variant="accent" size="sm" className="flex-1" asChild>
-                    <Link to={`/teacher/assign?class=${classId}`}>Assign</Link>
+                    <Link to={`/teacher/assign?class=${classId}`}>{t('tchAssign')}</Link>
                   </Button>
                   <Button variant="outline" size="sm" asChild>
-                    <Link to="/teacher/present">Present</Link>
+                    <Link to="/teacher/present">{t('tchPresent')}</Link>
                   </Button>
                 </div>
               </>
             ) : (
               <p className="py-8 text-center text-small text-muted-foreground">
-                Pick an activity to preview it.
+                {t('tchPickActivityPreview')}
               </p>
             )}
           </CardContent>

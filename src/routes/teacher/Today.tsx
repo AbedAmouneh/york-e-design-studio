@@ -27,11 +27,11 @@ import {
  */
 
 const periods = [
-  { time: '08:15', classId: 'cls-3', label: 'Mathematics, Unit 2', room: 'Room 12' },
-  { time: '09:30', classId: 'cls-1', label: 'Mathematics, Unit 2', room: 'Room 4' },
-  { time: '11:00', classId: 'cls-4', label: 'Mathematics, Unit 3', room: 'Room 12' },
-  { time: '13:15', classId: 'cls-5', label: 'Mathematics, Unit 1', room: 'Room 9' },
-]
+  { time: '08:15', classId: 'cls-3', labelKey: 'tchPeriodMathUnit2', room: '12' },
+  { time: '09:30', classId: 'cls-1', labelKey: 'tchPeriodMathUnit2', room: '4' },
+  { time: '11:00', classId: 'cls-4', labelKey: 'tchPeriodMathUnit3', room: '12' },
+  { time: '13:15', classId: 'cls-5', labelKey: 'tchPeriodMathUnit1', room: '9' },
+] as const
 
 export function TeacherToday() {
   const { t } = useLocale()
@@ -47,12 +47,12 @@ export function TeacherToday() {
   return (
     <Page>
       <PageHeader
-        title="Wednesday, 10 February"
-        subtitle="Term 2, week 5 · Four classes today"
+        title={t('tchTodayTitle')}
+        subtitle={t('tchTodaySubtitle')}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/teacher/grading">
-              Start marking
+              {t('tchStartMarking')}
               <ArrowUpRight className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
             </Link>
           </Button>
@@ -61,25 +61,33 @@ export function TeacherToday() {
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Waiting to be marked"
+          label={t('tchWaitingToMark')}
           value={String(totals.waiting)}
-          hint="Across four classes"
+          hint={t('tchAcrossFourClasses')}
           emphasis={totals.waiting > 20}
         />
-        <StatCard label="Due this week" value={String(totals.dueThisWeek)} hint="Assignments" />
+        <StatCard
+          label={t('tchDueThisWeek')}
+          value={String(totals.dueThisWeek)}
+          hint={t('tchAssignments')}
+        />
         <StatCard
           label={t('atRisk')}
           value={String(totals.atRisk)}
-          hint="Students below the threshold"
+          hint={t('tchBelowThreshold')}
           emphasis={totals.atRisk > 0}
         />
-        <StatCard label="Learners" value={String(totals.learners)} hint="In your classes" />
+        <StatCard
+          label={t('learners')}
+          value={String(totals.learners)}
+          hint={t('tchInYourClasses')}
+        />
       </div>
 
       <section className="grid gap-4 xl:grid-cols-[1.1fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Today</CardTitle>
+            <CardTitle>{t('navToday')}</CardTitle>
             <Button variant="ghost" size="sm" asChild>
               <Link to="/teacher/calendar">{t('navCalendar')}</Link>
             </Button>
@@ -105,16 +113,17 @@ export function TeacherToday() {
                       </span>
                       {early ? (
                         <Badge variant="outline" className="flex-none">
-                          K1 to G3
+                          {t('tchK1ToG3')}
                         </Badge>
                       ) : null}
                     </span>
                     <span className="block truncate text-caption text-muted-foreground">
-                      {period.label} · {period.room} · {classGroup.studentIds.length} students
+                      {t(period.labelKey)} · {t('tchRoom').replace('{n}', period.room)} ·{' '}
+                      {t('tchNStudents').replace('{n}', String(classGroup.studentIds.length))}
                     </span>
                   </span>
                   <Button variant="outline" size="sm" className="flex-none" asChild>
-                    <span>Present</span>
+                    <span>{t('tchPresent')}</span>
                   </Button>
                 </Link>
               )
@@ -138,7 +147,7 @@ export function TeacherToday() {
               >
                 <span className="min-w-0 flex-1 leading-tight">
                   <span className="block truncate text-small font-medium text-foreground">
-                    {item.activity?.title ?? 'Activity'}
+                    {item.activity?.title ?? t('colActivity')}
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
                     {item.classGroup?.name}
@@ -151,7 +160,7 @@ export function TeacherToday() {
                   )}
                 >
                   <Clock className="h-3.5 w-3.5" aria-hidden />
-                  {item.oldestDays}d
+                  {t('tchDaysShort').replace('{n}', String(item.oldestDays))}
                 </span>
                 <Badge variant="neutral" className="flex-none">
                   {item.waiting}
@@ -160,7 +169,7 @@ export function TeacherToday() {
             ))}
             {queue.length === 0 ? (
               <p className="py-6 text-center text-small text-muted-foreground">
-                Nothing waiting. The queue is clear.
+                {t('tchQueueClear')}
               </p>
             ) : null}
           </CardContent>
@@ -204,21 +213,18 @@ export function TeacherToday() {
                   </span>
                   <StatusBadge
                     status="at-risk"
-                    label={early ? 'Needs time with you' : t('atRisk')}
+                    label={early ? t('tchNeedsTimeWithYou') : t('atRisk')}
                   />
                 </Link>
               )
             })}
-            <p className="px-2 pt-1 text-caption text-muted-foreground">
-              Scores are shown to you for every age group. Children in K1 to Grade 3 never see a
-              percentage or the words at risk.
-            </p>
+            <p className="px-2 pt-1 text-caption text-muted-foreground">{t('tchScoresNote')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Your classes</CardTitle>
+            <CardTitle>{t('tchYourClasses')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1.5">
             {teacherClasses.map((classGroup) => {
@@ -251,12 +257,9 @@ export function TeacherToday() {
       <Card className="border-accent/40">
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
           <Sparkles className="h-4 w-4 flex-none text-foreground" aria-hidden />
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            Six students missed the same question on common denominators. Build a ten minute
-            reteach from the course content.
-          </span>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('tchTodayAiHint')}</span>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/teacher/ai">Open AI tools</Link>
+            <Link to="/teacher/ai">{t('tchOpenAiTools')}</Link>
           </Button>
         </CardContent>
       </Card>
