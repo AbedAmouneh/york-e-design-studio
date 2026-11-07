@@ -13,6 +13,7 @@ import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import { schools } from '@/data/seed'
@@ -55,7 +56,16 @@ const features: Array<{ labelKey: StringKey; share: number }> = [
 ]
 
 export function SuperAdminUsage() {
-  const { t, dir } = useLocale()
+  const { t, dir, locale } = useLocale()
+
+  // Recharts reads the legend off each series' `name` prop, so a literal there
+  // would have been three English school names sitting under an Arabic chart.
+  // The short data keys stay as they are: those are field names, not copy.
+  const seriesName = (schoolId: string) =>
+    schoolName(
+      schools.find((item) => item.id === schoolId),
+      locale,
+    )
 
   const weeklyData = weekly.map((row) => ({
     ...row,
@@ -118,7 +128,7 @@ export function SuperAdminUsage() {
                 <Area
                   type="monotone"
                   dataKey="cedar"
-                  name="Cedar Valley"
+                  name={seriesName('sch-cedar')}
                   stackId="1"
                   stroke="hsl(var(--foreground))"
                   fill="hsl(var(--foreground))"
@@ -127,7 +137,7 @@ export function SuperAdminUsage() {
                 <Area
                   type="monotone"
                   dataKey="noor"
-                  name="Al Noor"
+                  name={seriesName('sch-noor')}
                   stackId="1"
                   stroke="hsl(var(--accent))"
                   fill="hsl(var(--accent))"
@@ -136,7 +146,7 @@ export function SuperAdminUsage() {
                 <Area
                   type="monotone"
                   dataKey="rawabi"
-                  name="Rawabi"
+                  name={seriesName('sch-rawabi')}
                   stackId="1"
                   stroke="hsl(var(--success))"
                   fill="hsl(var(--success))"
