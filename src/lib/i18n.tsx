@@ -9,10 +9,8 @@ import {
   type ReactNode,
 } from 'react'
 import type { Locale } from '@/types'
-import { en } from '@/i18n/en'
-import { ar } from '@/i18n/ar'
+import { ar, en, type StringKey } from '@/i18n'
 
-type StringKey = keyof typeof en
 type Dictionary = Record<StringKey, string>
 
 const dictionaries: Record<Locale, Dictionary> = { en, ar }
