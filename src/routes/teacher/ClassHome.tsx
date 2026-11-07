@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import {
   activityById,
@@ -73,7 +74,7 @@ export function TeacherClassHome() {
   return (
     <Page>
       <PageHeader
-        title={classGroup.name}
+        title={groupName(classGroup, locale)}
         subtitle={t('tchClassSubtitle')
           .replace('{g}', String(classGroup.grade))
           .replace('{n}', String(members.length))}
