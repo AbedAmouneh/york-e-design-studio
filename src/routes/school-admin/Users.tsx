@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName, schoolName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import { classes, DEFAULT_SCHOOL_ID, guardians, schools, students, teachers } from '@/data/seed'
 import type { Role } from '@/types'
@@ -23,15 +24,15 @@ import type { Role } from '@/types'
 type Filter = 'all' | 'student' | 'teacher' | 'parent'
 
 export function SchoolAdminUsers() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [filter, setFilter] = useState<Filter>('student')
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const school = schools.find((s) => s.id === DEFAULT_SCHOOL_ID)!
 
   const classNameById = useMemo(
-    () => new Map(classes.map((classGroup) => [classGroup.id, classGroup.name])),
-    [],
+    () => new Map(classes.map((classGroup) => [classGroup.id, groupName(classGroup, locale)])),
+    [locale],
   )
 
   const people = useMemo(() => {
@@ -103,7 +104,7 @@ export function SchoolAdminUsers() {
     <Page>
       <PageHeader
         title={t('navUsers')}
-        subtitle={`${school.name} · ${school.seatsUsed} ${t('seatsUsed')} ${t('ofTotal')} ${school.seats}`}
+        subtitle={`${schoolName(school, locale)} · ${school.seatsUsed} ${t('seatsUsed')} ${t('ofTotal')} ${school.seats}`}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/school-admin/users/import">
