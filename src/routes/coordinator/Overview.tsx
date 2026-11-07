@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { classes, standings, teachers } from '@/data/seed'
 
@@ -22,7 +23,7 @@ import { classes, standings, teachers } from '@/data/seed'
  * ranking, because the useful follow up is a conversation, not a league table.
  */
 export function CoordinatorOverview() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   const myClasses = classes.filter((item) => item.schoolId === 'sch-cedar' && item.grade >= 6)
 
@@ -75,7 +76,7 @@ export function CoordinatorOverview() {
             <span className="min-w-0 flex-1 text-small text-foreground">
               {t('coBehindPlanBanner').replace(
                 '{c}',
-                behind.map((row) => row.group.name).join(t('coAndJoin')),
+                behind.map((row) => groupName(row.group, locale)).join(t('coAndJoin')),
               )}
             </span>
             <Button variant="outline" size="sm" asChild>
@@ -103,7 +104,7 @@ export function CoordinatorOverview() {
             >
               <span className="min-w-[160px] flex-1 leading-tight">
                 <span className="block text-small font-medium text-foreground">
-                  {row.group.name}
+                  {groupName(row.group, locale)}
                 </span>
                 <span className="block text-caption text-muted-foreground">
                   {row.teacher
