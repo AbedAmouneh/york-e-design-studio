@@ -14,7 +14,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
+import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 import type { StringKey } from '@/i18n'
 
 /**
@@ -81,7 +83,8 @@ const parsedRows: ParsedRow[] = [
 ]
 
 export function SchoolAdminBulkImport() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
+  const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)!
   const [step, setStep] = useState<Step>('upload')
   const [fixed, setFixed] = useState<Set<number>>(new Set())
 
@@ -93,7 +96,7 @@ export function SchoolAdminBulkImport() {
     <Page>
       <PageHeader
         title={t('admBulkImportTitle')}
-        subtitle="Cedar Valley School"
+        subtitle={schoolName(school, locale)}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/school-admin/users">
