@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useLocale } from '@/lib/i18n'
 import { cn, initials } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import { classes, standings, students, teachers } from '@/data/seed'
 
 /**
@@ -42,7 +43,7 @@ export function CoordinatorFlagged() {
     .map((row, index) => ({
       ...row,
       subjects: index % 3 === 0 ? 3 : index % 2 === 0 ? 2 : 1,
-      raisedBy: index % 4 === 0 ? 'Automatic' : 'Teacher',
+      raisedByKey: (index % 4 === 0 ? 'coRaisedAutomatic' : 'coRaisedTeacher') as StringKey,
     }))
 
   const multi = rows.filter((row) => row.subjects > 1)
@@ -61,7 +62,9 @@ export function CoordinatorFlagged() {
     <Page>
       <PageHeader
         title={t('navFlagged')}
-        subtitle={`${rows.length} flagged · ${multi.length} struggling in more than one subject`}
+        subtitle={t('coFlaggedSubtitle')
+          .replace('{n}', String(rows.length))
+          .replace('{m}', String(multi.length))}
       />
 
       {multi.length > 0 ? (
@@ -69,8 +72,7 @@ export function CoordinatorFlagged() {
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
             <Flag className="h-4 w-4 flex-none text-warning" aria-hidden />
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {multi.length} students are flagged in two or more subjects. No single teacher can
-              see this pattern, which is why it surfaces here.
+              {t('coMultiSubjectBanner').replace('{n}', String(multi.length))}
             </span>
           </CardContent>
         </Card>
@@ -79,22 +81,25 @@ export function CoordinatorFlagged() {
       {selected.size > 0 ? (
         <Card className="border-accent/50">
           <CardContent className="flex flex-wrap items-center gap-3 p-3">
-            <Badge variant="accent">{selected.size} selected</Badge>
+            <Badge variant="accent">
+              {selected.size} {t('selected')}
+            </Badge>
             <Button variant="outline" size="sm" onClick={() => setDone('meeting')}>
               <MessageSquare className="h-3.5 w-3.5" aria-hidden />
-              Ask their teachers for a note
+              {t('coAskTeachersForNote')}
             </Button>
             <Button variant="outline" size="sm" onClick={() => setDone('head')}>
-              Raise with the head of school
+              {t('coRaiseWithHead')}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}>
-              Clear
+              {t('clear')}
             </Button>
             {done ? (
               <span className="text-small text-success">
-                {done === 'meeting'
-                  ? `Requested notes on ${selected.size} students.`
-                  : `Raised ${selected.size} students with the head of school.`}
+                {(done === 'meeting' ? t('coRequestedNotes') : t('coRaisedWithHead')).replace(
+                  '{n}',
+                  String(selected.size),
+                )}
               </span>
             ) : null}
           </CardContent>
@@ -103,7 +108,7 @@ export function CoordinatorFlagged() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Flagged</CardTitle>
+          <CardTitle>{t('coFlaggedTitle')}</CardTitle>
           <Badge variant="outline">{rows.length}</Badge>
         </CardHeader>
         <CardContent className="space-y-1.5">
@@ -133,7 +138,9 @@ export function CoordinatorFlagged() {
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
                     {row.group.name} ·{' '}
-                    {row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}` : 'Unassigned'}
+                    {row.teacher
+                      ? `${row.teacher.firstName} ${row.teacher.lastName}`
+                      : t('coUnassigned')}
                   </span>
                 </span>
 
@@ -141,11 +148,14 @@ export function CoordinatorFlagged() {
                   variant={row.subjects > 1 ? 'warning' : 'outline'}
                   className="flex-none"
                 >
-                  {row.subjects} {row.subjects === 1 ? 'subject' : 'subjects'}
+                  {t(row.subjects === 1 ? 'coOneSubject' : 'coNSubjects').replace(
+                    '{n}',
+                    String(row.subjects),
+                  )}
                 </Badge>
 
                 <Badge variant="outline" className="flex-none">
-                  {row.raisedBy}
+                  {t(row.raisedByKey)}
                 </Badge>
 
                 <span className="tabular w-14 flex-none text-end text-small text-foreground">
@@ -157,10 +167,7 @@ export function CoordinatorFlagged() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Automatic means the platform raised it from the data. Teacher means a person did. Both are
-        shown because they mean different things when you follow them up.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('coFlaggedNote')}</p>
     </Page>
   )
 }

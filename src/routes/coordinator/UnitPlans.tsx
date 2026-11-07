@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Unit plans.
@@ -23,8 +24,8 @@ import { cn } from '@/lib/utils'
 
 interface Unit {
   id: string
-  title: string
-  weeks: string
+  titleKey: StringKey
+  weeksKey: StringKey
   standards: string[]
   locked: boolean
   status: 'done' | 'current' | 'planned'
@@ -33,32 +34,32 @@ interface Unit {
 const initialUnits: Unit[] = [
   {
     id: 'u1',
-    title: 'Place value and rounding',
-    weeks: '7 Sept to 9 Oct',
+    titleKey: 'coUnitPlaceValue',
+    weeksKey: 'coWeeksU1',
     standards: ['6.NS.1', '6.NS.2'],
     locked: true,
     status: 'done',
   },
   {
     id: 'u2',
-    title: 'Fractions',
-    weeks: '25 Jan to 19 Feb',
+    titleKey: 'coUnitFractions',
+    weeksKey: 'coWeeksU2',
     standards: ['6.NF.1', '6.NF.2', '6.NF.3'],
     locked: true,
     status: 'current',
   },
   {
     id: 'u3',
-    title: 'Decimals and percentages',
-    weeks: '22 Feb to 19 Mar',
+    titleKey: 'coUnitDecimals',
+    weeksKey: 'coWeeksU3',
     standards: ['6.NS.3', '6.RP.3'],
     locked: false,
     status: 'planned',
   },
   {
     id: 'u4',
-    title: 'Ratio and proportion',
-    weeks: '19 Apr to 21 May',
+    titleKey: 'coUnitRatio',
+    weeksKey: 'coWeeksU4',
     standards: ['6.RP.1', '6.RP.2'],
     locked: false,
     status: 'planned',
@@ -81,11 +82,11 @@ export function CoordinatorUnitPlans() {
     <Page>
       <PageHeader
         title={t('navUnitPlans')}
-        subtitle="Mathematics, Grade 6 · applies to all four classes"
+        subtitle={t('coUnitPlansSubtitle')}
         actions={
           <Button variant="accent" size="sm">
             <Plus className="h-3.5 w-3.5" aria-hidden />
-            Add a unit
+            {t('coAddUnit')}
           </Button>
         }
       />
@@ -103,23 +104,25 @@ export function CoordinatorUnitPlans() {
               />
               <CardTitle>
                 <span className="tabular me-2 text-muted-foreground">{index + 1}</span>
-                {unit.title}
+                {t(unit.titleKey)}
               </CardTitle>
               {unit.status === 'current' ? (
-                <Badge variant="accent">Running now</Badge>
+                <Badge variant="accent">{t('coRunningNow')}</Badge>
               ) : unit.status === 'done' ? (
                 <Badge variant="success">
                   <Check className="me-1 h-3 w-3" aria-hidden />
-                  Finished
+                  {t('coFinished')}
                 </Badge>
               ) : (
-                <Badge variant="outline">Planned</Badge>
+                <Badge variant="outline">{t('coPlanned')}</Badge>
               )}
-              <span className="ms-auto text-caption text-muted-foreground">{unit.weeks}</span>
+              <span className="ms-auto text-caption text-muted-foreground">
+                {t(unit.weeksKey)}
+              </span>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-caption text-muted-foreground">Standards</span>
+                <span className="text-caption text-muted-foreground">{t('navStandards')}</span>
                 {unit.standards.map((standard) => (
                   <Badge key={standard} variant="neutral">
                     {standard}
@@ -133,12 +136,10 @@ export function CoordinatorUnitPlans() {
                     {unit.locked ? (
                       <Lock className="h-3.5 w-3.5 text-foreground" aria-hidden />
                     ) : null}
-                    Lock the sequence and the assessment date
+                    {t('coLockSequence')}
                   </span>
                   <span className="mt-0.5 block text-caption text-muted-foreground">
-                    {unit.locked
-                      ? 'Every class covers this in the same order and sits the check on the same day.'
-                      : 'Each teacher orders this unit themselves. The assessment date is still yours.'}
+                    {unit.locked ? t('coLockedHint') : t('coUnlockedHint')}
                   </span>
                 </span>
                 <Switch checked={unit.locked} onCheckedChange={() => toggleLock(unit.id)} />
@@ -150,16 +151,12 @@ export function CoordinatorUnitPlans() {
 
       <div className="flex items-center gap-3">
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
-          Publish to all classes
+          {t('coPublishToAllClasses')}
         </Button>
         {saved ? (
-          <span className="text-small text-success">
-            Published. Four teachers have been notified.
-          </span>
+          <span className="text-small text-success">{t('coPublishedNotified')}</span>
         ) : (
-          <span className="text-caption text-muted-foreground">
-            Teachers see changes to a published plan on their planner immediately.
-          </span>
+          <span className="text-caption text-muted-foreground">{t('coPublishHint')}</span>
         )}
       </div>
     </Page>

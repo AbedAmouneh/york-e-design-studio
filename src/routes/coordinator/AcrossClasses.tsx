@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Across my classes.
@@ -18,12 +19,18 @@ import { cn } from '@/lib/utils'
  * screen reads in a staff meeting.
  */
 
-const byQuestion = [
-  { question: 'Q1 equivalent', cedar: 88, maple: 84, jasmine: 79, laurel: 86 },
-  { question: 'Q2 common denom', cedar: 71, maple: 44, jasmine: 68, laurel: 74 },
-  { question: 'Q3 adding', cedar: 66, maple: 41, jasmine: 63, laurel: 70 },
-  { question: 'Q4 explain', cedar: 58, maple: 52, jasmine: 55, laurel: 61 },
-  { question: 'Q5 word problem', cedar: 74, maple: 69, jasmine: 72, laurel: 77 },
+const byQuestion: Array<{
+  questionKey: StringKey
+  cedar: number
+  maple: number
+  jasmine: number
+  laurel: number
+}> = [
+  { questionKey: 'coQ1Equivalent', cedar: 88, maple: 84, jasmine: 79, laurel: 86 },
+  { questionKey: 'coQ2CommonDenom', cedar: 71, maple: 44, jasmine: 68, laurel: 74 },
+  { questionKey: 'coQ3Adding', cedar: 66, maple: 41, jasmine: 63, laurel: 70 },
+  { questionKey: 'coQ4Explain', cedar: 58, maple: 52, jasmine: 55, laurel: 61 },
+  { questionKey: 'coQ5WordProblem', cedar: 74, maple: 69, jasmine: 72, laurel: 77 },
 ]
 
 const series = [
@@ -36,28 +43,29 @@ const series = [
 export function CoordinatorAcrossClasses() {
   const { t, dir } = useLocale()
 
+  // Recharts reads its axis labels off the data, so the question names have to
+  // be resolved here rather than held translated in the module scope array.
+  const chartData = byQuestion.map((row) => ({ ...row, question: t(row.questionKey) }))
+
   const gaps = byQuestion
     .map((row) => {
       const values = series.map((item) => row[item.key as keyof typeof row] as number)
-      return { question: row.question, spread: Math.max(...values) - Math.min(...values) }
+      return { questionKey: row.questionKey, spread: Math.max(...values) - Math.min(...values) }
     })
     .sort((a, b) => b.spread - a.spread)
 
   return (
     <Page>
-      <PageHeader
-        title={t('navAcrossClasses')}
-        subtitle="End of unit check, fractions · sat by all four classes on 12 February"
-      />
+      <PageHeader title={t('navAcrossClasses')} subtitle={t('coAcrossSubtitle')} />
 
       <Card>
         <CardHeader>
-          <CardTitle>Correct answers by question</CardTitle>
+          <CardTitle>{t('coCorrectByQuestion')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={byQuestion} barSize={16} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+              <BarChart data={chartData} barSize={16} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis
                   dataKey="question"
@@ -92,16 +100,16 @@ export function CoordinatorAcrossClasses() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Biggest gaps between classes</CardTitle>
+          <CardTitle>{t('coBiggestGaps')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {gaps.map((row) => (
             <div
-              key={row.question}
+              key={row.questionKey}
               className="flex flex-wrap items-center gap-4 rounded border border-border px-4 py-3"
             >
               <span className="min-w-[140px] flex-1 text-small font-medium text-foreground">
-                {row.question}
+                {t(row.questionKey)}
               </span>
               <span className="h-1.5 w-32 flex-none overflow-hidden rounded-full bg-muted">
                 <span
@@ -118,7 +126,7 @@ export function CoordinatorAcrossClasses() {
                   row.spread >= 20 ? 'font-semibold text-warning' : 'text-muted-foreground',
                 )}
               >
-                {row.spread} point spread
+                {t('coPointSpread').replace('{n}', String(row.spread))}
               </span>
             </div>
           ))}
@@ -128,12 +136,10 @@ export function CoordinatorAcrossClasses() {
       <Card className="border-warning/40">
         <CardContent className="flex flex-wrap items-start gap-3 p-4">
           <Badge variant="warning" className="flex-none">
-            Worth a look
+            {t('coWorthALook')}
           </Badge>
           <p className="min-w-0 flex-1 text-small text-foreground">
-            Questions 2 and 3 both sit around 30 points below the other classes in Grade 6 Maple,
-            and both depend on common denominators. That class is also behind the unit plan, so the
-            likely explanation is sequence rather than teaching.
+            {t('coAcrossInsight').replace('{c}', series[1].label)}
           </p>
         </CardContent>
       </Card>

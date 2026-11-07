@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Standards coverage.
@@ -22,14 +23,14 @@ type Level = 'covered' | 'partial' | 'none'
 
 const classesShown = ['Grade 6 Cedar', 'Grade 6 Maple', 'Grade 7 Jasmine', 'Grade 7 Laurel']
 
-const rows: Array<{ code: string; label: string; levels: Level[] }> = [
-  { code: '6.NS.1', label: 'Place value to millions', levels: ['covered', 'covered', 'covered', 'covered'] },
-  { code: '6.NS.2', label: 'Rounding and estimation', levels: ['covered', 'covered', 'covered', 'partial'] },
-  { code: '6.NF.1', label: 'Equivalent fractions', levels: ['covered', 'covered', 'partial', 'covered'] },
-  { code: '6.NF.2', label: 'Adding and subtracting fractions', levels: ['covered', 'partial', 'partial', 'covered'] },
-  { code: '6.NF.3', label: 'Multiplying fractions', levels: ['partial', 'none', 'none', 'partial'] },
-  { code: '6.RP.1', label: 'Ratio language', levels: ['none', 'none', 'covered', 'covered'] },
-  { code: '6.RP.3', label: 'Percentages in context', levels: ['none', 'none', 'partial', 'none'] },
+const rows: Array<{ code: string; labelKey: StringKey; levels: Level[] }> = [
+  { code: '6.NS.1', labelKey: 'coStdPlaceValueMillions', levels: ['covered', 'covered', 'covered', 'covered'] },
+  { code: '6.NS.2', labelKey: 'coStdRounding', levels: ['covered', 'covered', 'covered', 'partial'] },
+  { code: '6.NF.1', labelKey: 'coStdEquivalentFractions', levels: ['covered', 'covered', 'partial', 'covered'] },
+  { code: '6.NF.2', labelKey: 'coStdAddSubtractFractions', levels: ['covered', 'partial', 'partial', 'covered'] },
+  { code: '6.NF.3', labelKey: 'coStdMultiplyingFractions', levels: ['partial', 'none', 'none', 'partial'] },
+  { code: '6.RP.1', labelKey: 'coStdRatioLanguage', levels: ['none', 'none', 'covered', 'covered'] },
+  { code: '6.RP.3', labelKey: 'coStdPercentagesContext', levels: ['none', 'none', 'partial', 'none'] },
 ]
 
 const tone: Record<Level, string> = {
@@ -38,10 +39,10 @@ const tone: Record<Level, string> = {
   none: 'bg-muted text-muted-foreground',
 }
 
-const mark: Record<Level, string> = {
-  covered: 'Covered',
-  partial: 'Partly',
-  none: 'Not yet',
+const markKey: Record<Level, StringKey> = {
+  covered: 'coMarkCovered',
+  partial: 'coMarkPartly',
+  none: 'coMarkNotYet',
 }
 
 export function CoordinatorStandards() {
@@ -62,7 +63,7 @@ export function CoordinatorStandards() {
     <Page>
       <PageHeader
         title={t('navStandards')}
-        subtitle="Mathematics · Term 2 to date"
+        subtitle={t('coStandardsSubtitle')}
         actions={
           <Button variant="outline" size="sm">
             {t('export')}
@@ -72,19 +73,19 @@ export function CoordinatorStandards() {
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">Covered</span>
+          <span className="text-small text-muted-foreground">{t('coMarkCovered')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-success">
             {Math.round((counts.covered / total) * 100)}%
           </p>
         </Card>
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">Partly covered</span>
+          <span className="text-small text-muted-foreground">{t('coPartlyCovered')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-warning">
             {Math.round((counts.partial / total) * 100)}%
           </p>
         </Card>
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">Not yet taught</span>
+          <span className="text-small text-muted-foreground">{t('coNotYetTaught')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-foreground">
             {Math.round((counts.none / total) * 100)}%
           </p>
@@ -93,15 +94,17 @@ export function CoordinatorStandards() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Standard by class</CardTitle>
-          <Badge variant="outline">{rows.length} standards</Badge>
+          <CardTitle>{t('coStandardByClass')}</CardTitle>
+          <Badge variant="outline">
+            {t('coNStandards').replace('{n}', String(rows.length))}
+          </Badge>
         </CardHeader>
         <CardContent className="overflow-x-auto px-0 pb-0">
           <table className="w-full border-collapse text-small">
             <thead>
               <tr className="border-y border-border bg-surface">
                 <th className="min-w-[220px] px-4 py-2.5 text-start font-medium text-muted-foreground">
-                  Standard
+                  {t('coColStandard')}
                 </th>
                 {classesShown.map((name) => (
                   <th
@@ -118,7 +121,9 @@ export function CoordinatorStandards() {
                 <tr key={row.code} className="border-b border-border last:border-0">
                   <td className="px-4 py-2.5">
                     <span className="block font-medium text-foreground">{row.code}</span>
-                    <span className="block text-caption text-muted-foreground">{row.label}</span>
+                    <span className="block text-caption text-muted-foreground">
+                      {t(row.labelKey)}
+                    </span>
                   </td>
                   {row.levels.map((level, index) => (
                     <td key={`${row.code}-${index}`} className="px-3 py-2.5 text-center">
@@ -128,7 +133,7 @@ export function CoordinatorStandards() {
                           tone[level],
                         )}
                       >
-                        {mark[level]}
+                        {t(markKey[level])}
                       </span>
                     </td>
                   ))}
@@ -139,10 +144,7 @@ export function CoordinatorStandards() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Covered means taught and assessed. Partly means taught but not yet assessed. A standard
-        that was mentioned in a lesson and never tested does not count as covered.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('coStandardsNote')}</p>
     </Page>
   )
 }

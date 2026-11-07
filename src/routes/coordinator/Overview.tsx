@@ -46,21 +46,23 @@ export function CoordinatorOverview() {
   return (
     <Page>
       <PageHeader
-        title="Mathematics"
-        subtitle={`${myClasses.length} classes · ${rows.length} teachers · Term 2, week 5`}
+        title={t('coSubjectMathematics')}
+        subtitle={t('coOverviewSubtitle')
+          .replace('{n}', String(myClasses.length))
+          .replace('{m}', String(rows.length))}
       />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Classes" value={String(myClasses.length)} />
-        <StatCard label="Learners" value={String(totalLearners)} />
+        <StatCard label={t('classesCount')} value={String(myClasses.length)} />
+        <StatCard label={t('learners')} value={String(totalLearners)} />
         <StatCard
           label={t('atRisk')}
           value={String(totalAtRisk)}
           emphasis={totalAtRisk > 0}
-          hint="Across all my classes"
+          hint={t('coAcrossAllMyClasses')}
         />
         <StatCard
-          label="Classes behind plan"
+          label={t('coClassesBehindPlan')}
           value={String(behind.length)}
           emphasis={behind.length > 0}
         />
@@ -71,11 +73,13 @@ export function CoordinatorOverview() {
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
             <AlertTriangle className="h-4 w-4 flex-none text-warning" aria-hidden />
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {behind.map((row) => row.group.name).join(' and ')} is behind the unit plan with two
-              weeks of term left. The end of unit check is set for 12 February in every class.
+              {t('coBehindPlanBanner').replace(
+                '{c}',
+                behind.map((row) => row.group.name).join(t('coAndJoin')),
+              )}
             </span>
             <Button variant="outline" size="sm" asChild>
-              <Link to="/coordinator/unit-plans">Open the unit plan</Link>
+              <Link to="/coordinator/unit-plans">{t('coOpenUnitPlan')}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -83,10 +87,10 @@ export function CoordinatorOverview() {
 
       <Card>
         <CardHeader>
-          <CardTitle>My classes</CardTitle>
+          <CardTitle>{t('navMyClasses')}</CardTitle>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/coordinator/classes">
-              Compare
+              {t('coCompare')}
               <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
             </Link>
           </Button>
@@ -102,8 +106,10 @@ export function CoordinatorOverview() {
                   {row.group.name}
                 </span>
                 <span className="block text-caption text-muted-foreground">
-                  {row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}` : 'Unassigned'}{' '}
-                  · {row.size} learners
+                  {row.teacher
+                    ? `${row.teacher.firstName} ${row.teacher.lastName}`
+                    : t('coUnassigned')}{' '}
+                  · {t('coNLearners').replace('{n}', String(row.size))}
                 </span>
               </span>
 
@@ -123,7 +129,7 @@ export function CoordinatorOverview() {
                     row.coverage < 70 ? 'font-semibold text-warning' : 'text-muted-foreground',
                   )}
                 >
-                  {row.coverage}% of plan
+                  {t('coPercentOfPlan').replace('{n}', String(row.coverage))}
                 </span>
               </span>
 
@@ -133,9 +139,12 @@ export function CoordinatorOverview() {
 
               <span className="flex-none">
                 {row.atRisk > 0 ? (
-                  <StatusBadge status="at-risk" label={`${row.atRisk} ${t('atRisk').toLowerCase()}`} />
+                  <StatusBadge
+                    status="at-risk"
+                    label={t('coNAtRisk').replace('{n}', String(row.atRisk))}
+                  />
                 ) : (
-                  <Badge variant="success">On track</Badge>
+                  <Badge variant="success">{t('onTrack')}</Badge>
                 )}
               </span>
             </div>
@@ -143,10 +152,7 @@ export function CoordinatorOverview() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Coverage is measured against the unit plan you set, not against what other coordinators are
-        doing. Teachers are not ranked against each other anywhere in this role.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('coOverviewNote')}</p>
     </Page>
   )
 }
