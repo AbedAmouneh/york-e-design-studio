@@ -10,7 +10,9 @@ import {
 } from 'lucide-react'
 import { cn, initials } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { children, fullNameOf, isEarly, parentName } from '@/data/parent'
+import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 import { Badge } from '@/components/ui/badge'
 
 /**
@@ -25,8 +27,16 @@ import { Badge } from '@/components/ui/badge'
  */
 export function ParentApp() {
   const { childId } = useParams()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const active = children.find((child) => child.id === childId) ?? children[0]
+
+  /*
+    Read from the seed rather than written in place. The sidebar used to carry
+    the literal "Cedar Valley School", which stayed English on an Arabic page.
+    Resolved the same way the staff shells resolve theirs, so the parent view
+    and the teacher view can never drift apart on the name of the same school.
+  */
+  const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)!
 
   /*
     Labelled with the child's name rather than "My progress". A parent is
@@ -59,7 +69,9 @@ export function ParentApp() {
     <div className="flex h-full bg-surface">
       <aside className="flex w-sidebar flex-none flex-col border-e border-border bg-background">
         <div className="flex h-14 flex-none items-center border-b border-border px-4">
-          <span className="truncate text-small font-semibold text-foreground">Cedar Valley School</span>
+          <span className="truncate text-small font-semibold text-foreground">
+            {schoolName(school, locale)}
+          </span>
         </div>
 
         <div className="flex-none space-y-1 border-b border-border p-3">
