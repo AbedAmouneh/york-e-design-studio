@@ -81,6 +81,7 @@ export const frameSections: FrameSection[] = [
       f('shFrameClassHomeEarly', '/teacher/classes/cls-1'),
       f('shFrameCourseContent', '/teacher/classes/cls-3/course/crs-math-g6'),
       f('shFrameContentLibrary', '/teacher/library'),
+      f('shFrameSearchInCourse', '/teacher/classes/cls-3/course/crs-math-g6/search'),
       f('shFrameAssignActivity', '/teacher/assign', { noteKey: 'shFrameNoteFlow' }),
       f('shFrameWeeklyPlanner', '/teacher/planner'),
       f('shFrameCalendar', '/teacher/calendar'),
@@ -112,6 +113,9 @@ export const frameSections: FrameSection[] = [
       f('shFrameDashboard', '/student'),
       f('shFrameMyCourses', '/student/courses'),
       f('shFrameCoursePlayer', '/student/courses/crs-math-g6'),
+      f('shFrameLessonPlayer', '/student/courses/crs-math-g6/activity/crs-math-g6-u1-a1', {
+        noteKey: 'shFrameNoteNoChrome',
+      }),
       f('shFrameAssignmentsDueDates', '/student/assignments'),
       f('shFrameTakeQuiz', '/student/quiz/asg-cls-3-1', { noteKey: 'shFrameNoteFlowNoChrome' }),
       f('shFrameQuizResults', '/student/quiz/asg-cls-3-1/results'),
@@ -131,6 +135,7 @@ export const frameSections: FrameSection[] = [
       f('shFrameDoingActivity', '/student/early/activity/a3', { noteKey: 'shFrameNoteNoChrome' }),
       f('shFrameWellDone', '/student/early/done', { noteKey: 'shFrameNoteFlow' }),
       f('shFrameMyStickers', '/student/early/stickers'),
+      f('shFrameEarlyHelp', '/student/early/help'),
     ],
   },
   {
@@ -168,6 +173,7 @@ export const frameSections: FrameSection[] = [
       f('shFrameSchools', '/super-admin'),
       f('shFrameSchoolDetail', '/super-admin/tenant/sch-noor'),
       f('shFrameProvisionSchool', '/super-admin/provision', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameTenantBranding', '/super-admin/tenant/sch-noor/branding'),
       f('shFrameSeatsLicences', '/super-admin/seats'),
       f('shFrameCourseCatalogue', '/super-admin/catalogue'),
       f('shFrameUsageAcrossSchools', '/super-admin/usage'),
@@ -186,6 +192,9 @@ export const frameSections: FrameSection[] = [
       f('shFrameNotifications', '/shared/notifications'),
       f('shFrameEmptyStates', '/shared/empty'),
       f('shFrameErrorStates', '/shared/error'),
+      f('shFrameSchoolSelection', '/shared/schools', { noteKey: 'shFrameNoteNoChrome' }),
+      f('shFrameHelpCentre', '/shared/help'),
+      f('shFrameSupportTicket', '/shared/support'),
     ],
   },
 ]
