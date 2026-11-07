@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn, formatDate } from '@/lib/utils'
 import { courses, skills } from '@/data/seed'
 import { activityById, assignmentsForClass, classById } from '@/data/teacher'
@@ -169,7 +170,7 @@ export function TeacherCourseSearch() {
         title={t('tchCourseSearchTitle')}
         subtitle={t('tchCourseSearchSubtitle')
           .replace('{c}', courseTitle)
-          .replace('{g}', classGroup?.name ?? '')}
+          .replace('{g}', groupName(classGroup, locale))}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/teacher/classes/${classId}/course/${courseId}`}>
