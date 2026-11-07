@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/ui/input'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import {
   activityById,
@@ -107,7 +108,7 @@ export function TeacherGradebook() {
       <PageHeader
         title={t('navGradebook')}
         subtitle={t('tchGradebookSubtitle')
-          .replace('{c}', classGroup.name)
+          .replace('{c}', groupName(classGroup, locale))
           .replace('{n}', String(columns.length))}
         actions={
           <div className="flex items-center gap-2">
@@ -142,7 +143,7 @@ export function TeacherGradebook() {
                   size="sm"
                   onClick={() => setClassId(item.id)}
                 >
-                  {item.name}
+                  {groupName(item, locale)}
                 </Button>
               ))}
             </div>
