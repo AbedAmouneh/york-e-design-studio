@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { needsGradingQueue, teacherClasses } from '@/data/teacher'
 
@@ -49,7 +50,7 @@ export function TeacherNeedsGrading() {
               </span>
               <span className="block text-caption text-muted-foreground">
                 {t('tchOldestLine')
-                  .replace('{c}', oldest.classGroup?.name ?? '')
+                  .replace('{c}', groupName(oldest.classGroup, locale))
                   .replace('{n}', String(oldest.waiting))
                   .replace('{d}', String(oldest.oldestDays))}
               </span>
@@ -76,7 +77,7 @@ export function TeacherNeedsGrading() {
             size="sm"
             onClick={() => setClassFilter(item.id)}
           >
-            {item.name}
+            {groupName(item, locale)}
           </Button>
         ))}
       </div>
@@ -102,7 +103,8 @@ export function TeacherNeedsGrading() {
                     : t('colActivity')}
                 </span>
                 <span className="block truncate text-caption text-muted-foreground">
-                  {item.classGroup?.name} · {t('tchDueOn').replace('{d}', item.assignment.dueOn)}
+                  {groupName(item.classGroup, locale)} ·{' '}
+                  {t('tchDueOn').replace('{d}', item.assignment.dueOn)}
                 </span>
               </span>
 
