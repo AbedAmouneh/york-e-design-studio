@@ -33,7 +33,7 @@ export const parent = {
   // My children
   parSchoolTermWeek: {
     en: 'Cedar Valley School · Term 2, week 5',
-    ar: 'مدرسة Cedar Valley · الفصل الثاني، الأسبوع الخامس',
+    ar: 'مدرسة وادي الأرز · الفصل الثاني، الأسبوع الخامس',
   },
   parK1ToG3: { en: 'K1 to G3', ar: 'الروضة إلى الثالث' },
   parStarsThisTerm: { en: 'average this term', ar: 'المستوى العام هذا الفصل' },
@@ -218,7 +218,7 @@ export const parent = {
   // Announcements
   parAnnouncementsSubtitle: {
     en: 'From Cedar Valley School',
-    ar: 'من مدرسة Cedar Valley',
+    ar: 'من مدرسة وادي الأرز',
   },
   parWholeSchool: { en: 'Whole school', ar: 'المدرسة بأكملها' },
   parConcerns: { en: 'Concerns: {n}', ar: 'يخص: {n}' },
