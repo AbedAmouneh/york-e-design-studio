@@ -45,7 +45,7 @@ export const shared = {
   },
   shSplashFooter: {
     en: 'York-E 3.0 · Cedar Valley School · Term 2',
-    ar: 'يورك-إي ٣٫٠ · Cedar Valley School · الفصل الثاني',
+    ar: 'يورك-إي ٣٫٠ · مدرسة وادي الأرز · الفصل الثاني',
   },
 
   // Sign in, the K1 to Grade 3 route. Read by the child, not to the child.
@@ -157,7 +157,7 @@ export const shared = {
   },
   shNotif3Detail: {
     en: 'Grade 6 Cedar and Grade 6 Maple, 12 February',
-    ar: 'Grade 6 Cedar وGrade 6 Maple، ١٢ شباط',
+    ar: 'الصف السادس شعبة الأرز والصف السادس شعبة القيقب، ١٢ شباط',
   },
   shNotif4Title: {
     en: 'Term 2 reports close on 2 April',
@@ -206,7 +206,7 @@ export const shared = {
   },
   shNoResultsBody: {
     en: 'You are filtering by Grade 7 and quizzes only. Try searching by skill rather than by title.',
-    ar: 'أنت تصفّي حسب Grade 7 والاختبارات القصيرة فقط. جرّب البحث حسب المهارة بدل العنوان.',
+    ar: 'أنت تصفّي حسب الصف السابع والاختبارات القصيرة فقط. جرّب البحث حسب المهارة بدل العنوان.',
   },
   shClearTheFilters: { en: 'Clear the filters', ar: 'امسح عوامل التصفية' },
   shNothingForYou: { en: 'Nothing for you', ar: 'لا شيء لك' },
@@ -478,7 +478,7 @@ export const shared = {
   shTkt1At: { en: '6 Feb', ar: '٦ شباط' },
   shTkt2Issue: {
     en: 'Nobody in Grade 6 Cedar can open the end of unit quiz',
-    ar: 'لا أحد في Grade 6 Cedar يستطيع فتح اختبار نهاية الوحدة',
+    ar: 'لا أحد في الصف السادس، شعبة الأرز يستطيع فتح اختبار نهاية الوحدة',
   },
   shTkt2At: { en: '5 Feb', ar: '٥ شباط' },
   shTkt3Issue: {
