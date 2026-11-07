@@ -1,5 +1,6 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 import { forwardRef, type ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -34,13 +35,50 @@ export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  /**
+   * Pending. Disables the button and shows a spinner beside the label.
+   *
+   * The label stays. Swapping it for a spinner is the common shortcut and it
+   * makes the button change width mid click, which moves whatever sits next to
+   * it. Keeping the text also keeps the action readable: a person who looks
+   * back at a half finished form should still see what it was doing.
+   *
+   * `aria-busy` rather than a visually hidden "loading" string, because the
+   * button is already disabled and a screen reader announcing a disabled
+   * control twice is noise.
+   */
+  loading?: boolean
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : 'button'
+
+    // `asChild` renders someone else's element, usually a Link. Injecting a
+    // spinner there would give Slot two children and throw, and a link that is
+    // pending is a navigation rather than a submit, so it is not a state this
+    // component should claim to handle.
+    if (asChild) {
+      return (
+        <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props}>
+          {children}
+        </Comp>
+      )
+    }
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props} />
+      <button
+        className={cn(buttonVariants({ variant, size }), className)}
+        ref={ref}
+        disabled={disabled || loading}
+        aria-busy={loading || undefined}
+        {...props}
+      >
+        {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden /> : null}
+        {children}
+      </button>
     )
   },
 )
