@@ -588,6 +588,10 @@ export const shared = {
     en: 'Screens every role meets, built once rather than six times.',
     ar: 'شاشات يلتقيها كل دور، بُنيت مرة واحدة لا ست مرات.',
   },
+  shSectionDesignSystemBlurb: {
+    en: 'Not screens. The parts the screens are made of, and the values behind them.',
+    ar: 'ليست شاشات، بل الأجزاء التي تتكون منها الشاشات والقيم التي تقوم عليها.',
+  },
 
   // Frame titles, school admin
   shFrameOverview: { en: 'Overview', ar: 'نظرة عامة' },
@@ -755,6 +759,7 @@ export const shared = {
   // Frame notes. What the frame is, when it is not an ordinary page.
   shFrameNoteFlow: { en: 'Flow', ar: 'مسار' },
   shFrameNoteNoChrome: { en: 'No chrome', ar: 'بلا إطار' },
+  shFrameNoteSpec: { en: 'Spec', ar: 'مرجع' },
   shFrameNoteFlowNoChrome: { en: 'Flow, no chrome', ar: 'مسار، بلا إطار' },
   shFrameNoteNoChromeProjected: {
     en: 'No chrome, projected',
