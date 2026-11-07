@@ -1,14 +1,45 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Download, Plus, TriangleAlert } from 'lucide-react'
+import { ArrowRight, Download, MoreHorizontal, Plus, TriangleAlert } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input, SearchInput } from '@/components/ui/input'
+import { FieldError, Input, SearchInput } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Hint } from '@/components/ui/tooltip'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Progress } from '@/components/ui/progress'
+import { PersonAvatar } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
+import { Label } from '@/components/ui/label'
+import { SavedIndicator, useToast } from '@/components/ui/toast'
 import {
   Table,
   TableBody,
@@ -97,12 +128,22 @@ const forcedRing = 'ring-2 ring-ring ring-offset-2 ring-offset-background'
 
 export function DesignComponents() {
   const { t } = useLocale()
+  const toast = useToast()
+  const [saved, setSaved] = useState(false)
+
+  // The saved indicator is the only thing on this page with real behaviour, so
+  // it clears itself rather than sitting there forever after one click.
+  useEffect(() => {
+    if (!saved) return undefined
+    const timer = window.setTimeout(() => setSaved(false), 3000)
+    return () => window.clearTimeout(timer)
+  }, [saved])
 
   const missing: StringKey[] = [
-    'dsMissingLoading',
-    'dsMissingInputError',
-    'dsMissingPrimitives',
-    'dsMissingToast',
+    'dsMissingRadio',
+    'dsMissingDatePicker',
+    'dsMissingFileUpload',
+    'dsMigrationNote',
   ]
 
   return (
@@ -133,6 +174,11 @@ export function DesignComponents() {
         </Spec>
         <Spec label={t('dsStateDisabled')} code="disabled:opacity-50">
           <Button size="sm" disabled>
+            {t('save')}
+          </Button>
+        </Spec>
+        <Spec label={t('dsStateLoading')} code="<Button loading>  aria-busy, disabled, label stays">
+          <Button size="sm" loading>
             {t('save')}
           </Button>
         </Spec>
@@ -220,7 +266,7 @@ export function DesignComponents() {
         </Spec>
       </Section>
 
-      <Section title={t('dsInputs')} note={t('dsMissingInputError')}>
+      <Section title={t('dsInputs')}>
         <Spec label={t('dsStatePlaceholder')} code="placeholder:text-muted-foreground">
           <Input placeholder={t('search')} readOnly />
         </Spec>
@@ -233,11 +279,166 @@ export function DesignComponents() {
         <Spec label={t('dsStateDisabled')} code="disabled:cursor-not-allowed disabled:opacity-50">
           <Input defaultValue="Grade 6 Cedar" disabled />
         </Spec>
-        <Spec label={t('dsStateError')} code='className="border-danger"'>
-          <Input defaultValue="" readOnly className="border-danger" />
+        <Spec label={t('dsStateError')} code="<Input invalid>  border-danger, ring-danger, aria-invalid">
+          <span className="w-full space-y-1.5">
+            <Input defaultValue="" readOnly invalid aria-describedby="ds-err" />
+            <FieldError id="ds-err">{t('dsStateError')}</FieldError>
+          </span>
+        </Spec>
+        <Spec label="Label" code="<Label htmlFor>  peer-disabled dims with the field">
+          <Label htmlFor="ds-label-demo">{t('dsColSample')}</Label>
         </Spec>
         <Spec label="SearchInput" code="ps-9, icon at start-3, mirrors in RTL">
-          <SearchInput placeholder={t('search')} readOnly />
+          <SearchInput id="ds-label-demo" placeholder={t('search')} readOnly />
+        </Spec>
+      </Section>
+
+      <Section title={t('dsSelect')} note={t('dsSelectNote')}>
+        <Spec label={t('dsStateRest')} code="<Select><SelectTrigger><SelectValue /></SelectTrigger>">
+          <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={t('dsPickClass')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cls-3">Grade 6 Cedar</SelectItem>
+              <SelectItem value="cls-4">Grade 6 Maple</SelectItem>
+              <SelectItem value="cls-5">Grade 7 Jasmine</SelectItem>
+            </SelectContent>
+          </Select>
+        </Spec>
+        <Spec label={t('dsStateError')} code="<SelectTrigger invalid>">
+          <Select>
+            <SelectTrigger className="w-full" invalid>
+              <SelectValue placeholder={t('dsPickClass')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cls-3">Grade 6 Cedar</SelectItem>
+            </SelectContent>
+          </Select>
+        </Spec>
+        <Spec label={t('dsStateDisabled')} code="<Select disabled>">
+          <Select disabled>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={t('dsPickClass')} />
+            </SelectTrigger>
+          </Select>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsDialog')} note={t('dsDialogNote')}>
+        <Spec label={t('dsStateOpen')} code="<DialogContent closeLabel={t('close')}>">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                {t('dsStateOpen')}
+              </Button>
+            </DialogTrigger>
+            <DialogContent closeLabel={t('close')}>
+              <DialogHeader>
+                <DialogTitle>{t('dsDialogTitle')}</DialogTitle>
+                <DialogDescription>{t('dsDialogBody')}</DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button size="sm" variant="ghost">
+                    {t('cancel')}
+                  </Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button size="sm" variant="danger">
+                    {t('dsMenuRemove')}
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsTooltip')} note={t('dsTooltipNote')}>
+        <Spec label={t('dsStateHoverMe')} code="<Hint label={...}><Button /></Hint>">
+          <Hint label={t('dsTooltipDemo')}>
+            <Button size="icon" variant="outline" aria-label={t('dsTooltipDemo')}>
+              <Download className="h-4 w-4" aria-hidden />
+            </Button>
+          </Hint>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsPopover')}>
+        <Spec label={t('dsStateOpen')} code='align="start" resolves against direction'>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="sm" variant="outline">
+                {t('dsStateOpen')}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <p className="text-small text-muted-foreground">{t('dsPopoverBody')}</p>
+            </PopoverContent>
+          </Popover>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsDropdown')}>
+        <Spec label={t('dsStateOpen')} code="<DropdownMenuItem destructive>">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="ghost" aria-label={t('dsDropdown')}>
+                <MoreHorizontal className="h-4 w-4" aria-hidden />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>{t('dsMenuEdit')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('dsMenuDuplicate')}</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem destructive>{t('dsMenuRemove')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsProgress')} note={t('dsProgressNote')}>
+        <Spec label="default" code='<Progress value={68} label="..." />'>
+          <Progress value={68} label={t('dsColSample')} className="w-full" />
+        </Spec>
+        <Spec label="success" code='tone="success"'>
+          <Progress value={88} label={t('dsColSample')} tone="success" className="w-full" />
+        </Spec>
+        <Spec label="warning" code='tone="warning"'>
+          <Progress value={44} label={t('dsColSample')} tone="warning" className="w-full" />
+        </Spec>
+        <Spec label="learner" code='tone="learner"  the only tone the early tier uses'>
+          <Progress value={66} label={t('dsColSample')} tone="learner" className="w-full" />
+        </Spec>
+      </Section>
+
+      <Section title={t('dsAvatar')}>
+        <Spec label={t('dsStateRest')} code='<PersonAvatar name="Ibrahim Sleiman" />'>
+          <PersonAvatar name="Ibrahim Sleiman" />
+        </Spec>
+        <Spec label={t('dsSeparator')} code='<Separator />  decorative by default'>
+          <span className="flex w-full items-center gap-3">
+            <span className="text-small text-muted-foreground">A</span>
+            <Separator className="flex-1" />
+            <span className="text-small text-muted-foreground">B</span>
+          </span>
+        </Spec>
+      </Section>
+
+      <Section title={t('dsFeedback')} note={t('dsFeedbackNote')}>
+        <Spec label={t('dsStateInline')} code="<SavedIndicator saved label={t('saved')} />">
+          <span className="flex items-center gap-3">
+            <Button size="sm" variant="outline" onClick={() => setSaved(true)}>
+              {t('dsSavedDemo')}
+            </Button>
+            <SavedIndicator saved={saved} label={t('saved')} />
+          </span>
+        </Spec>
+        <Spec label={t('dsStateCorner')} code="const toast = useToast(); toast(message)">
+          <Button size="sm" variant="outline" onClick={() => toast(t('saved'))}>
+            {t('dsToastDemo')}
+          </Button>
         </Spec>
       </Section>
 
