@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { classesForSchool, courses, DEFAULT_SCHOOL_ID, schools, subjects } from '@/data/seed'
 
@@ -99,7 +100,7 @@ export function SchoolAdminCourses() {
                     <TableCell className="tabular text-end">{row.activities}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {row.assigned.length
-                        ? row.assigned.map((item) => item.name).join(', ')
+                        ? row.assigned.map((item) => groupName(item, locale)).join(', ')
                         : t('admNotAssigned')}
                     </TableCell>
                     <TableCell>
