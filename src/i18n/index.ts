@@ -1,5 +1,6 @@
 import { common } from './common'
 import { coordinator } from './coordinator'
+import { designSystem } from './designSystem'
 import { parent } from './parent'
 import { schoolAdmin } from './schoolAdmin'
 import { shared } from './shared'
@@ -26,6 +27,7 @@ const phrases = {
   ...coordinator,
   ...superAdmin,
   ...shared,
+  ...designSystem,
 } satisfies Record<string, Phrase>
 
 export type StringKey = keyof typeof phrases
