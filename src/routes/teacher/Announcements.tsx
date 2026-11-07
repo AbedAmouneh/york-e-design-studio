@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn, initials } from '@/lib/utils'
 import { fullName, teacherClasses } from '@/data/teacher'
@@ -87,7 +88,7 @@ const threadTimeKeys = [
 ] as const
 
 export function TeacherAnnouncements() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [audience, setAudience] = useState<Set<string>>(new Set([teacherClasses[1].id]))
@@ -179,7 +180,7 @@ export function TeacherAnnouncements() {
                           : 'border-border text-muted-foreground hover:bg-surface',
                       )}
                     >
-                      {item.name}
+                      {groupName(item, locale)}
                     </button>
                   ))}
                 </div>
