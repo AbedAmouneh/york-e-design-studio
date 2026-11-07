@@ -3,6 +3,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useLocale } from '@/lib/i18n'
 import { announcements } from '@/data/seed'
 import { children } from '@/data/parent'
 
@@ -17,11 +18,13 @@ import { children } from '@/data/parent'
  * about the one in Grade 2 or the one in Grade 6.
  */
 export function ParentAnnouncements() {
+  const { t } = useLocale()
+
   const posts = announcements.map((item) => ({
     ...item,
     concerns:
       item.audience === 'school'
-        ? 'Whole school'
+        ? t('parWholeSchool')
         : item.title.includes('Grade 6')
           ? children[0].firstName
           : children[1].firstName,
@@ -29,7 +32,7 @@ export function ParentAnnouncements() {
 
   return (
     <Page>
-      <PageHeader title="Announcements" subtitle="From Cedar Valley School" />
+      <PageHeader title={t('navAnnouncements')} subtitle={t('parAnnouncementsSubtitle')} />
 
       <div className="space-y-2">
         {posts.map((item) => (
@@ -51,7 +54,7 @@ export function ParentAnnouncements() {
               <p className="text-small text-muted-foreground">{item.body}</p>
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline">{item.authorName}</Badge>
-                <Badge variant="neutral">Concerns: {item.concerns}</Badge>
+                <Badge variant="neutral">{t('parConcerns').replace('{n}', item.concerns)}</Badge>
               </div>
             </CardContent>
           </Card>

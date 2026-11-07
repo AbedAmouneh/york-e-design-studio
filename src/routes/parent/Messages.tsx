@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn, initials } from '@/lib/utils'
+import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { children, parentName } from '@/data/parent'
 
 /**
@@ -18,12 +20,16 @@ import { children, parentName } from '@/data/parent'
  * and it is why this screen is a thread list and not an inbox.
  */
 
+/*
+  The staff name on a thread is data and stays as written. Everything the
+  school says is copy, so it is held as a key and resolved at render time.
+*/
 interface Message {
   id: string
   from: 'school' | 'me'
   author: string
-  body: string
-  at: string
+  bodyKey: StringKey
+  atKey: StringKey
 }
 
 const thread: Message[] = [
@@ -31,40 +37,65 @@ const thread: Message[] = [
     id: 'm1',
     from: 'school',
     author: 'Ziad Mansour',
-    body: 'Good afternoon. Just to let you know we are starting fractions this week. Ibrahim found the first lesson tricky, which is completely normal at this point. Ten minutes of practice at home would make a real difference.',
-    at: 'Yesterday, 15:40',
+    bodyKey: 'parMsg1Body',
+    atKey: 'parMsgAt1',
   },
   {
     id: 'm2',
     from: 'me',
     author: parentName,
-    body: 'Thank you for letting us know. We will go over it this weekend.',
-    at: 'Yesterday, 19:02',
+    bodyKey: 'parMsg2Body',
+    atKey: 'parMsgAt2',
   },
   {
     id: 'm3',
     from: 'school',
     author: 'Ziad Mansour',
-    body: 'That is great, thank you. There are three short practice questions set in the app if it helps.',
-    at: 'Today, 09:12',
+    bodyKey: 'parMsg3Body',
+    atKey: 'parMsgAt3',
   },
 ]
 
-const threads = [
-  { id: 't1', staff: 'Ziad Mansour', role: 'Class teacher', about: children[0], unread: true },
-  { id: 't2', staff: 'School office', role: 'Administration', about: children[1], unread: false },
+interface Thread {
+  id: string
+  staff: string | null
+  staffKey: StringKey | null
+  roleKey: StringKey
+  about: (typeof children)[number]
+  unread: boolean
+}
+
+const threads: Thread[] = [
+  {
+    id: 't1',
+    staff: 'Ziad Mansour',
+    staffKey: null,
+    roleKey: 'parRoleClassTeacher',
+    about: children[0],
+    unread: true,
+  },
+  {
+    id: 't2',
+    staff: null,
+    staffKey: 'parSchoolOffice',
+    roleKey: 'parRoleAdministration',
+    about: children[1],
+    unread: false,
+  },
 ]
 
 export function ParentMessages() {
+  const { t } = useLocale()
   const [active, setActive] = useState(threads[0].id)
   const [draft, setDraft] = useState('')
   const [sent, setSent] = useState(false)
 
   const current = threads.find((item) => item.id === active) ?? threads[0]
+  const staffNameOf = (item: Thread) => item.staff ?? t(item.staffKey as StringKey)
 
   return (
     <Page>
-      <PageHeader title="Messages" subtitle="From your children's teachers and the school office" />
+      <PageHeader title={t('parMessages')} subtitle={t('parMessagesSubtitle')} />
 
       <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
         <Card className="h-fit">
@@ -80,14 +111,14 @@ export function ParentMessages() {
                 )}
               >
                 <span className="grid h-9 w-9 flex-none place-items-center rounded-full bg-surface text-caption font-semibold text-foreground">
-                  {initials(item.staff)}
+                  {initials(staffNameOf(item))}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col leading-tight">
                   <span className="truncate text-small font-medium text-foreground">
-                    {item.staff}
+                    {staffNameOf(item)}
                   </span>
                   <span className="truncate text-caption text-muted-foreground">
-                    about {item.about.firstName}
+                    {t('parAboutChild').replace('{n}', item.about.firstName)}
                   </span>
                 </span>
                 {item.unread ? (
@@ -103,13 +134,15 @@ export function ParentMessages() {
             <div className="flex items-center gap-3 border-b border-border pb-3">
               <span className="min-w-0 flex-1 leading-tight">
                 <span className="block text-small font-semibold text-foreground">
-                  {current.staff}
+                  {staffNameOf(current)}
                 </span>
                 <span className="block text-caption text-muted-foreground">
-                  {current.role} · about {current.about.firstName}
+                  {t('parRoleAboutChild')
+                    .replace('{t}', t(current.roleKey))
+                    .replace('{n}', current.about.firstName)}
                 </span>
               </span>
-              <Badge variant="outline">Kept on record</Badge>
+              <Badge variant="outline">{t('parKeptOnRecord')}</Badge>
             </div>
 
             <div className="space-y-3">
@@ -127,9 +160,11 @@ export function ParentMessages() {
                     <span className="text-caption font-semibold text-foreground">
                       {message.author}
                     </span>
-                    <span className="text-caption text-muted-foreground">{message.at}</span>
+                    <span className="text-caption text-muted-foreground">{t(message.atKey)}</span>
                   </div>
-                  <p className="mt-1.5 text-small text-foreground">{message.body}</p>
+                  <p className="mt-1.5 text-small text-foreground">
+                    {t(message.bodyKey).replace('{n}', children[0].firstName)}
+                  </p>
                 </div>
               ))}
             </div>
@@ -142,7 +177,7 @@ export function ParentMessages() {
                   setDraft(event.target.value)
                   setSent(false)
                 }}
-                placeholder={`Reply to ${current.staff}`}
+                placeholder={t('parReplyTo').replace('{n}', staffNameOf(current))}
                 className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
               <div className="flex items-center gap-3">
@@ -156,14 +191,12 @@ export function ParentMessages() {
                   }}
                 >
                   <Send className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-                  Send
+                  {t('parSend')}
                 </Button>
                 {sent ? (
-                  <span className="text-small text-success">Sent. Teachers reply in school hours.</span>
+                  <span className="text-small text-success">{t('parSentNote')}</span>
                 ) : (
-                  <span className="text-caption text-muted-foreground">
-                    Teachers reply during school hours, Monday to Friday.
-                  </span>
+                  <span className="text-caption text-muted-foreground">{t('parReplyHours')}</span>
                 )}
               </div>
             </div>

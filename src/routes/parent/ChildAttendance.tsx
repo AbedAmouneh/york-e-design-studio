@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import {
   attendanceFor,
   attendanceSummary,
@@ -32,15 +34,16 @@ const tone: Record<AttendanceRecord['state'], string> = {
   excused: 'bg-muted text-muted-foreground border-border-strong',
 }
 
-const label: Record<AttendanceRecord['state'], string> = {
-  present: 'Present',
-  late: 'Late',
-  absent: 'Absent',
-  excused: 'Excused',
+const labelKey: Record<AttendanceRecord['state'], StringKey> = {
+  present: 'parPresent',
+  late: 'parLate',
+  absent: 'parAbsent',
+  excused: 'parExcused',
 }
 
 export function ParentChildAttendance() {
   const { childId = '' } = useParams()
+  const { t } = useLocale()
   const child = childById(childId) ?? children[0]
   const records = attendanceFor(child)
   const summary = attendanceSummary(child)
@@ -48,30 +51,34 @@ export function ParentChildAttendance() {
   return (
     <Page>
       <PageHeader
-        title={`${child.firstName}'s attendance`}
-        subtitle="Term 2 · recorded by the class teacher each morning"
+        title={t('parNameAttendance').replace('{n}', child.firstName)}
+        subtitle={t('parAttendanceSubtitle')}
         actions={
           <Button variant="outline" size="sm">
-            Tell the school about an absence
+            {t('parTellSchoolAbsence')}
           </Button>
         }
       />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Present"
+          label={t('parPresent')}
           value={String(summary.present)}
-          hint={`of ${summary.total} days`}
+          hint={t('parOfNDays').replace('{n}', String(summary.total))}
         />
-        <StatCard label="Late" value={String(summary.late)} />
-        <StatCard label="Absent" value={String(summary.absent)} emphasis={summary.absent > 1} />
-        <StatCard label="Excused" value={String(summary.excused)} />
+        <StatCard label={t('parLate')} value={String(summary.late)} />
+        <StatCard
+          label={t('parAbsent')}
+          value={String(summary.absent)}
+          emphasis={summary.absent > 1}
+        />
+        <StatCard label={t('parExcused')} value={String(summary.excused)} />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Day by day</CardTitle>
-          <Badge variant="outline">{records.length} days</Badge>
+          <CardTitle>{t('parDayByDay')}</CardTitle>
+          <Badge variant="outline">{t('parNDays').replace('{n}', String(records.length))}</Badge>
         </CardHeader>
         <CardContent className="space-y-1.5">
           {records.map((record) => (
@@ -88,17 +95,14 @@ export function ParentChildAttendance() {
                   tone[record.state],
                 )}
               >
-                {label[record.state]}
+                {t(labelKey[record.state])}
               </span>
             </div>
           ))}
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        If something here looks wrong, tell the school office rather than the class teacher. The
-        register is corrected at the office.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('parAttendanceNote')}</p>
     </Page>
   )
 }

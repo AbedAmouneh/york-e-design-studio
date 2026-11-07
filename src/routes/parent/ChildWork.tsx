@@ -34,7 +34,7 @@ import {
  */
 export function ParentChildWork() {
   const { childId = '' } = useParams()
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const child = childById(childId) ?? children[0]
   const early = isEarly(child)
 
@@ -44,13 +44,15 @@ export function ParentChildWork() {
   return (
     <Page>
       <PageHeader
-        title={`${child.firstName}'s work`}
-        subtitle={`${due.length} still to do · ${marks.length} marked`}
+        title={t('parNameWork').replace('{n}', child.firstName)}
+        subtitle={t('parWorkSubtitle')
+          .replace('{n}', String(due.length))
+          .replace('{m}', String(marks.length))}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Still to do</CardTitle>
+          <CardTitle>{t('parStillToDo')}</CardTitle>
           <Badge variant={due.length > 0 ? 'accent' : 'neutral'}>{due.length}</Badge>
         </CardHeader>
         <CardContent className="space-y-1.5">
@@ -65,7 +67,7 @@ export function ParentChildWork() {
                     ? locale === 'ar'
                       ? item.activity.titleAr
                       : item.activity.title
-                    : 'Activity'}
+                    : t('colActivity')}
                 </span>
                 <span className="block truncate text-caption text-muted-foreground">
                   {item.course ? (locale === 'ar' ? item.course.titleAr : item.course.title) : ''}
@@ -73,13 +75,13 @@ export function ParentChildWork() {
               </span>
               <span className="flex flex-none items-center gap-1.5 text-caption text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" aria-hidden />
-                due {item.assignment.dueOn}
+                {t('parDueOn').replace('{d}', item.assignment.dueOn)}
               </span>
             </div>
           ))}
           {due.length === 0 ? (
             <p className="py-6 text-center text-small text-muted-foreground">
-              Nothing outstanding right now.
+              {t('parNothingOutstandingNow')}
             </p>
           ) : null}
         </CardContent>
@@ -87,17 +89,17 @@ export function ParentChildWork() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Marked and returned</CardTitle>
+          <CardTitle>{t('parMarkedAndReturned')}</CardTitle>
           <Badge variant="outline">{marks.length}</Badge>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Activity</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Returned</TableHead>
-                <TableHead className="text-end">{early ? 'Stars' : 'Mark'}</TableHead>
+                <TableHead>{t('colActivity')}</TableHead>
+                <TableHead>{t('colCourse')}</TableHead>
+                <TableHead>{t('parColReturned')}</TableHead>
+                <TableHead className="text-end">{t(early ? 'parStars' : 'parMark')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -111,7 +113,7 @@ export function ParentChildWork() {
                         ? locale === 'ar'
                           ? item.activity.titleAr
                           : item.activity.title
-                        : 'Activity'}
+                        : t('colActivity')}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {item.course
@@ -162,10 +164,7 @@ export function ParentChildWork() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Work that is with the teacher does not appear until it is marked and released, so you and
-        your child see the same thing at the same time.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('parWorkNote')}</p>
     </Page>
   )
 }

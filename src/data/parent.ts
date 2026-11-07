@@ -94,15 +94,11 @@ export const isEarly = (child: Student) => child.ageTier === 'early'
  * Never a verdict, always a next step. A one star child is told what to
  * practise, not that they are behind.
  */
-export function earlySummary(child: Student) {
+export function earlySummaryKey(child: Student) {
   const stars = standings.find((item) => item.studentId === child.id)?.stars ?? 1
-  if (stars === 3) {
-    return `${child.firstName} is finishing their work and getting most of it right.`
-  }
-  if (stars === 2) {
-    return `${child.firstName} is finishing their work. A few topics are still settling.`
-  }
-  return `${child.firstName} is finishing their work and finding some of it hard. Their teacher is working on it with them.`
+  if (stars === 3) return 'parEarlySummaryThree' as const
+  if (stars === 2) return 'parEarlySummaryTwo' as const
+  return 'parEarlySummaryOne' as const
 }
 
 export { students }

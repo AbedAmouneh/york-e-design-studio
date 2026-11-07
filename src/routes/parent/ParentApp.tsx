@@ -9,6 +9,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import { cn, initials } from '@/lib/utils'
+import { useLocale } from '@/lib/i18n'
 import { children, fullNameOf, isEarly, parentName } from '@/data/parent'
 import { Badge } from '@/components/ui/badge'
 
@@ -24,23 +25,34 @@ import { Badge } from '@/components/ui/badge'
  */
 export function ParentApp() {
   const { childId } = useParams()
+  const { t } = useLocale()
   const active = children.find((child) => child.id === childId) ?? children[0]
 
   /*
     Labelled with the child's name rather than "My progress". A parent is
-    looking at somebody else, so the possessive belongs to the child.
+    looking at somebody else, so the possessive belongs to the child. Arabic
+    builds that possessive the other way round, so the whole label is one
+    phrase with the name interpolated rather than a name plus a suffix.
   */
   const sections = [
-    { to: `/parent/child/${active.id}`, label: 'Overview', icon: LayoutDashboard, end: true },
-    { to: `/parent/child/${active.id}/progress`, label: `${active.firstName}'s progress`, icon: TrendingUp },
-    { to: `/parent/child/${active.id}/work`, label: `${active.firstName}'s work`, icon: FileText },
-    { to: `/parent/child/${active.id}/attendance`, label: 'Attendance', icon: CalendarCheck },
+    { to: `/parent/child/${active.id}`, label: t('navOverview'), icon: LayoutDashboard, end: true },
+    {
+      to: `/parent/child/${active.id}/progress`,
+      label: t('parNameProgress').replace('{n}', active.firstName),
+      icon: TrendingUp,
+    },
+    {
+      to: `/parent/child/${active.id}/work`,
+      label: t('parNameWork').replace('{n}', active.firstName),
+      icon: FileText,
+    },
+    { to: `/parent/child/${active.id}/attendance`, label: t('navAttendance'), icon: CalendarCheck },
   ]
 
   const general = [
-    { to: '/parent/messages', label: 'Messages', icon: MessageSquare },
-    { to: '/parent/announcements', label: 'Announcements', icon: Megaphone },
-    { to: '/parent/settings', label: 'Notifications', icon: Settings },
+    { to: '/parent/messages', label: t('parMessages'), icon: MessageSquare },
+    { to: '/parent/announcements', label: t('navAnnouncements'), icon: Megaphone },
+    { to: '/parent/settings', label: t('navNotifications'), icon: Settings },
   ]
 
   return (
@@ -52,7 +64,7 @@ export function ParentApp() {
 
         <div className="flex-none space-y-1 border-b border-border p-3">
           <p className="px-1 pb-1 text-caption font-medium uppercase tracking-wide text-muted-foreground">
-            My children
+            {t('parMyChildren')}
           </p>
           {children.map((child) => (
             <NavLink
@@ -71,7 +83,7 @@ export function ParentApp() {
                   {child.firstName}
                 </span>
                 <span className="truncate text-caption text-muted-foreground">
-                  {isEarly(child) ? 'Grade 2' : 'Grade 6'}
+                  {isEarly(child) ? t('parGrade2') : t('parGrade6')}
                 </span>
               </span>
             </NavLink>
@@ -136,7 +148,7 @@ export function ParentApp() {
           </span>
           <span className="flex min-w-0 flex-col leading-tight">
             <span className="truncate text-small font-medium text-foreground">{parentName}</span>
-            <span className="truncate text-caption text-muted-foreground">Parent</span>
+            <span className="truncate text-caption text-muted-foreground">{t('tabParent')}</span>
           </span>
         </div>
       </aside>

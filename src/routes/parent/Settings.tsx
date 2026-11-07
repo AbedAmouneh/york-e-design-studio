@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
+import { useLocale } from '@/lib/i18n'
+import type { StringKey } from '@/i18n'
 import { children, fullNameOf, parentName } from '@/data/parent'
 
 /**
@@ -20,26 +22,33 @@ import { children, fullNameOf, parentName } from '@/data/parent'
 
 interface Setting {
   id: string
-  label: string
-  hint: string
+  labelKey: StringKey
+  hintKey: StringKey
   locked?: boolean
 }
 
 const settings: Setting[] = [
   {
     id: 'absence',
-    label: 'My child is marked absent',
-    hint: 'Sent the same morning. This cannot be turned off.',
+    labelKey: 'parNotifAbsence',
+    hintKey: 'parNotifAbsenceHint',
     locked: true,
   },
-  { id: 'marks', label: 'Work is marked and returned', hint: 'Sent when the teacher releases it.' },
-  { id: 'due', label: 'Something is due tomorrow', hint: 'One reminder the evening before.' },
-  { id: 'messages', label: 'A teacher messages me', hint: 'Sent straight away.' },
-  { id: 'announcements', label: 'School announcements', hint: 'Sent when posted.' },
-  { id: 'weekly', label: 'Weekly summary', hint: 'One email on Friday afternoon.' },
+  { id: 'marks', labelKey: 'parNotifMarks', hintKey: 'parNotifMarksHint' },
+  { id: 'due', labelKey: 'parNotifDue', hintKey: 'parNotifDueHint' },
+  { id: 'messages', labelKey: 'parNotifMessages', hintKey: 'parNotifMessagesHint' },
+  { id: 'announcements', labelKey: 'parNotifAnnouncements', hintKey: 'parNotifAnnouncementsHint' },
+  { id: 'weekly', labelKey: 'parNotifWeekly', hintKey: 'parNotifWeeklyHint' },
 ]
 
+const channels = [
+  { key: 'email', labelKey: 'parChannelEmail' },
+  { key: 'app', labelKey: 'parChannelApp' },
+  { key: 'both', labelKey: 'parChannelBoth' },
+] as const
+
 export function ParentSettings() {
+  const { t } = useLocale()
   const [prefs, setPrefs] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {}
     children.forEach((child) => {
@@ -59,20 +68,17 @@ export function ParentSettings() {
 
   return (
     <Page>
-      <PageHeader title="Notifications" subtitle={`Signed in as ${parentName}`} />
+      <PageHeader
+        title={t('navNotifications')}
+        subtitle={t('parSignedInAs').replace('{n}', parentName)}
+      />
 
       <Card>
         <CardHeader>
-          <CardTitle>How to reach you</CardTitle>
+          <CardTitle>{t('parHowToReachYou')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          {(
-            [
-              { key: 'email', label: 'Email only' },
-              { key: 'app', label: 'In the app only' },
-              { key: 'both', label: 'Both' },
-            ] as const
-          ).map((option) => (
+          {channels.map((option) => (
             <button
               key={option.key}
               type="button"
@@ -87,7 +93,7 @@ export function ParentSettings() {
                   : 'border-border text-muted-foreground hover:bg-surface',
               )}
             >
-              {option.label}
+              {t(option.labelKey)}
             </button>
           ))}
         </CardContent>
@@ -97,7 +103,9 @@ export function ParentSettings() {
         <Card key={child.id}>
           <CardHeader>
             <CardTitle>{fullNameOf(child)}</CardTitle>
-            <Badge variant="outline">{child.ageTier === 'early' ? 'Grade 2' : 'Grade 6'}</Badge>
+            <Badge variant="outline">
+              {child.ageTier === 'early' ? t('parGrade2') : t('parGrade6')}
+            </Badge>
           </CardHeader>
           <CardContent className="space-y-2">
             {settings.map((setting) => {
@@ -108,14 +116,14 @@ export function ParentSettings() {
                   className="flex items-center justify-between gap-4 rounded border border-border px-4 py-3"
                 >
                   <span className="min-w-0 text-small text-foreground">
-                    {setting.label}
+                    {t(setting.labelKey)}
                     <span className="mt-0.5 block text-caption text-muted-foreground">
-                      {setting.hint}
+                      {t(setting.hintKey)}
                     </span>
                   </span>
                   {setting.locked ? (
                     <Badge variant="neutral" className="flex-none">
-                      Always on
+                      {t('parAlwaysOn')}
                     </Badge>
                   ) : (
                     <Switch checked={prefs[key] ?? false} onCheckedChange={() => toggle(key)} />
@@ -129,14 +137,12 @@ export function ParentSettings() {
 
       <div className="flex items-center gap-3">
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
-          Save
+          {t('save')}
         </Button>
         {saved ? (
-          <span className="text-small text-success">Saved.</span>
+          <span className="text-small text-success">{t('saved')}</span>
         ) : (
-          <span className="text-caption text-muted-foreground">
-            Settings apply per child, not to your whole account.
-          </span>
+          <span className="text-caption text-muted-foreground">{t('parSettingsNote')}</span>
         )}
       </div>
     </Page>

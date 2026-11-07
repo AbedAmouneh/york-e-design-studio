@@ -12,7 +12,7 @@ import {
   childById,
   children,
   classOfChild,
-  earlySummary,
+  earlySummaryKey,
   fullNameOf,
   isEarly,
   pendingWorkFor,
@@ -33,7 +33,7 @@ import {
  */
 export function ParentChildOverview() {
   const { childId = '' } = useParams()
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const child = childById(childId) ?? children[0]
 
   const standing = standingOfChild(child)
@@ -47,12 +47,12 @@ export function ParentChildOverview() {
     <Page>
       <PageHeader
         title={fullNameOf(child)}
-        subtitle={`${group?.name} · Term 2, week 5`}
+        subtitle={t('parClassTermWeek').replace('{c}', group?.name ?? '')}
         actions={
           <Button variant="outline" size="sm" asChild>
             <Link to="/parent/messages">
               <Mail className="h-3.5 w-3.5" aria-hidden />
-              Message the teacher
+              {t('parMessageTeacher')}
             </Link>
           </Button>
         }
@@ -76,7 +76,8 @@ export function ParentChildOverview() {
               ))}
             </span>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {earlySummary(child)} In class they see stars like these, never a score.
+              {t(earlySummaryKey(child)).replace('{n}', child.firstName)}{' '}
+              {t('parSeesStarsNotScore')}
             </span>
           </CardContent>
         </Card>
@@ -84,43 +85,41 @@ export function ParentChildOverview() {
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {early ? (
-          <StatCard label="Work finished" value={`${standing?.completion}%`} />
+          <StatCard label={t('parWorkFinished')} value={`${standing?.completion}%`} />
         ) : (
-          <StatCard label="Average this term" value={`${standing?.average}%`} />
+          <StatCard label={t('parAvgThisTerm')} value={`${standing?.average}%`} />
         )}
-        <StatCard label="Marks released" value={String(marks.length)} />
-        <StatCard label="Due soon" value={String(due.length)} emphasis={due.length > 2} />
+        <StatCard label={t('parMarksReleased')} value={String(marks.length)} />
+        <StatCard label={t('parDueSoon')} value={String(due.length)} emphasis={due.length > 2} />
         <StatCard
-          label="Days present"
-          value={`${attendance.present} of ${attendance.total}`}
+          label={t('parDaysPresent')}
+          value={t('parNofM')
+            .replace('{n}', String(attendance.present))
+            .replace('{m}', String(attendance.total))}
           emphasis={attendance.absent > 1}
         />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>How {child.firstName} is getting on</CardTitle>
+          <CardTitle>{t('parHowChildIsGettingOn').replace('{n}', child.firstName)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="rounded border border-success/30 bg-success-tint px-4 py-3">
             <p className="text-caption font-medium uppercase tracking-wide text-success">
-              Going well
+              {t('parGoingWell')}
             </p>
             <p className="mt-1 text-small text-foreground">
-              {early
-                ? 'Counting in tens and reading aloud. They finished everything set this week.'
-                : 'Place value and common denominators. Work is handed in on time.'}
+              {t(early ? 'parGoingWellEarly' : 'parGoingWellUpper')}
             </p>
           </div>
 
           <div className="rounded border border-border bg-surface px-4 py-3">
             <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
-              Worth a bit of help at home
+              {t('parWorthHelpAtHome')}
             </p>
             <p className="mt-1 text-small text-foreground">
-              {early
-                ? 'Counting past 100. Practising out loud on the way to school is plenty.'
-                : 'Adding fractions with different denominators. Ten minutes of practice would help.'}
+              {t(early ? 'parHelpEarly' : 'parHelpUpper')}
             </p>
           </div>
         </CardContent>
@@ -129,9 +128,9 @@ export function ParentChildOverview() {
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Coming up</CardTitle>
+            <CardTitle>{t('parComingUp')}</CardTitle>
             <Button variant="ghost" size="sm" asChild>
-              <Link to={`/parent/child/${child.id}/work`}>See all</Link>
+              <Link to={`/parent/child/${child.id}/work`}>{t('viewAll')}</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-1.5">
@@ -146,7 +145,7 @@ export function ParentChildOverview() {
                     ? locale === 'ar'
                       ? item.activity.titleAr
                       : item.activity.title
-                    : 'Activity'}
+                    : t('colActivity')}
                 </span>
                 <span className="flex-none text-caption text-muted-foreground">
                   {item.assignment.dueOn}
@@ -155,7 +154,7 @@ export function ParentChildOverview() {
             ))}
             {due.length === 0 ? (
               <p className="py-6 text-center text-small text-muted-foreground">
-                Nothing outstanding.
+                {t('parNothingOutstanding')}
               </p>
             ) : null}
           </CardContent>
@@ -163,10 +162,10 @@ export function ParentChildOverview() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Recent marks</CardTitle>
+            <CardTitle>{t('parRecentMarks')}</CardTitle>
             <Button variant="ghost" size="sm" asChild>
               <Link to={`/parent/child/${child.id}/progress`}>
-                Progress
+                {t('parProgress')}
                 <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
               </Link>
             </Button>
@@ -184,7 +183,7 @@ export function ParentChildOverview() {
                       ? locale === 'ar'
                         ? item.activity.titleAr
                         : item.activity.title
-                      : 'Activity'}
+                      : t('colActivity')}
                   </span>
                   {early ? (
                     <span className="flex flex-none gap-0.5">

@@ -36,14 +36,16 @@ import {
  */
 export function ParentChildProgress() {
   const { childId = '' } = useParams()
-  const { locale, dir } = useLocale()
+  const { locale, dir, t } = useLocale()
   const child = childById(childId) ?? children[0]
   const early = isEarly(child)
   const standing = standingOfChild(child)
   const marks = releasedWorkFor(child)
 
   const series = marks.slice(0, 8).map((item, index) => ({
-    label: item.activity?.title ?? `Task ${index + 1}`,
+    label:
+      (locale === 'ar' ? item.activity?.titleAr : item.activity?.title) ??
+      t('parTaskN').replace('{n}', String(index + 1)),
     score: item.submission?.score ?? 0,
   }))
 
@@ -52,40 +54,32 @@ export function ParentChildProgress() {
   return (
     <Page>
       <PageHeader
-        title={`${child.firstName}'s progress`}
-        subtitle={early ? 'Term 2, what they can do now' : 'Term 2, marks over time'}
+        title={t('parNameProgress').replace('{n}', child.firstName)}
+        subtitle={t(early ? 'parProgressSubtitleEarly' : 'parProgressSubtitleUpper')}
       />
 
       {early ? (
         <Card>
           <CardHeader>
-            <CardTitle>What {child.firstName} can do now</CardTitle>
+            <CardTitle>{t('parWhatChildCanDoNow').replace('{n}', child.firstName)}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {[
-              'Counts in tens to 100 without help',
-              'Reads a short story aloud and tells you what happened',
-              'Names circles, squares and triangles',
-              'Writes numbers to 50 the right way round',
-            ].map((line) => (
+            {(['parCanDo1', 'parCanDo2', 'parCanDo3', 'parCanDo4'] as const).map((key) => (
               <div
-                key={line}
+                key={key}
                 className="flex items-start gap-3 rounded border border-border px-4 py-3"
               >
                 <Star className="mt-0.5 h-4 w-4 flex-none fill-accent text-accent" aria-hidden />
-                <span className="text-small text-foreground">{line}</span>
+                <span className="text-small text-foreground">{t(key)}</span>
               </div>
             ))}
-            <p className="pt-1 text-caption text-muted-foreground">
-              At this age the school reports what a child can do rather than a score. There is no
-              chart here on purpose.
-            </p>
+            <p className="pt-1 text-caption text-muted-foreground">{t('parNoChartNote')}</p>
           </CardContent>
         </Card>
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Marks over time</CardTitle>
+            <CardTitle>{t('parMarksOverTime')}</CardTitle>
             <Badge
               variant={
                 standing?.trend === 'rising'
@@ -95,11 +89,13 @@ export function ParentChildProgress() {
                     : 'neutral'
               }
             >
-              {standing?.trend === 'rising'
-                ? 'Improving'
-                : standing?.trend === 'falling'
-                  ? 'Slipping a little'
-                  : 'Steady'}
+              {t(
+                standing?.trend === 'rising'
+                  ? 'parTrendImproving'
+                  : standing?.trend === 'falling'
+                    ? 'parTrendSlipping'
+                    : 'parTrendSteady',
+              )}
             </Badge>
           </CardHeader>
           <CardContent>
@@ -143,8 +139,7 @@ export function ParentChildProgress() {
               </ResponsiveContainer>
             </div>
             <p className="mt-2 text-caption text-muted-foreground">
-              This is {fullNameOf(child)}'s own work over time. It is not compared with anyone else
-              in the class.
+              {t('parOwnWorkNote').replace('{n}', fullNameOf(child))}
             </p>
           </CardContent>
         </Card>
@@ -152,17 +147,22 @@ export function ParentChildProgress() {
 
       <Card>
         <CardHeader>
-          <CardTitle>By topic</CardTitle>
+          <CardTitle>{t('parByTopic')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {skills.slice(0, 6).map(({ record, skill }) => {
-            const label =
-              record.mastery >= 75 ? 'Secure' : record.mastery >= 55 ? 'Getting there' : 'Needs work'
+            const label = t(
+              record.mastery >= 75
+                ? 'parTopicSecure'
+                : record.mastery >= 55
+                  ? 'parTopicGettingThere'
+                  : 'parTopicNeedsWork',
+            )
             return (
               <div key={record.skillId} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3">
                   <span className="min-w-0 truncate text-small text-foreground">
-                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : 'Topic'}
+                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('parTopic')}
                   </span>
                   <Badge
                     variant={
