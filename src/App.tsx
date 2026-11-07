@@ -87,6 +87,14 @@ import { SuperAdminUsage } from '@/routes/super-admin/Usage'
 import { SuperAdminSupport } from '@/routes/super-admin/Support'
 import { SuperAdminSettings } from '@/routes/super-admin/Settings'
 
+import { SharedApp } from '@/routes/shared/SharedApp'
+import { SharedSignIn } from '@/routes/shared/SignIn'
+import { SharedForgotPassword } from '@/routes/shared/ForgotPassword'
+import { SharedProfile } from '@/routes/shared/Profile'
+import { SharedNotifications } from '@/routes/shared/Notifications'
+import { SharedEmptyState } from '@/routes/shared/EmptyState'
+import { SharedErrorState } from '@/routes/shared/ErrorState'
+
 export default function App() {
   return (
     <Routes>
@@ -99,6 +107,8 @@ export default function App() {
       <Route path="/student/quiz/:assignmentId" element={<StudentTakeQuiz />} />
       <Route path="/student/early/activity/:activityId" element={<EarlyDoActivity />} />
       <Route path="/student/early/done" element={<EarlyWellDone />} />
+      <Route path="/shared/sign-in" element={<SharedSignIn />} />
+      <Route path="/shared/forgot" element={<SharedForgotPassword />} />
 
       <Route element={<StudioShell />}>
         <Route index element={<Navigate to="/school-admin" replace />} />
@@ -189,6 +199,14 @@ export default function App() {
           <Route path="messages" element={<ParentMessages />} />
           <Route path="announcements" element={<ParentAnnouncements />} />
           <Route path="settings" element={<ParentSettings />} />
+        </Route>
+
+        <Route path="shared" element={<SharedApp />}>
+          <Route index element={<Navigate to="/shared/profile" replace />} />
+          <Route path="profile" element={<SharedProfile />} />
+          <Route path="notifications" element={<SharedNotifications />} />
+          <Route path="empty" element={<SharedEmptyState />} />
+          <Route path="error" element={<SharedErrorState />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
