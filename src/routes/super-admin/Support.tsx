@@ -14,20 +14,26 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import { schools } from '@/data/seed'
 
 /**
- * The history rows carry keys rather than copy. School names stay as data, and
- * the class name inside "Teacher, Grade 6 Falcon" stays as it appears in the
- * tenant's own records, because an audit line that renames what it is auditing
- * is no longer an audit line.
+ * The history rows carry keys and ids rather than copy.
+ *
+ * The school is a `schoolId` and not a name. An earlier version wrote the name
+ * in here on the argument that an audit line which renames what it is auditing
+ * is no longer an audit line. That argument was right about free text and
+ * wrong about this: the row points at a tenant record, and showing that
+ * tenant's own Arabic name to an Arabic reader is not a rename. Writing the
+ * name in place also meant the log could drift from the tenant list above it,
+ * which is the failure an audit screen can least afford.
  */
 const sessions: Array<{
   id: string
   whoKey: StringKey
-  school: string
+  schoolId: string
   asKey: StringKey
   reasonKey: StringKey
   atKey: StringKey
@@ -36,7 +42,7 @@ const sessions: Array<{
   {
     id: 'imp-1',
     whoKey: 'saPlatformOperations',
-    school: 'Al Noor International School',
+    schoolId: 'sch-noor',
     asKey: 'saImpAs1',
     reasonKey: 'saImpReason1',
     atKey: 'saImpAt1',
@@ -45,7 +51,7 @@ const sessions: Array<{
   {
     id: 'imp-2',
     whoKey: 'saPlatformOperations',
-    school: 'Cedar Valley School',
+    schoolId: 'sch-cedar',
     asKey: 'saImpAs2',
     reasonKey: 'saImpReason2',
     atKey: 'saImpAt2',
@@ -71,7 +77,7 @@ const sessions: Array<{
  * document nobody reads.
  */
 export function SuperAdminSupport() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [reason, setReason] = useState('')
   const [target, setTarget] = useState<string | null>(null)
   const [active, setActive] = useState(false)
@@ -109,7 +115,7 @@ export function SuperAdminSupport() {
                       : 'border-border text-muted-foreground hover:bg-surface',
                   )}
                 >
-                  {school.name}
+                  {schoolName(school, locale)}
                 </button>
               ))}
             </div>
@@ -170,7 +176,12 @@ export function SuperAdminSupport() {
                   <TableCell className="font-medium text-foreground">
                     {t(session.whoKey)}
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{session.school}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {schoolName(
+                      schools.find((item) => item.id === session.schoolId),
+                      locale,
+                    )}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{t(session.asKey)}</TableCell>
                   <TableCell className="max-w-[280px] text-muted-foreground">
                     {t(session.reasonKey)}
