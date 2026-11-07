@@ -23,6 +23,11 @@ const tabs = [
   { to: '/teacher', labelKey: 'tabTeacher' },
   { to: '/student', labelKey: 'tabStudent' },
   { to: '/parent', labelKey: 'tabParent' },
+  // The shared screens have no tab and are reached from the canvas, because a
+  // reviewer meets them in the course of a role. The design system does get
+  // one: it is the only section nobody arrives at by accident, and a developer
+  // checking a class name mid task should not have to go through the canvas.
+  { to: '/design/components', labelKey: 'tabDesignSystem' },
 ] as const
 
 export function StudioShell() {
