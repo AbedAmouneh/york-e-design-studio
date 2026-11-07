@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { schools, studentsForSchool } from '@/data/seed'
 
@@ -26,7 +27,7 @@ import { schools, studentsForSchool } from '@/data/seed'
  * pretend otherwise.
  */
 export function SuperAdminSeats() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   const rows = schools.map((school) => {
     const used = Math.round((school.seatsUsed / school.seats) * 100)
@@ -68,7 +69,10 @@ export function SuperAdminSeats() {
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
             <Badge variant="accent">{t('saBadgeSales')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {t('saTightNote').replace('{n}', tight.map((row) => row.school.name).join(', '))}
+              {t('saTightNote').replace(
+                '{n}',
+                tight.map((row) => schoolName(row.school, locale)).join(', '),
+              )}
             </span>
             <Button variant="outline" size="sm">
               {t('saFlagAccountTeam')}
@@ -82,7 +86,10 @@ export function SuperAdminSeats() {
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
             <Badge variant="warning">{t('saRenewalRisk')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {t('saIdleNote').replace('{n}', idle.map((row) => row.school.name).join(', '))}
+              {t('saIdleNote').replace(
+                '{n}',
+                idle.map((row) => schoolName(row.school, locale)).join(', '),
+              )}
             </span>
             <Button variant="outline" size="sm">
               {t('saOpenCheckIn')}
@@ -110,7 +117,9 @@ export function SuperAdminSeats() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.school.id}>
-                  <TableCell className="font-medium text-foreground">{row.school.name}</TableCell>
+                  <TableCell className="font-medium text-foreground">
+                    {schoolName(row.school, locale)}
+                  </TableCell>
                   <TableCell className="tabular text-end">{row.school.seats}</TableCell>
                   <TableCell className="tabular text-end">{row.school.seatsUsed}</TableCell>
                   <TableCell>
