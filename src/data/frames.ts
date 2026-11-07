@@ -5,8 +5,15 @@
  * progress counts are derived from. Screens that are planned but not built sit
  * in the list as `built: false` rather than being left out, so the canvas is an
  * honest picture of what exists rather than a gallery of the finished parts.
+ *
+ * The register holds string keys rather than English words. The canvas is the
+ * first screen a reviewer opens, so an English title here would be the one
+ * English word left on an otherwise Arabic studio. The text for every key lives
+ * in `src/i18n/shared.ts`, except the six section titles that already exist as
+ * tab labels in `src/i18n/common.ts` and are reused rather than duplicated.
  */
 
+import type { StringKey } from '@/i18n'
 import { UPPER_STUDENT_ID } from './student'
 import { children } from './parent'
 
@@ -16,164 +23,169 @@ const EARLY_CHILD = children[1].id
 export interface Frame {
   /** Numbered for review. "Look at frame 34" has to mean something. */
   n: number
-  title: string
+  titleKey: StringKey
   /** Route without the leading hash. Empty when the screen is not built yet. */
   path: string
   built: boolean
   /** Marked when the screen is an addition beyond the agreed features sheet. */
   proposed?: boolean
-  note?: string
+  noteKey?: StringKey
 }
 
 export interface FrameSection {
   id: string
-  title: string
-  blurb: string
+  titleKey: StringKey
+  blurbKey: StringKey
   frames: Frame[]
 }
 
 let counter = 0
-const f = (title: string, path: string, extra: Partial<Frame> = {}): Frame => {
+const f = (titleKey: StringKey, path: string, extra: Partial<Frame> = {}): Frame => {
   counter += 1
-  return { n: counter, title, path, built: Boolean(path), ...extra }
+  return { n: counter, titleKey, path, built: Boolean(path), ...extra }
 }
 
 export const frameSections: FrameSection[] = [
   {
     id: 'school-admin',
-    title: 'School admin',
-    blurb: 'Runs one school. Sets up people, classes and courses, then watches the term.',
+    titleKey: 'tabSchoolAdmin',
+    blurbKey: 'shSectionSchoolAdminBlurb',
     frames: [
-      f('Overview', '/school-admin'),
-      f('Analytics', '/school-admin/analytics'),
-      f('Classes', '/school-admin/classes'),
-      f('Create a class', '/school-admin/classes/new', { note: 'Flow' }),
-      f('Class detail', '/school-admin/classes/cls-3'),
-      f('Class detail, early tier', '/school-admin/classes/cls-1'),
-      f('Users', '/school-admin/users'),
-      f('Bulk import', '/school-admin/users/import', { note: 'Flow' }),
-      f('Courses and licences', '/school-admin/courses'),
-      f('Attendance', '/school-admin/attendance'),
-      f('Announcements', '/school-admin/announcements'),
-      f('Reports', '/school-admin/reports', { proposed: true, note: 'Ministry report proposed' }),
-      f('Activity log', '/school-admin/activity-log'),
-      f('Settings', '/school-admin/settings'),
+      f('shFrameOverview', '/school-admin'),
+      f('shFrameAnalytics', '/school-admin/analytics'),
+      f('shFrameClasses', '/school-admin/classes'),
+      f('shFrameCreateClass', '/school-admin/classes/new', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameClassDetail', '/school-admin/classes/cls-3'),
+      f('shFrameClassDetailEarly', '/school-admin/classes/cls-1'),
+      f('shFrameUsers', '/school-admin/users'),
+      f('shFrameBulkImport', '/school-admin/users/import', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameCoursesLicences', '/school-admin/courses'),
+      f('shFrameAttendance', '/school-admin/attendance'),
+      f('shFrameAnnouncements', '/school-admin/announcements'),
+      f('shFrameReports', '/school-admin/reports', {
+        proposed: true,
+        noteKey: 'shFrameNoteMinistryReport',
+      }),
+      f('shFrameActivityLog', '/school-admin/activity-log'),
+      f('shFrameSettings', '/school-admin/settings'),
     ],
   },
   {
     id: 'teacher',
-    title: 'Teacher',
-    blurb: 'The role the product is judged on. Marking, planning and spotting who is slipping.',
+    titleKey: 'tabTeacher',
+    blurbKey: 'shSectionTeacherBlurb',
     frames: [
-      f('Today', '/teacher'),
-      f('My classes', '/teacher/classes'),
-      f('Class home', '/teacher/classes/cls-3'),
-      f('Class home, early tier', '/teacher/classes/cls-1'),
-      f('Course content', '/teacher/classes/cls-3/course/crs-math-g6'),
-      f('Content library', '/teacher/library'),
-      f('Assign an activity', '/teacher/assign', { note: 'Flow' }),
-      f('Weekly planner', '/teacher/planner'),
-      f('Calendar', '/teacher/calendar'),
-      f('Gradebook', '/teacher/gradebook'),
-      f('Gradebook settings', '/teacher/gradebook/settings'),
-      f('Grade changes', '/teacher/gradebook/audit'),
-      f('Needs grading', '/teacher/grading'),
-      f('Grade a submission', '/teacher/grading/asg-cls-3-1', { note: 'Flow' }),
-      f('Students', '/teacher/students'),
+      f('shFrameToday', '/teacher'),
+      f('shFrameMyClasses', '/teacher/classes'),
+      f('shFrameClassHome', '/teacher/classes/cls-3'),
+      f('shFrameClassHomeEarly', '/teacher/classes/cls-1'),
+      f('shFrameCourseContent', '/teacher/classes/cls-3/course/crs-math-g6'),
+      f('shFrameContentLibrary', '/teacher/library'),
+      f('shFrameAssignActivity', '/teacher/assign', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameWeeklyPlanner', '/teacher/planner'),
+      f('shFrameCalendar', '/teacher/calendar'),
+      f('shFrameGradebook', '/teacher/gradebook'),
+      f('shFrameGradebookSettings', '/teacher/gradebook/settings'),
+      f('shFrameGradeChanges', '/teacher/gradebook/audit'),
+      f('shFrameNeedsGrading', '/teacher/grading'),
+      f('shFrameGradeSubmission', '/teacher/grading/asg-cls-3-1', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameStudents', '/teacher/students'),
       // The same child the student frames show, so the two sides can be
       // compared directly.
-      f('Student detail', `/teacher/students/${UPPER_STUDENT_ID}`),
-      f('Skill drill down', `/teacher/students/${UPPER_STUDENT_ID}/skills`),
-      f('Question bank', '/teacher/question-bank'),
-      f('Create a quiz', '/teacher/question-bank/new'),
-      f('Attendance register', '/teacher/attendance'),
-      f('Announcements and messages', '/teacher/announcements'),
-      f('AI teacher tools', '/teacher/ai'),
-      f('Classroom presentation', '/teacher/present', { note: 'No chrome, projected' }),
+      f('shFrameStudentDetail', `/teacher/students/${UPPER_STUDENT_ID}`),
+      f('shFrameSkillDrillDown', `/teacher/students/${UPPER_STUDENT_ID}/skills`),
+      f('shFrameQuestionBank', '/teacher/question-bank'),
+      f('shFrameCreateQuiz', '/teacher/question-bank/new'),
+      f('shFrameAttendanceRegister', '/teacher/attendance'),
+      f('shFrameAnnouncementsMessages', '/teacher/announcements'),
+      f('shFrameAiTeacherTools', '/teacher/ai'),
+      f('shFrameClassroomPresentation', '/teacher/present', {
+        noteKey: 'shFrameNoteNoChromeProjected',
+      }),
     ],
   },
   {
     id: 'student-upper',
-    title: 'Student, Grade 3 and above',
-    blurb: 'Sees scores, feedback and progress. Never the words at risk.',
+    titleKey: 'shSectionStudentUpper',
+    blurbKey: 'shSectionStudentUpperBlurb',
     frames: [
-      f('Dashboard', '/student'),
-      f('My courses', '/student/courses'),
-      f('Course player', '/student/courses/crs-math-g6'),
-      f('Assignments and due dates', '/student/assignments'),
-      f('Take a quiz', '/student/quiz/asg-cls-3-1', { note: 'Flow, no chrome' }),
-      f('Quiz results and feedback', '/student/quiz/asg-cls-3-1/results'),
-      f('My grades', '/student/grades'),
-      f('My progress', '/student/progress'),
-      f('Calendar', '/student/calendar'),
-      f('Announcements', '/student/announcements'),
+      f('shFrameDashboard', '/student'),
+      f('shFrameMyCourses', '/student/courses'),
+      f('shFrameCoursePlayer', '/student/courses/crs-math-g6'),
+      f('shFrameAssignmentsDueDates', '/student/assignments'),
+      f('shFrameTakeQuiz', '/student/quiz/asg-cls-3-1', { noteKey: 'shFrameNoteFlowNoChrome' }),
+      f('shFrameQuizResults', '/student/quiz/asg-cls-3-1/results'),
+      f('shFrameMyGrades', '/student/grades'),
+      f('shFrameMyProgress', '/student/progress'),
+      f('shFrameCalendar', '/student/calendar'),
+      f('shFrameAnnouncements', '/student/announcements'),
     ],
   },
   {
     id: 'student-early',
-    title: 'Student, K1 to Grade 3',
-    blurb: 'Stars and completion. No percentage anywhere, and no at risk at all.',
+    titleKey: 'shSectionStudentEarly',
+    blurbKey: 'shSectionStudentEarlyBlurb',
     frames: [
-      f('Home', '/student/early'),
-      f('My work', '/student/early/activities'),
-      f('Doing an activity', '/student/early/activity/a3', { note: 'No chrome' }),
-      f('Well done moment', '/student/early/done', { note: 'Flow' }),
-      f('My stickers', '/student/early/stickers'),
+      f('shFrameHome', '/student/early'),
+      f('shFrameMyWork', '/student/early/activities'),
+      f('shFrameDoingActivity', '/student/early/activity/a3', { noteKey: 'shFrameNoteNoChrome' }),
+      f('shFrameWellDone', '/student/early/done', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameMyStickers', '/student/early/stickers'),
     ],
   },
   {
     id: 'parent',
-    title: 'Parent',
-    blurb: 'Two children, one in each age tier. Sees exactly what the child sees.',
+    titleKey: 'tabParent',
+    blurbKey: 'shSectionParentBlurb',
     frames: [
-      f('My children', '/parent'),
-      f('Child overview, Grade 6', `/parent/child/${UPPER_CHILD}`),
-      f('Child overview, Grade 2', `/parent/child/${EARLY_CHILD}`),
-      f('Progress over time', `/parent/child/${UPPER_CHILD}/progress`),
-      f('Assignments and marks', `/parent/child/${UPPER_CHILD}/work`),
-      f('Attendance', `/parent/child/${UPPER_CHILD}/attendance`),
-      f('Messages from school', '/parent/messages'),
-      f('Notification settings', '/parent/settings'),
+      f('shFrameMyChildren', '/parent'),
+      f('shFrameChildOverviewUpper', `/parent/child/${UPPER_CHILD}`),
+      f('shFrameChildOverviewEarly', `/parent/child/${EARLY_CHILD}`),
+      f('shFrameProgressOverTime', `/parent/child/${UPPER_CHILD}/progress`),
+      f('shFrameAssignmentsMarks', `/parent/child/${UPPER_CHILD}/work`),
+      f('shFrameAttendance', `/parent/child/${UPPER_CHILD}/attendance`),
+      f('shFrameMessagesFromSchool', '/parent/messages'),
+      f('shFrameNotificationSettings', '/parent/settings'),
     ],
   },
   {
     id: 'coordinator',
-    title: 'Coordinator',
-    blurb: 'Owns the unit plan and standards coverage across several classes.',
+    titleKey: 'tabCoordinator',
+    blurbKey: 'shSectionCoordinatorBlurb',
     frames: [
-      f('Overview', '/coordinator'),
-      f('Unit plans', '/coordinator/unit-plans'),
-      f('Standards coverage', '/coordinator/standards'),
-      f('Across my classes', '/coordinator/classes'),
-      f('Flagged students', '/coordinator/flagged'),
+      f('shFrameOverview', '/coordinator'),
+      f('shFrameUnitPlans', '/coordinator/unit-plans'),
+      f('shFrameStandardsCoverage', '/coordinator/standards'),
+      f('shFrameAcrossMyClasses', '/coordinator/classes'),
+      f('shFrameFlaggedStudents', '/coordinator/flagged'),
     ],
   },
   {
     id: 'super-admin',
-    title: 'Super admin',
-    blurb: 'York Press level. Tenants, seats and what every school is doing.',
+    titleKey: 'tabSuperAdmin',
+    blurbKey: 'shSectionSuperAdminBlurb',
     frames: [
-      f('Schools', '/super-admin'),
-      f('School detail', '/super-admin/tenant/sch-noor'),
-      f('Provision a school', '/super-admin/provision', { note: 'Flow' }),
-      f('Seats and licences', '/super-admin/seats'),
-      f('Course catalogue', '/super-admin/catalogue'),
-      f('Usage across schools', '/super-admin/usage'),
-      f('Support and impersonation', '/super-admin/support'),
-      f('Platform settings', '/super-admin/settings'),
+      f('shFrameSchools', '/super-admin'),
+      f('shFrameSchoolDetail', '/super-admin/tenant/sch-noor'),
+      f('shFrameProvisionSchool', '/super-admin/provision', { noteKey: 'shFrameNoteFlow' }),
+      f('shFrameSeatsLicences', '/super-admin/seats'),
+      f('shFrameCourseCatalogue', '/super-admin/catalogue'),
+      f('shFrameUsageAcrossSchools', '/super-admin/usage'),
+      f('shFrameSupportImpersonation', '/super-admin/support'),
+      f('shFramePlatformSettings', '/super-admin/settings'),
     ],
   },
   {
     id: 'shared',
-    title: 'Shared',
-    blurb: 'Screens every role meets.',
+    titleKey: 'tabShared',
+    blurbKey: 'shSectionSharedBlurb',
     frames: [
-      f('Sign in', ''),
-      f('Forgotten password', ''),
-      f('Profile', ''),
-      f('Notifications', ''),
-      f('Empty state', ''),
-      f('Something went wrong', ''),
+      f('shFrameSignIn', '/shared/sign-in', { noteKey: 'shFrameNoteTwoRoutesNoChrome' }),
+      f('shFrameForgottenPassword', '/shared/forgot', { noteKey: 'shFrameNoteNoChrome' }),
+      f('shFrameProfileAccessibility', '/shared/profile'),
+      f('shFrameNotifications', '/shared/notifications'),
+      f('shFrameEmptyStates', '/shared/empty'),
+      f('shFrameErrorStates', '/shared/error'),
     ],
   },
 ]

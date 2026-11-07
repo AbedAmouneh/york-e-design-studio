@@ -29,7 +29,7 @@ const FRAME_H = 900
 const zoomSteps = [0.16, 0.22, 0.3, 0.42, 0.6]
 
 export function Canvas() {
-  const { locale } = useLocale()
+  const { t, locale } = useLocale()
   const [zoomIndex, setZoomIndex] = useState(1)
   const [active, setActive] = useState(frameSections[0].id)
   const zoom = zoomSteps[zoomIndex]
@@ -46,9 +46,11 @@ export function Canvas() {
     <div className="flex h-full">
       <aside className="flex w-sidebar flex-none flex-col border-e border-border bg-background">
         <div className="flex-none border-b border-border px-4 py-3">
-          <p className="text-small font-semibold text-foreground">Frames</p>
+          <p className="text-small font-semibold text-foreground">{t('shFrames')}</p>
           <p className="mt-0.5 text-caption text-muted-foreground">
-            {builtCount} of {totalCount} built
+            {t('shNOfMBuilt')
+              .replace('{n}', String(builtCount))
+              .replace('{m}', String(totalCount))}
           </p>
           <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
             <div
@@ -73,7 +75,7 @@ export function Canvas() {
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                 )}
               >
-                <span className="min-w-0 flex-1 truncate">{section.title}</span>
+                <span className="min-w-0 flex-1 truncate">{t(section.titleKey)}</span>
                 <span
                   className={cn(
                     'tabular flex-none text-caption',
@@ -91,7 +93,7 @@ export function Canvas() {
           <Button
             variant="outline"
             size="sm"
-            aria-label="Zoom out"
+            aria-label={t('shZoomOut')}
             disabled={zoomIndex === 0}
             onClick={() => setZoomIndex(zoomIndex - 1)}
           >
@@ -103,7 +105,7 @@ export function Canvas() {
           <Button
             variant="outline"
             size="sm"
-            aria-label="Zoom in"
+            aria-label={t('shZoomIn')}
             disabled={zoomIndex === zoomSteps.length - 1}
             onClick={() => setZoomIndex(zoomIndex + 1)}
           >
@@ -114,22 +116,24 @@ export function Canvas() {
 
       <div ref={scrollRef} className="min-w-0 flex-1 overflow-auto bg-surface-sunken p-6">
         <header className="mb-6">
-          <h1 className="text-heading font-semibold text-foreground">York-E 3.0, every screen</h1>
+          <h1 className="text-heading font-semibold text-foreground">{t('shCanvasTitle')}</h1>
           <p className="mt-1 max-w-[70ch] text-small text-muted-foreground">
-            Live frames, not screenshots. Click into any one and use it. Grey frames are screens
-            that are planned and not built yet, which is deliberate: the gaps should be as easy to
-            see as the finished work.
+            {t('shCanvasBlurb')}
           </p>
         </header>
 
         {frameSections.map((section) => (
           <section key={section.id} id={`section-${section.id}`} className="mb-10 scroll-mt-6">
             <div className="mb-3 flex flex-wrap items-baseline gap-3">
-              <h2 className="text-subheading font-semibold text-foreground">{section.title}</h2>
+              <h2 className="text-subheading font-semibold text-foreground">
+                {t(section.titleKey)}
+              </h2>
               <Badge variant="outline">
-                {section.frames.filter((frame) => frame.built).length} of {section.frames.length}
+                {t('shNOfM')
+                  .replace('{n}', String(section.frames.filter((frame) => frame.built).length))
+                  .replace('{m}', String(section.frames.length))}
               </Badge>
-              <p className="text-small text-muted-foreground">{section.blurb}</p>
+              <p className="text-small text-muted-foreground">{t(section.blurbKey)}</p>
             </div>
 
             <div
@@ -146,7 +150,7 @@ export function Canvas() {
         ))}
 
         <p className="pb-10 text-caption text-muted-foreground">
-          {allFrames.length} frames in total.
+          {t('shFramesTotal').replace('{n}', String(allFrames.length))}
         </p>
       </div>
     </div>
@@ -154,6 +158,7 @@ export function Canvas() {
 }
 
 function FrameCard({ frame, zoom, locale }: { frame: Frame; zoom: number; locale: string }) {
+  const { t } = useLocale()
   const holder = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -176,6 +181,10 @@ function FrameCard({ frame, zoom, locale }: { frame: Frame; zoom: number; locale
   const width = FRAME_W * zoom
   const height = FRAME_H * zoom
 
+  // Resolved once. The title is the iframe's accessible name, the caption and
+  // the link label, and those three must not disagree.
+  const title = t(frame.titleKey)
+
   return (
     <figure className="flex flex-col gap-2" style={{ width }}>
       <div
@@ -191,7 +200,7 @@ function FrameCard({ frame, zoom, locale }: { frame: Frame; zoom: number; locale
             // The locale is in the key so flipping to Arabic reloads every
             // frame rather than leaving half the canvas in English.
             key={locale}
-            title={frame.title}
+            title={title}
             src={`${import.meta.env.BASE_URL}#${frame.path}?bare=1`}
             className="origin-top-left border-0"
             style={{
@@ -204,11 +213,11 @@ function FrameCard({ frame, zoom, locale }: { frame: Frame; zoom: number; locale
           />
         ) : frame.built ? (
           <div className="grid h-full place-items-center">
-            <span className="text-caption text-muted-foreground">Loading</span>
+            <span className="text-caption text-muted-foreground">{t('shLoading')}</span>
           </div>
         ) : (
           <div className="grid h-full place-items-center px-3 text-center">
-            <span className="text-caption text-muted-foreground">Not built yet</span>
+            <span className="text-caption text-muted-foreground">{t('shNotBuiltYet')}</span>
           </div>
         )}
       </div>
@@ -222,20 +231,22 @@ function FrameCard({ frame, zoom, locale }: { frame: Frame; zoom: number; locale
               frame.built ? 'text-foreground' : 'text-muted-foreground',
             )}
           >
-            {frame.title}
+            {title}
           </span>
-          {frame.note ? (
-            <span className="block truncate text-caption text-muted-foreground">{frame.note}</span>
+          {frame.noteKey ? (
+            <span className="block truncate text-caption text-muted-foreground">
+              {t(frame.noteKey)}
+            </span>
           ) : null}
         </span>
-        {frame.proposed ? <Badge variant="warning">Proposed</Badge> : null}
+        {frame.proposed ? <Badge variant="warning">{t('proposed')}</Badge> : null}
         {frame.built ? (
           <a
             href={`${import.meta.env.BASE_URL}#${frame.path}`}
             target="_blank"
             rel="noreferrer"
             className="flex-none text-muted-foreground transition-colors hover:text-foreground"
-            aria-label={`Open ${frame.title}`}
+            aria-label={t('shOpenFrame').replace('{t}', title)}
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
           </a>
