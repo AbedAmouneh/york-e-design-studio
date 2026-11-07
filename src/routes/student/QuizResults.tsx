@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Check, MessageSquare, X } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
@@ -31,56 +32,56 @@ interface Result {
   why?: string
 }
 
-const results: Result[] = [
-  {
-    id: 'q1',
-    stem: 'Which pair of fractions has a common denominator of 12?',
-    yours: '1/3 and 1/4',
-    correct: '1/3 and 1/4',
-    marks: 2,
-    outOf: 2,
-  },
-  {
-    id: 'q2',
-    stem: 'Work out 1/3 + 1/4.',
-    yours: '2/7',
-    correct: '7/12',
-    marks: 0,
-    outOf: 4,
-    why: 'You added the tops and the bottoms. Change both to twelfths first, then add only the tops.',
-  },
-  {
-    id: 'q3',
-    stem: 'Which of these is equal to 2/6?',
-    yours: '1/3',
-    correct: '1/3',
-    marks: 2,
-    outOf: 2,
-  },
-  {
-    id: 'q4',
-    stem: 'Explain why you cannot add 1/2 and 1/3 without changing them first.',
-    yours: 'Because the bottoms are different.',
-    correct: '',
-    marks: 3,
-    outOf: 4,
-    why: 'Right idea. Name what the bottom number means, the size of each piece, for the last mark.',
-  },
-  {
-    id: 'q5',
-    stem: 'A recipe needs 3/4 of a cup of flour. You make it twice.',
-    yours: '1 and 1/2 cups',
-    correct: '1 and 1/2 cups',
-    marks: 4,
-    outOf: 4,
-  },
-]
-
 export function StudentQuizResults() {
   const { assignmentId = '' } = useParams()
   const { t, locale } = useLocale()
 
   const work = workFor(upperStudent).find((item) => item.assignment.id === assignmentId)
+
+  /*
+   * Built inside the component so the stems, the student's own wording and
+   * the explanations all follow the locale. Bare fractions stay as glyphs.
+   */
+  const results: Result[] = useMemo(
+    () => [
+      {
+        id: 'q1',
+        stem: t('stuQ1'),
+        yours: t('stuQ1OptA'),
+        correct: t('stuQ1OptA'),
+        marks: 2,
+        outOf: 2,
+      },
+      {
+        id: 'q2',
+        stem: t('stuR2'),
+        yours: '2/7',
+        correct: '7/12',
+        marks: 0,
+        outOf: 4,
+        why: t('stuWhy2'),
+      },
+      { id: 'q3', stem: t('stuQ3'), yours: '1/3', correct: '1/3', marks: 2, outOf: 2 },
+      {
+        id: 'q4',
+        stem: t('stuR4'),
+        yours: t('stuA4Yours'),
+        correct: '',
+        marks: 3,
+        outOf: 4,
+        why: t('stuWhy4'),
+      },
+      {
+        id: 'q5',
+        stem: t('stuR5'),
+        yours: t('stuA5'),
+        correct: t('stuA5'),
+        marks: 4,
+        outOf: 4,
+      },
+    ],
+    [t],
+  )
 
   const earned = results.reduce((sum, row) => sum + row.marks, 0)
   const total = results.reduce((sum, row) => sum + row.outOf, 0)
@@ -94,9 +95,15 @@ export function StudentQuizResults() {
             ? locale === 'ar'
               ? work.activity.titleAr
               : work.activity.title
-            : 'Your results'
+            : t('stuYourResults')
         }
-        subtitle={work?.course?.title ?? 'Mathematics, Grade 6'}
+        subtitle={
+          work?.course
+            ? locale === 'ar'
+              ? work.course.titleAr
+              : work.course.title
+            : t('stuMathsGrade6')
+        }
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/student/assignments">
@@ -113,7 +120,9 @@ export function StudentQuizResults() {
             <span className="tabular text-heading font-semibold leading-none text-foreground">
               {earned}
             </span>
-            <span className="text-small text-muted-foreground">out of {total}</span>
+            <span className="text-small text-muted-foreground">
+              {t('stuOutOf').replace('{n}', String(total))}
+            </span>
           </span>
           <span className="tabular text-small text-muted-foreground">{percent}%</span>
           <span className="h-2 min-w-[120px] flex-1 overflow-hidden rounded-full bg-muted">
@@ -122,7 +131,11 @@ export function StudentQuizResults() {
               style={{ width: `${percent}%` }}
             />
           </span>
-          <Badge variant="outline">{results.filter((r) => r.marks === r.outOf).length} of {results.length} fully right</Badge>
+          <Badge variant="outline">
+            {t('stuFullyRight')
+              .replace('{n}', String(results.filter((r) => r.marks === r.outOf).length))
+              .replace('{m}', String(results.length))}
+          </Badge>
         </CardContent>
       </Card>
 
@@ -132,7 +145,7 @@ export function StudentQuizResults() {
             <MessageSquare className="mt-0.5 h-4 w-4 flex-none text-foreground" aria-hidden />
             <span className="min-w-0 flex-1">
               <span className="block text-caption uppercase tracking-wide text-muted-foreground">
-                From your teacher
+                {t('stuFromYourTeacher')}
               </span>
               <span className="mt-1 block text-small text-foreground">
                 {work.submission.feedback}
@@ -144,7 +157,7 @@ export function StudentQuizResults() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Question by question</CardTitle>
+          <CardTitle>{t('stuQuestionByQuestion')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {results.map((row, index) => {
@@ -189,11 +202,11 @@ export function StudentQuizResults() {
 
                 <div className="mt-3 space-y-1.5 ps-9 text-small">
                   <p className="text-muted-foreground">
-                    You wrote <span className="text-foreground">{row.yours}</span>
+                    {t('stuYouWrote')} <span className="text-foreground">{row.yours}</span>
                   </p>
                   {row.correct && row.correct !== row.yours ? (
                     <p className="text-muted-foreground">
-                      The answer was{' '}
+                      {t('stuTheAnswerWas')}{' '}
                       <span className="font-medium text-success">{row.correct}</span>
                     </p>
                   ) : null}
@@ -211,11 +224,9 @@ export function StudentQuizResults() {
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            Adding fractions is the one to practise. There are three more questions on it in Unit 2.
-          </span>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('stuPractiseHint')}</span>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/student/courses">Go to the unit</Link>
+            <Link to="/student/courses">{t('stuGoToUnit')}</Link>
           </Button>
         </CardContent>
       </Card>

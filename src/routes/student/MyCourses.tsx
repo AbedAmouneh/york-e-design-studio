@@ -25,7 +25,7 @@ export function StudentMyCourses() {
     <Page>
       <PageHeader
         title={t('navMyCourses')}
-        subtitle={`${group?.name} · ${myCourses.length} courses this term`}
+        subtitle={`${group?.name} · ${t('stuCoursesThisTerm').replace('{n}', String(myCourses.length))}`}
       />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -54,14 +54,16 @@ export function StudentMyCourses() {
                     {locale === 'ar' ? course.titleAr : course.title}
                   </span>
                   <span className="block text-caption text-muted-foreground">
-                    {course.units.length} units · {activityCount} activities
+                    {t('stuUnitsActivities')
+                      .replace('{n}', String(course.units.length))
+                      .replace('{m}', String(activityCount))}
                   </span>
                 </span>
               </span>
 
               <span className="mt-auto space-y-1.5">
                 <span className="flex items-center justify-between text-caption">
-                  <span className="text-muted-foreground">Your progress</span>
+                  <span className="text-muted-foreground">{t('stuYourProgress')}</span>
                   <span className="tabular text-foreground">{percent}%</span>
                 </span>
                 <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -78,11 +80,8 @@ export function StudentMyCourses() {
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
-          <Badge variant="outline">Why this list is short</Badge>
-          <p className="min-w-0 flex-1 text-small text-muted-foreground">
-            You see the courses your teacher has opened for your class. Anything else in the school
-            library is not yours to browse yet.
-          </p>
+          <Badge variant="outline">{t('stuWhyShort')}</Badge>
+          <p className="min-w-0 flex-1 text-small text-muted-foreground">{t('stuWhyShortBody')}</p>
         </CardContent>
       </Card>
     </Page>

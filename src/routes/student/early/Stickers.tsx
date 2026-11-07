@@ -1,6 +1,8 @@
 import { Award, BookOpen, Calculator, Lock, Shapes, Sparkles, Star, Sun } from 'lucide-react'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { earlyStudent } from '@/data/student'
+import type { StringKey } from '@/i18n'
 
 /**
  * My stickers.
@@ -14,29 +16,37 @@ import { earlyStudent } from '@/data/student'
  * decision rather than an omission.
  */
 
-export const earnedStickers = [
-  { id: 's1', label: 'Counted to 100', icon: Calculator },
-  { id: 's2', label: 'Read 5 stories', icon: BookOpen },
-  { id: 's3', label: 'Three stars', icon: Star },
-  { id: 's4', label: 'Every day this week', icon: Sun },
-  { id: 's5', label: 'Shapes expert', icon: Shapes },
-  { id: 's6', label: 'Tried again', icon: Sparkles },
-  { id: 's7', label: 'First finish', icon: Award },
+export const earnedStickers: Array<{
+  id: string
+  labelKey: StringKey
+  icon: typeof Calculator
+}> = [
+  { id: 's1', labelKey: 'erlStickerCounted100', icon: Calculator },
+  { id: 's2', labelKey: 'erlStickerRead5', icon: BookOpen },
+  { id: 's3', labelKey: 'erlStickerThreeStars', icon: Star },
+  { id: 's4', labelKey: 'erlStickerEveryDay', icon: Sun },
+  { id: 's5', labelKey: 'erlStickerShapesExpert', icon: Shapes },
+  { id: 's6', labelKey: 'erlStickerTriedAgain', icon: Sparkles },
+  { id: 's7', labelKey: 'erlStickerFirstFinish', icon: Award },
 ]
 
-const locked = [
-  { id: 's8', label: 'Read 10 stories' },
-  { id: 's9', label: 'Counted to 200' },
-  { id: 's10', label: 'Two weeks in a row' },
+const locked: Array<{ id: string; labelKey: StringKey }> = [
+  { id: 's8', labelKey: 'erlStickerRead10' },
+  { id: 's9', labelKey: 'erlStickerCounted200' },
+  { id: 's10', labelKey: 'erlStickerTwoWeeks' },
 ]
 
 export function EarlyStickers() {
+  const { t } = useLocale()
+
   return (
     <div className="space-y-6 pb-4">
       <div className="space-y-1">
-        <h1 className="text-heading font-semibold text-foreground">My stickers</h1>
+        <h1 className="text-heading font-semibold text-foreground">{t('erlMyStickers')}</h1>
         <p className="text-body text-muted-foreground">
-          You have {earnedStickers.length} stickers, {earlyStudent.firstName}
+          {t('erlStickersCount')
+            .replace('{n}', String(earnedStickers.length))
+            .replace('{m}', earlyStudent.firstName)}
         </p>
       </div>
 
@@ -52,7 +62,7 @@ export function EarlyStickers() {
                 <Icon className="h-8 w-8" aria-hidden />
               </span>
               <span className="text-small font-semibold leading-tight text-foreground">
-                {sticker.label}
+                {t(sticker.labelKey)}
               </span>
             </div>
           )
@@ -69,15 +79,13 @@ export function EarlyStickers() {
               <Lock className="h-7 w-7" aria-hidden />
             </span>
             <span className="text-small font-medium leading-tight text-muted-foreground">
-              {sticker.label}
+              {t(sticker.labelKey)}
             </span>
           </div>
         ))}
       </div>
 
-      <p className="text-small text-muted-foreground">
-        Keep going to collect the rest.
-      </p>
+      <p className="text-small text-muted-foreground">{t('erlCollectRest')}</p>
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { BookOpen, Calculator, Check, Lock, Shapes, Star } from 'lucide-react'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * My work, early tier.
@@ -11,57 +13,71 @@ import { cn } from '@/lib/utils'
  * giving them any way to act on it.
  */
 
-const groups = [
+const groups: Array<{
+  subjectKey: StringKey
+  icon: typeof Calculator
+  items: Array<{
+    id: string
+    titleKey: StringKey
+    done: boolean
+    stars: number
+    locked?: boolean
+  }>
+}> = [
   {
-    subject: 'Maths',
+    subjectKey: 'erlSubjMaths',
     icon: Calculator,
     items: [
-      { id: 'a1', title: 'Counting in tens', done: true, stars: 3 },
-      { id: 'a3', title: 'Number line to 100', done: false, stars: 0 },
-      { id: 'a4', title: 'Adding to 20', done: false, stars: 0, locked: true },
+      { id: 'a1', titleKey: 'erlActCountingInTens', done: true, stars: 3 },
+      { id: 'a3', titleKey: 'erlActNumberLine100', done: false, stars: 0 },
+      { id: 'a4', titleKey: 'erlActAddingTo20', done: false, stars: 0, locked: true },
     ],
   },
   {
-    subject: 'Reading',
+    subjectKey: 'erlSubjReading',
     icon: BookOpen,
     items: [
-      { id: 'a2', title: 'The hungry fox', done: true, stars: 2 },
-      { id: 'a5', title: 'Rhyming words', done: true, stars: 3 },
-      { id: 'a6', title: 'The lost kite', done: false, stars: 0, locked: true },
+      { id: 'a2', titleKey: 'erlActHungryFox', done: true, stars: 2 },
+      { id: 'a5', titleKey: 'erlActRhymingWords', done: true, stars: 3 },
+      { id: 'a6', titleKey: 'erlActLostKite', done: false, stars: 0, locked: true },
     ],
   },
   {
-    subject: 'Shapes',
+    subjectKey: 'erlSubjShapes',
     icon: Shapes,
-    items: [{ id: 'a7', title: 'Circles and squares', done: true, stars: 3 }],
+    items: [{ id: 'a7', titleKey: 'erlActCirclesSquares', done: true, stars: 3 }],
   },
 ]
 
 export function EarlyActivities() {
+  const { t } = useLocale()
+
   return (
     <div className="space-y-6 pb-4">
-      <h1 className="text-heading font-semibold text-foreground">My work</h1>
+      <h1 className="text-heading font-semibold text-foreground">{t('erlMyWork')}</h1>
 
       {groups.map((group) => {
         const Icon = group.icon
         const finished = group.items.filter((item) => item.done).length
         return (
-          <section key={group.subject} className="space-y-3">
+          <section key={group.subjectKey} className="space-y-3">
             <div className="flex items-center gap-3">
               <span className="grid h-10 w-10 flex-none place-items-center rounded-2xl bg-primary/10 text-primary">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <h2 className="min-w-0 flex-1 text-subheading font-semibold text-foreground">
-                {group.subject}
+                {t(group.subjectKey)}
               </h2>
               <span className="flex-none text-small text-muted-foreground">
-                {finished} of {group.items.length} done
+                {t('erlNofMDone')
+                  .replace('{n}', String(finished))
+                  .replace('{m}', String(group.items.length))}
               </span>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               {group.items.map((item) => {
-                const locked = 'locked' in item && item.locked
+                const locked = Boolean(item.locked)
                 return (
                   <Link
                     key={item.id}
@@ -92,11 +108,11 @@ export function EarlyActivities() {
 
                     <span className="min-w-0 flex-1 leading-tight">
                       <span className="block text-body font-semibold text-foreground">
-                        {item.title}
+                        {t(item.titleKey)}
                       </span>
                       {locked ? (
                         <span className="block text-small text-muted-foreground">
-                          Your teacher will open this
+                          {t('erlTeacherWillOpen')}
                         </span>
                       ) : item.done ? (
                         <span className="mt-1 flex gap-0.5">
@@ -114,7 +130,7 @@ export function EarlyActivities() {
                           ))}
                         </span>
                       ) : (
-                        <span className="block text-small text-primary">Ready for you</span>
+                        <span className="block text-small text-primary">{t('erlReadyForYou')}</span>
                       )}
                     </span>
                   </Link>

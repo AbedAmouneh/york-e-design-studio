@@ -41,9 +41,9 @@ export function StudentAssignments() {
   )
 
   const tabs: Array<{ key: Tab; label: string; count: number }> = [
-    { key: 'todo', label: 'To do', count: todo.length },
-    { key: 'handed-in', label: 'Handed in', count: handedIn.length },
-    { key: 'marked', label: 'Marked', count: marked.length },
+    { key: 'todo', label: t('stuTabTodo'), count: todo.length },
+    { key: 'handed-in', label: t('stuTabHandedIn'), count: handedIn.length },
+    { key: 'marked', label: t('stuTabMarked'), count: marked.length },
   ]
 
   const rows = tab === 'todo' ? todo : tab === 'handed-in' ? handedIn : marked
@@ -52,7 +52,7 @@ export function StudentAssignments() {
     <Page>
       <PageHeader
         title={t('navAssignments')}
-        subtitle={`${todo.length} to do · Term 2`}
+        subtitle={t('stuAssignmentsSubtitle').replace('{n}', String(todo.length))}
       />
 
       <div className="flex flex-wrap items-center gap-1 rounded border border-border p-0.5">
@@ -84,7 +84,7 @@ export function StudentAssignments() {
                       ? locale === 'ar'
                         ? item.activity.titleAr
                         : item.activity.title
-                      : 'Activity'}
+                      : t('stuActivity')}
                   </span>
                   <span className="block text-caption text-muted-foreground">
                     {item.course
@@ -97,24 +97,24 @@ export function StudentAssignments() {
 
                 <span className="flex flex-none items-center gap-1.5 text-caption text-muted-foreground">
                   <CalendarClock className="h-3.5 w-3.5" aria-hidden />
-                  due {item.assignment.dueOn}
+                  {t('stuDueOn').replace('{d}', item.assignment.dueOn)}
                 </span>
 
                 {late ? (
                   <Badge variant="warning" className="flex-none">
                     <Clock className="me-1 h-3 w-3" aria-hidden />
-                    Handed in late
+                    {t('stuHandedInLate')}
                   </Badge>
                 ) : null}
 
                 {tab === 'todo' ? (
                   <Button variant="accent" size="sm" className="flex-none" asChild>
-                    <Link to={`/student/quiz/${item.assignment.id}`}>Start</Link>
+                    <Link to={`/student/quiz/${item.assignment.id}`}>{t('start')}</Link>
                   </Button>
                 ) : tab === 'handed-in' ? (
                   <Badge variant="outline" className="flex-none">
                     <Check className="me-1 h-3 w-3" aria-hidden />
-                    With your teacher
+                    {t('stuWithYourTeacher')}
                   </Badge>
                 ) : (
                   <span className="flex flex-none items-center gap-3">
@@ -131,7 +131,9 @@ export function StudentAssignments() {
                       {score}%
                     </span>
                     <Button variant="outline" size="sm" asChild>
-                      <Link to={`/student/quiz/${item.assignment.id}/results`}>See feedback</Link>
+                      <Link to={`/student/quiz/${item.assignment.id}/results`}>
+                        {t('stuSeeFeedback')}
+                      </Link>
                     </Button>
                   </span>
                 )}
@@ -142,7 +144,7 @@ export function StudentAssignments() {
 
         {rows.length === 0 ? (
           <p className="py-12 text-center text-small text-muted-foreground">
-            {tab === 'todo' ? 'Nothing to do right now.' : 'Nothing here yet.'}
+            {tab === 'todo' ? t('stuNothingToDo') : t('stuNothingHereYet')}
           </p>
         ) : null}
       </div>

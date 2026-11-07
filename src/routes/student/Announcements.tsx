@@ -23,7 +23,7 @@ export function StudentAnnouncements() {
 
   return (
     <Page>
-      <PageHeader title={t('navAnnouncements')} subtitle="From your school and your teachers" />
+      <PageHeader title={t('navAnnouncements')} subtitle={t('stuAnnSubtitle')} />
 
       <div className="space-y-2">
         {visible.map((item) => (
@@ -49,9 +49,7 @@ export function StudentAnnouncements() {
         ))}
       </div>
 
-      <p className="text-caption text-muted-foreground">
-        Messages your teacher sends to your family are not shown here.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('stuAnnFamilyNote')}</p>
     </Page>
   )
 }

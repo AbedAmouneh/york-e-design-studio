@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Student calendar.
@@ -16,25 +17,33 @@ import { cn } from '@/lib/utils'
 
 interface Event {
   day: number
-  label: string
+  labelKey: StringKey
   kind: 'lesson' | 'due' | 'assessment'
-  subject: string
+  subjectKey: StringKey
 }
 
 const events: Event[] = [
-  { day: 2, label: 'Equivalent fractions', kind: 'lesson', subject: 'Mathematics' },
-  { day: 3, label: 'Reading comprehension', kind: 'lesson', subject: 'English' },
-  { day: 4, label: 'Check 2.3', kind: 'due', subject: 'Mathematics' },
-  { day: 5, label: 'Apply 1.5', kind: 'due', subject: 'Mathematics' },
-  { day: 9, label: 'The water cycle', kind: 'lesson', subject: 'Science' },
-  { day: 10, label: 'Adding fractions practice', kind: 'lesson', subject: 'Mathematics' },
-  { day: 12, label: 'End of unit check', kind: 'assessment', subject: 'Mathematics' },
-  { day: 17, label: 'Photosynthesis', kind: 'lesson', subject: 'Science' },
-  { day: 19, label: 'Practise 2.4', kind: 'due', subject: 'Mathematics' },
-  { day: 24, label: 'Paragraph structure', kind: 'lesson', subject: 'English' },
+  { day: 2, labelKey: 'stuEvtEquivalentFractions', kind: 'lesson', subjectKey: 'stuSubjMathematics' },
+  { day: 3, labelKey: 'stuEvtReadingComprehension', kind: 'lesson', subjectKey: 'stuSubjEnglish' },
+  { day: 4, labelKey: 'stuEvtCheck23', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  { day: 5, labelKey: 'stuEvtApply15', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  { day: 9, labelKey: 'stuEvtWaterCycle', kind: 'lesson', subjectKey: 'stuSubjScience' },
+  { day: 10, labelKey: 'stuEvtAddingFractions', kind: 'lesson', subjectKey: 'stuSubjMathematics' },
+  { day: 12, labelKey: 'stuEvtEndOfUnitCheck', kind: 'assessment', subjectKey: 'stuSubjMathematics' },
+  { day: 17, labelKey: 'stuEvtPhotosynthesis', kind: 'lesson', subjectKey: 'stuSubjScience' },
+  { day: 19, labelKey: 'stuEvtPractise24', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  { day: 24, labelKey: 'stuEvtParagraphStructure', kind: 'lesson', subjectKey: 'stuSubjEnglish' },
 ]
 
-const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const weekdayKeys: StringKey[] = [
+  'stuMonShort',
+  'stuTueShort',
+  'stuWedShort',
+  'stuThuShort',
+  'stuFriShort',
+  'stuSatShort',
+  'stuSunShort',
+]
 
 export function StudentCalendar() {
   const { t } = useLocale()
@@ -44,13 +53,14 @@ export function StudentCalendar() {
     <Page>
       <PageHeader
         title={t('navCalendar')}
-        subtitle="February 2027 · Grade 6 Cedar"
+        // The class name is data and stays as it is in both languages.
+        subtitle={`${t('stuCalendarMonth')} · Grade 6 Cedar`}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label="Previous month">
+            <Button variant="ghost" size="icon" aria-label={t('stuPreviousMonth')}>
               <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Next month">
+            <Button variant="ghost" size="icon" aria-label={t('stuNextMonth')}>
               <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
             </Button>
           </div>
@@ -60,9 +70,9 @@ export function StudentCalendar() {
       <Card>
         <CardContent className="p-3">
           <div className="grid grid-cols-7 gap-1.5">
-            {weekdays.map((day) => (
-              <div key={day} className="px-2 py-1.5 text-caption font-medium text-muted-foreground">
-                {day}
+            {weekdayKeys.map((key) => (
+              <div key={key} className="px-2 py-1.5 text-caption font-medium text-muted-foreground">
+                {t(key)}
               </div>
             ))}
 
@@ -94,7 +104,7 @@ export function StudentCalendar() {
                     {dayEvents.map((event, index) => (
                       <div
                         key={`${day}-${index}`}
-                        title={`${event.subject}: ${event.label}`}
+                        title={`${t(event.subjectKey)}: ${t(event.labelKey)}`}
                         className={cn(
                           'truncate rounded border px-1.5 py-1 text-caption leading-tight',
                           event.kind === 'lesson'
@@ -104,8 +114,8 @@ export function StudentCalendar() {
                               : 'border-foreground bg-foreground text-background',
                         )}
                       >
-                        {event.kind === 'due' ? 'Due: ' : ''}
-                        {event.label}
+                        {event.kind === 'due' ? t('stuDuePrefix') : ''}
+                        {t(event.labelKey)}
                       </div>
                     ))}
                   </div>
@@ -119,15 +129,15 @@ export function StudentCalendar() {
       <div className="flex flex-wrap items-center gap-4 text-caption text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded border border-border" aria-hidden />
-          Lesson
+          {t('stuLegendLesson')}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded border border-accent/50 bg-accent/30" aria-hidden />
-          Something is due
+          {t('stuLegendDue')}
         </span>
         <span className="flex items-center gap-1.5">
-          <Badge variant="neutral">Test</Badge>
-          An assessment
+          <Badge variant="neutral">{t('stuLegendTest')}</Badge>
+          {t('stuLegendAssessment')}
         </span>
       </div>
     </Page>

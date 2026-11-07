@@ -40,14 +40,14 @@ export function StudentDashboard() {
   return (
     <Page>
       <PageHeader
-        title={`Hello, ${upperStudent.firstName}`}
-        subtitle={`${group?.name} · Term 2, week 5`}
+        title={t('stuHello').replace('{n}', upperStudent.firstName)}
+        subtitle={`${group?.name} · ${t('stuTermWeek')}`}
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
         <Card className="border-accent/40">
           <CardHeader>
-            <CardTitle>Due this week</CardTitle>
+            <CardTitle>{t('stuDueThisWeek')}</CardTitle>
             <Badge variant={due.length > 0 ? 'accent' : 'neutral'}>{due.length}</Badge>
           </CardHeader>
           <CardContent className="space-y-1.5">
@@ -64,7 +64,7 @@ export function StudentDashboard() {
                       ? locale === 'ar'
                         ? item.activity.titleAr
                         : item.activity.title
-                      : 'Activity'}
+                      : t('stuActivity')}
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
                     {item.course
@@ -72,17 +72,17 @@ export function StudentDashboard() {
                         ? item.course.titleAr
                         : item.course.title
                       : ''}{' '}
-                    · due {item.assignment.dueOn}
+                    · {t('stuDueOn').replace('{d}', item.assignment.dueOn)}
                   </span>
                 </span>
                 <Button variant="outline" size="sm" className="flex-none" asChild>
-                  <span>Start</span>
+                  <span>{t('start')}</span>
                 </Button>
               </Link>
             ))}
             {due.length === 0 ? (
               <p className="py-8 text-center text-small text-muted-foreground">
-                Nothing due. You are up to date.
+                {t('stuNothingDue')}
               </p>
             ) : null}
           </CardContent>
@@ -90,19 +90,19 @@ export function StudentDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>How you are doing</CardTitle>
+            <CardTitle>{t('stuHowYouAreDoing')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-baseline gap-3">
               <span className="tabular text-display font-semibold leading-none text-foreground">
                 {standing?.average}%
               </span>
-              <span className="text-small text-muted-foreground">average this term</span>
+              <span className="text-small text-muted-foreground">{t('stuAverageThisTerm')}</span>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-3 text-small">
-                <span className="text-muted-foreground">Work completed</span>
+                <span className="text-muted-foreground">{t('stuWorkCompleted')}</span>
                 <span className="tabular text-foreground">{standing?.completion}%</span>
               </div>
               <span className="block h-2 w-full overflow-hidden rounded-full bg-muted">
@@ -113,9 +113,7 @@ export function StudentDashboard() {
               </span>
             </div>
 
-            <p className="text-caption text-muted-foreground">
-              Your average counts only work that has been marked and returned to you.
-            </p>
+            <p className="text-caption text-muted-foreground">{t('stuAverageNote')}</p>
 
             <Button variant="outline" size="sm" asChild className="w-full">
               <Link to="/student/progress">
@@ -150,7 +148,7 @@ export function StudentDashboard() {
                     {locale === 'ar' ? course.titleAr : course.title}
                   </span>
                   <span className="block text-caption text-muted-foreground">
-                    {course.units.length} units
+                    {t('stuNUnits').replace('{n}', String(course.units.length))}
                   </span>
                 </span>
               </Link>
@@ -160,7 +158,7 @@ export function StudentDashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Marks that came back</CardTitle>
+            <CardTitle>{t('stuMarksBack')}</CardTitle>
             <Button variant="ghost" size="sm" asChild>
               <Link to="/student/grades">{t('navMyGrades')}</Link>
             </Button>
@@ -179,11 +177,11 @@ export function StudentDashboard() {
                       ? locale === 'ar'
                         ? item.activity.titleAr
                         : item.activity.title
-                      : 'Activity'}
+                      : t('stuActivity')}
                   </span>
                   {item.submission?.feedback ? (
                     <Badge variant="outline" className="flex-none">
-                      Feedback
+                      {t('stuFeedback')}
                     </Badge>
                   ) : null}
                   <span

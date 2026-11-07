@@ -8,6 +8,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
+import { useLocale } from '@/lib/i18n'
 import { classOf, upperStudent } from '@/data/student'
 
 /**
@@ -30,13 +31,14 @@ const nav: NavItem[] = [
 ]
 
 export function StudentApp() {
+  const { t } = useLocale()
   const group = classOf(upperStudent)
   return (
     <AppShell
       nav={nav}
       schoolName={group?.name ?? 'Cedar Valley School'}
       userName={`${upperStudent.firstName} ${upperStudent.lastName}`}
-      userRole={`Grade ${group?.grade ?? 6}`}
+      userRole={t('stuGradeN').replace('{n}', String(group?.grade ?? 6))}
     />
   )
 }

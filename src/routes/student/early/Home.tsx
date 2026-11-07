@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { BookOpen, Calculator, Check, Star } from 'lucide-react'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import { earnedStickers } from './Stickers'
 
 /**
@@ -14,13 +16,42 @@ import { earnedStickers } from './Stickers'
  * numbers of stars, and neither is told where they sit in the class.
  */
 
-const todayWork = [
-  { id: 'a1', title: 'Counting in tens', subject: 'Maths', icon: Calculator, done: true, stars: 3 },
-  { id: 'a2', title: 'The hungry fox', subject: 'Reading', icon: BookOpen, done: true, stars: 2 },
-  { id: 'a3', title: 'Number line to 100', subject: 'Maths', icon: Calculator, done: false, stars: 0 },
+const todayWork: Array<{
+  id: string
+  titleKey: StringKey
+  subjectKey: StringKey
+  icon: typeof Calculator
+  done: boolean
+  stars: number
+}> = [
+  {
+    id: 'a1',
+    titleKey: 'erlActCountingInTens',
+    subjectKey: 'erlSubjMaths',
+    icon: Calculator,
+    done: true,
+    stars: 3,
+  },
+  {
+    id: 'a2',
+    titleKey: 'erlActHungryFox',
+    subjectKey: 'erlSubjReading',
+    icon: BookOpen,
+    done: true,
+    stars: 2,
+  },
+  {
+    id: 'a3',
+    titleKey: 'erlActNumberLine100',
+    subjectKey: 'erlSubjMaths',
+    icon: Calculator,
+    done: false,
+    stars: 0,
+  },
 ]
 
 export function EarlyHome() {
+  const { t } = useLocale()
   const next = todayWork.find((item) => !item.done)
   const finished = todayWork.filter((item) => item.done).length
 
@@ -31,25 +62,27 @@ export function EarlyHome() {
           to={`/student/early/activity/${next.id}`}
           className="block rounded-2xl bg-primary p-6 text-primary-foreground transition-transform hover:scale-[1.01]"
         >
-          <p className="text-small font-medium opacity-80">Next for you</p>
-          <p className="mt-2 text-heading font-semibold leading-tight">{next.title}</p>
-          <p className="mt-1 text-body opacity-80">{next.subject}</p>
+          <p className="text-small font-medium opacity-80">{t('erlNextForYou')}</p>
+          <p className="mt-2 text-heading font-semibold leading-tight">{t(next.titleKey)}</p>
+          <p className="mt-1 text-body opacity-80">{t(next.subjectKey)}</p>
           <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-foreground px-6 py-3 text-body font-semibold text-primary">
-            Let us go
+            {t('erlLetUsGo')}
           </span>
         </Link>
       ) : (
         <div className="rounded-2xl bg-primary p-6 text-center text-primary-foreground">
-          <p className="text-heading font-semibold">All done for today</p>
-          <p className="mt-1 text-body opacity-80">Come back tomorrow</p>
+          <p className="text-heading font-semibold">{t('erlAllDone')}</p>
+          <p className="mt-1 text-body opacity-80">{t('erlComeBackTomorrow')}</p>
         </div>
       )}
 
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="text-subheading font-semibold text-foreground">Today</h2>
+          <h2 className="text-subheading font-semibold text-foreground">{t('erlToday')}</h2>
           <p className="text-small text-muted-foreground">
-            {finished} of {todayWork.length} finished
+            {t('erlNofMFinished')
+              .replace('{n}', String(finished))
+              .replace('{m}', String(todayWork.length))}
           </p>
         </div>
 
@@ -94,9 +127,11 @@ export function EarlyHome() {
 
                 <span className="min-w-0 flex-1 leading-tight">
                   <span className="block text-body font-semibold text-foreground">
-                    {item.title}
+                    {t(item.titleKey)}
                   </span>
-                  <span className="block text-small text-muted-foreground">{item.subject}</span>
+                  <span className="block text-small text-muted-foreground">
+                    {t(item.subjectKey)}
+                  </span>
                 </span>
 
                 {item.done ? (
@@ -116,7 +151,7 @@ export function EarlyHome() {
                   </span>
                 ) : (
                   <span className="flex-none rounded-full bg-primary px-5 py-2.5 text-small font-semibold text-primary-foreground">
-                    Start
+                    {t('start')}
                   </span>
                 )}
               </Link>
@@ -133,9 +168,9 @@ export function EarlyHome() {
           <Star className="h-6 w-6 fill-primary text-primary" aria-hidden />
         </span>
         <span className="min-w-0 flex-1 text-body font-medium text-foreground">
-          You have {earnedStickers.length} stickers
+          {t('erlYouHaveStickers').replace('{n}', String(earnedStickers.length))}
         </span>
-        <span className="flex-none text-small font-semibold text-primary">See them</span>
+        <span className="flex-none text-small font-semibold text-primary">{t('erlSeeThem')}</span>
       </Link>
     </div>
   )

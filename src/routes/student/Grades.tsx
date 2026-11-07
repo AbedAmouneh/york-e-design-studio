@@ -50,30 +50,28 @@ export function StudentGrades() {
     <Page>
       <PageHeader
         title={t('navMyGrades')}
-        subtitle={`Term 2 · ${released.length} marks released`}
+        subtitle={t('stuGradesSubtitle').replace('{n}', String(released.length))}
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">Average this term</span>
+          <span className="text-small text-muted-foreground">{t('stuAverageLabel')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-foreground">
             {standing?.average}%
           </p>
         </Card>
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">Marks released</span>
+          <span className="text-small text-muted-foreground">{t('stuMarksReleased')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-foreground">
             {released.length}
           </p>
         </Card>
         <Card className="p-4">
-          <span className="text-small text-muted-foreground">With your teacher</span>
+          <span className="text-small text-muted-foreground">{t('stuWithYourTeacher')}</span>
           <p className="tabular mt-2 text-display font-semibold leading-none text-foreground">
             {waiting}
           </p>
-          <p className="mt-1.5 text-caption text-muted-foreground">
-            Marked work appears when your teacher releases it
-          </p>
+          <p className="mt-1.5 text-caption text-muted-foreground">{t('stuReleasedNote')}</p>
         </Card>
       </div>
 
@@ -85,10 +83,10 @@ export function StudentGrades() {
               <Badge
                 variant={average >= 75 ? 'success' : average >= 60 ? 'neutral' : 'danger'}
               >
-                {average}% average
+                {t('stuPercentAverage').replace('{n}', String(average))}
               </Badge>
             ) : (
-              <Badge variant="outline">No marks yet</Badge>
+              <Badge variant="outline">{t('stuNoMarksYet')}</Badge>
             )}
           </CardHeader>
           <CardContent className="px-0 pb-0">
@@ -96,9 +94,9 @@ export function StudentGrades() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Activity</TableHead>
-                    <TableHead>Returned</TableHead>
-                    <TableHead className="text-end">Mark</TableHead>
+                    <TableHead>{t('colActivity')}</TableHead>
+                    <TableHead>{t('stuColReturned')}</TableHead>
+                    <TableHead className="text-end">{t('stuColMark')}</TableHead>
                     <TableHead />
                   </TableRow>
                 </TableHeader>
@@ -112,7 +110,7 @@ export function StudentGrades() {
                             ? locale === 'ar'
                               ? row.activity.titleAr
                               : row.activity.title
-                            : 'Activity'}
+                            : t('stuActivity')}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
                           {row.submission?.submittedOn}
@@ -132,7 +130,7 @@ export function StudentGrades() {
                         <TableCell className="text-end">
                           <Button variant="ghost" size="sm" asChild>
                             <Link to={`/student/quiz/${row.assignment.id}/results`}>
-                              See feedback
+                              {t('stuSeeFeedback')}
                             </Link>
                           </Button>
                         </TableCell>
@@ -143,7 +141,7 @@ export function StudentGrades() {
               </Table>
             ) : (
               <p className="px-4 py-8 text-center text-small text-muted-foreground">
-                Nothing marked in this course yet.
+                {t('stuNothingMarkedYet')}
               </p>
             )}
           </CardContent>

@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Check, Volume2, X } from 'lucide-react'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 
 /**
@@ -19,15 +20,21 @@ import { cn } from '@/lib/utils'
  *   before a child can read a percentage.
  */
 
-const questions = [
-  { id: 'q1', stem: 'What comes after 40?', options: ['30', '50', '41'], answer: '50' },
-  { id: 'q2', stem: 'What comes after 70?', options: ['80', '60', '71'], answer: '80' },
-  { id: 'q3', stem: 'Count in tens. 10, 20, 30, ...', options: ['31', '40', '35'], answer: '40' },
-  { id: 'q4', stem: 'What comes before 60?', options: ['70', '50', '59'], answer: '50' },
-]
-
 export function EarlyDoActivity() {
   const navigate = useNavigate()
+  const { t } = useLocale()
+
+  // Only the stems need a translation. The options are numbers.
+  const questions = useMemo(
+    () => [
+      { id: 'q1', stem: t('erlQ1'), options: ['30', '50', '41'], answer: '50' },
+      { id: 'q2', stem: t('erlQ2'), options: ['80', '60', '71'], answer: '80' },
+      { id: 'q3', stem: t('erlQ3'), options: ['31', '40', '35'], answer: '40' },
+      { id: 'q4', stem: t('erlQ4'), options: ['70', '50', '59'], answer: '50' },
+    ],
+    [t],
+  )
+
   const [index, setIndex] = useState(0)
   const [picked, setPicked] = useState<string | null>(null)
   const [tryAgain, setTryAgain] = useState(false)
@@ -56,16 +63,21 @@ export function EarlyDoActivity() {
         <Link
           to="/student/early/activities"
           className="grid h-11 w-11 flex-none place-items-center rounded-full bg-surface text-muted-foreground"
-          aria-label="Close"
+          aria-label={t('erlClose')}
         >
           <X className="h-5 w-5" aria-hidden />
         </Link>
 
         <span className="min-w-0 flex-1 text-body font-semibold text-foreground">
-          Counting in tens
+          {t('erlActCountingInTens')}
         </span>
 
-        <span className="flex flex-none gap-1.5" aria-label={`Question ${index + 1} of ${questions.length}`}>
+        <span
+          className="flex flex-none gap-1.5"
+          aria-label={t('erlQuestionNofM')
+            .replace('{n}', String(index + 1))
+            .replace('{m}', String(questions.length))}
+        >
           {questions.map((item, position) => (
             <span
               key={item.id}
@@ -90,7 +102,7 @@ export function EarlyDoActivity() {
           </p>
           <button
             type="button"
-            aria-label="Read this out loud"
+            aria-label={t('erlReadAloud')}
             className="grid h-12 w-12 flex-none place-items-center rounded-full bg-primary/10 text-primary"
           >
             <Volume2 className="h-6 w-6" aria-hidden />
@@ -127,14 +139,14 @@ export function EarlyDoActivity() {
             <>
               <p className="flex items-center gap-2 text-subheading font-semibold text-primary">
                 <Check className="h-6 w-6" aria-hidden />
-                That is right
+                {t('erlThatIsRight')}
               </p>
               <button
                 type="button"
                 onClick={next}
                 className="rounded-full bg-primary px-8 py-3.5 text-body font-semibold text-primary-foreground"
               >
-                {index === questions.length - 1 ? 'Finish' : 'Next'}
+                {index === questions.length - 1 ? t('erlFinish') : t('next')}
               </button>
             </>
           ) : tryAgain ? (
@@ -144,7 +156,9 @@ export function EarlyDoActivity() {
                 which is the entire difference between practice and testing at
                 this age.
               */}
-              <p className="text-subheading font-semibold text-foreground">Have another look</p>
+              <p className="text-subheading font-semibold text-foreground">
+                {t('erlHaveAnotherLook')}
+              </p>
               <button
                 type="button"
                 onClick={() => {
@@ -153,11 +167,11 @@ export function EarlyDoActivity() {
                 }}
                 className="rounded-full bg-surface px-8 py-3.5 text-body font-semibold text-foreground"
               >
-                Try again
+                {t('erlTryAgain')}
               </button>
             </>
           ) : (
-            <p className="text-body text-muted-foreground">Tap your answer</p>
+            <p className="text-body text-muted-foreground">{t('erlTapYourAnswer')}</p>
           )}
         </div>
       </main>

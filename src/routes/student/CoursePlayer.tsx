@@ -51,7 +51,7 @@ export function StudentCoursePlayer() {
   if (!course) {
     return (
       <Page>
-        <PageHeader title="Course not found" subtitle="It may not be open for your class." />
+        <PageHeader title={t('stuCourseNotFound')} subtitle={t('stuCourseNotOpen')} />
         <Button variant="outline" size="sm" asChild>
           <Link to="/student/courses">{t('navMyCourses')}</Link>
         </Button>
@@ -75,7 +75,7 @@ export function StudentCoursePlayer() {
     <Page>
       <PageHeader
         title={locale === 'ar' ? course.titleAr : course.title}
-        subtitle={`${course.units.length} units`}
+        subtitle={t('stuNUnits').replace('{n}', String(course.units.length))}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/student/courses">
@@ -91,14 +91,14 @@ export function StudentCoursePlayer() {
           <CardContent className="flex flex-wrap items-center gap-4 p-4">
             <span className="min-w-0 flex-1 leading-tight">
               <span className="block text-caption uppercase tracking-wide text-muted-foreground">
-                Next up
+                {t('stuNextUp')}
               </span>
               <span className="mt-0.5 block text-small font-medium text-foreground">
                 {locale === 'ar' ? nextUp.titleAr : nextUp.title}
               </span>
             </span>
             <Button variant="accent" size="sm" asChild>
-              <Link to="/student/assignments">Start</Link>
+              <Link to="/student/assignments">{t('start')}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -121,11 +121,11 @@ export function StudentCoursePlayer() {
                 {locked ? (
                   <Badge variant="outline" className="flex-none">
                     <Lock className="me-1 h-3 w-3" aria-hidden />
-                    Opens later
+                    {t('stuOpensLater')}
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="flex-none">
-                    {unit.activities.length} activities
+                    {t('stuNActivities').replace('{n}', String(unit.activities.length))}
                   </Badge>
                 )}
               </button>
@@ -168,13 +168,13 @@ export function StudentCoursePlayer() {
 
                         {state === 'submitted' ? (
                           <Badge variant="outline" className="flex-none">
-                            Handed in
+                            {t('stuHandedIn')}
                           </Badge>
                         ) : null}
 
                         {state === 'todo' ? (
                           <Button variant="accent" size="sm" className="flex-none" asChild>
-                            <Link to="/student/assignments">Start</Link>
+                            <Link to="/student/assignments">{t('start')}</Link>
                           </Button>
                         ) : null}
                       </div>
@@ -187,9 +187,7 @@ export function StudentCoursePlayer() {
         })}
       </div>
 
-      <p className="text-caption text-muted-foreground">
-        Handed in means your teacher has it. A mark appears only once they release it to the class.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('stuHandedInNote')}</p>
     </Page>
   )
 }

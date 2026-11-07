@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { Home, Sparkles, Star } from 'lucide-react'
+import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { classOf, earlyStudent, standingOf } from '@/data/student'
+import type { StringKey } from '@/i18n'
 
 /**
  * Student, K1 to Grade 3.
@@ -16,13 +18,14 @@ import { classOf, earlyStudent, standingOf } from '@/data/student'
  * leak into a staff screen by accident.
  */
 
-const tabs = [
-  { to: '/student/early', label: 'Home', icon: Home, end: true },
-  { to: '/student/early/activities', label: 'My work', icon: Sparkles },
-  { to: '/student/early/stickers', label: 'My stickers', icon: Star },
+const tabs: Array<{ to: string; labelKey: StringKey; icon: typeof Home; end?: boolean }> = [
+  { to: '/student/early', labelKey: 'erlHome', icon: Home, end: true },
+  { to: '/student/early/activities', labelKey: 'erlMyWork', icon: Sparkles },
+  { to: '/student/early/stickers', labelKey: 'erlMyStickers', icon: Star },
 ]
 
 export function EarlyApp() {
+  const { t } = useLocale()
   const standing = standingOf(earlyStudent)
   const group = classOf(earlyStudent)
 
@@ -34,7 +37,7 @@ export function EarlyApp() {
         </span>
         <span className="min-w-0 flex-1 leading-tight">
           <span className="block text-subheading font-semibold text-foreground">
-            Hello, {earlyStudent.firstName}
+            {t('erlHello').replace('{n}', earlyStudent.firstName)}
           </span>
           <span className="block text-small text-muted-foreground">{group?.name}</span>
         </span>
@@ -73,7 +76,7 @@ export function EarlyApp() {
               }
             >
               <Icon className="h-6 w-6" aria-hidden />
-              <span className="text-small font-medium">{tab.label}</span>
+              <span className="text-small font-medium">{t(tab.labelKey)}</span>
             </NavLink>
           )
         })}

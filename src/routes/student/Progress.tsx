@@ -30,9 +30,9 @@ import { masteryFor, standingOf, upperStudent, visibleWork } from '@/data/studen
  */
 
 const bands = [
-  { key: 'solid', label: 'Solid', min: 75, tone: 'bg-success' },
-  { key: 'getting', label: 'Getting there', min: 55, tone: 'bg-warning' },
-  { key: 'practise', label: 'Worth practising', min: 0, tone: 'bg-danger' },
+  { key: 'solid', labelKey: 'stuBandSolid', min: 75, tone: 'bg-success' },
+  { key: 'getting', labelKey: 'stuBandGetting', min: 55, tone: 'bg-warning' },
+  { key: 'practise', labelKey: 'stuBandPractise', min: 0, tone: 'bg-danger' },
 ] as const
 
 function bandFor(value: number) {
@@ -46,24 +46,26 @@ export function StudentProgress() {
   const skillRows = masteryFor(upperStudent).sort((a, b) => a.record.mastery - b.record.mastery)
 
   const series = released.slice(0, 8).map((item, index) => ({
-    label: item.activity?.title ?? `Task ${index + 1}`,
+    label:
+      (locale === 'ar' ? item.activity?.titleAr : item.activity?.title) ??
+      t('stuTaskN').replace('{n}', String(index + 1)),
     score: item.submission?.score ?? 0,
   }))
 
   const trendLabel =
     standing?.trend === 'rising'
-      ? 'You are improving'
+      ? t('stuTrendRising')
       : standing?.trend === 'falling'
-        ? 'Slipping a little lately'
-        : 'Holding steady'
+        ? t('stuTrendFalling')
+        : t('stuTrendSteady')
 
   return (
     <Page>
-      <PageHeader title={t('navProgress')} subtitle="Term 2, how your work has gone" />
+      <PageHeader title={t('navProgress')} subtitle={t('stuProgressSubtitle')} />
 
       <Card>
         <CardHeader>
-          <CardTitle>Your marks over time</CardTitle>
+          <CardTitle>{t('stuMarksOverTime')}</CardTitle>
           <Badge
             variant={
               standing?.trend === 'rising'
@@ -112,15 +114,13 @@ export function StudentProgress() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <p className="mt-2 text-caption text-muted-foreground">
-            Only marks your teacher has released appear here.
-          </p>
+          <p className="mt-2 text-caption text-muted-foreground">{t('stuOnlyReleasedNote')}</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>What you are good at, and what to practise</CardTitle>
+          <CardTitle>{t('stuGoodAtTitle')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {skillRows.map(({ record, skill }) => {
@@ -129,7 +129,7 @@ export function StudentProgress() {
               <div key={record.skillId} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3">
                   <span className="min-w-0 truncate text-small text-foreground">
-                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : 'Skill'}
+                    {skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('stuSkill')}
                   </span>
                   <Badge
                     variant={
@@ -140,7 +140,7 @@ export function StudentProgress() {
                           : 'danger'
                     }
                   >
-                    {band.label}
+                    {t(band.labelKey)}
                   </Badge>
                 </div>
                 <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -157,11 +157,9 @@ export function StudentProgress() {
 
       <Card className="border-accent/40">
         <CardContent className="flex flex-wrap items-center gap-3 p-4">
-          <span className="min-w-0 flex-1 text-small text-foreground">
-            Adding fractions is the one worth practising. Unit 2 has three short questions on it.
-          </span>
+          <span className="min-w-0 flex-1 text-small text-foreground">{t('stuPractiseHint2')}</span>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/student/courses">Open Unit 2</Link>
+            <Link to="/student/courses">{t('stuOpenUnit2')}</Link>
           </Button>
         </CardContent>
       </Card>
