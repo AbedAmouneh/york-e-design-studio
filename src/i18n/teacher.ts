@@ -943,4 +943,65 @@ export const teacher = {
     en: 'The misconception tag comes from the question metadata set in the authoring platform. This screen is only as good as that tagging, which is why the metadata work blocks the authoring sprint rather than the other way round.',
     ar: 'يأتي وسم المفهوم الخاطئ من البيانات الوصفية للسؤال المحددة في منصة التأليف. وهذه الشاشة بجودة ذلك الوسم لا أكثر، ولهذا يسبق عمل البيانات الوصفية سباق التأليف لا العكس.',
   },
+
+  /*
+   * The body of the one message a teacher sends to several families at once
+   * from the bulk bar. Written to be true whichever child it reaches.
+   */
+  tchBulkMessageBody: {
+    en: 'I wanted to let you know we are working on fractions this week and your child found the first lesson tricky. Ten minutes of practice at home would help. Please ask me anything.',
+    ar: 'أردت إعلامكم أننا نعمل على الكسور هذا الأسبوع، وقد وجد طفلكم الدرس الأول صعباً. عشر دقائق من التدريب في المنزل ستساعد كثيراً. لا تترددوا في سؤالي عن أي شيء.',
+  },
+
+  /*
+   * Search inside one course. Separate wording from the content library on
+   * purpose: the library is a planning tool, this is the question a teacher
+   * asks out loud in the middle of a lesson, so the copy names the course and
+   * the position in the sequence rather than the catalogue.
+   */
+  tchCourseSearchTitle: { en: 'Search this course', ar: 'ابحث في هذا المقرر' },
+  tchCourseSearchSubtitle: {
+    en: 'Find where a topic sits in {c}, for {g}',
+    ar: 'اعرف أين يقع موضوع ما في {c}، لصف {g}',
+  },
+  tchBackToCourse: { en: 'Back to the course', ar: 'العودة إلى المقرر' },
+  tchCourseSearchPlaceholder: {
+    en: 'Try a skill, such as common denominators, or a unit name',
+    ar: 'جرّب مهارة، مثل المقامات المشتركة، أو اسم وحدة',
+  },
+  tchOnlyAssigned: { en: 'Only what I have assigned', ar: 'ما أسندته فقط' },
+  tchOnlyAssignedHint: {
+    en: 'Hides anything this class has not been given yet',
+    ar: 'يخفي كل ما لم يُعطَ لهذا الصف بعد',
+  },
+  tchCourseSearchCount: {
+    en: '{n} results in {m} units.',
+    ar: '{n} نتيجة في {m} وحدات.',
+  },
+  tchCourseSearchAllShown: {
+    en: 'The whole course, in order. Type to narrow it.',
+    ar: 'المقرر كاملاً بترتيبه. اكتب لتضييق النتائج.',
+  },
+  tchCourseSearchScope: {
+    en: 'This searches this course only.',
+    ar: 'يبحث هذا في هذا المقرر وحده.',
+  },
+  tchSearchEveryCourse: {
+    en: 'Search every course you teach',
+    ar: 'ابحث في كل مقرر تدرّسه',
+  },
+  tchUnitPosition: { en: 'Unit {n} of {m}', ar: 'الوحدة {n} من {m}' },
+  tchNMatchesInUnit: { en: '{n} matches here', ar: '{n} نتيجة هنا' },
+  tchMatchedOnSkill: { en: 'Matched on a skill', ar: 'تطابق عبر مهارة' },
+  tchAlreadyAssigned: { en: 'Already assigned', ar: 'مُسند مسبقاً' },
+  tchNotAssignedYet: { en: 'Not assigned yet', ar: 'لم يُسند بعد' },
+  tchNoCourseSearchMatch: {
+    en: 'Nothing in this course matches that. Try the name of a skill, such as common denominators, rather than the title of an activity.',
+    ar: 'لا شيء في هذا المقرر يطابق ذلك. جرّب اسم مهارة، مثل المقامات المشتركة، بدلاً من عنوان نشاط.',
+  },
+  tchCourseSearchNote: {
+    en: 'Searching by skill only works because every activity is tagged in the authoring platform. A result with no skill on it is untagged, so no search by skill will ever reach it.',
+    ar: 'لا يعمل البحث بالمهارة إلا لأن كل نشاط موسوم في منصة التأليف. والنتيجة التي بلا مهارة غير موسومة، فلن يصل إليها أي بحث بالمهارة.',
+  },
+  tchSearchThisCourse: { en: 'Search this course', ar: 'ابحث في هذا المقرر' },
 } satisfies Record<string, Phrase>

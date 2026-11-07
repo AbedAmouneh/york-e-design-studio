@@ -271,6 +271,124 @@ export const student = {
     ar: 'مُسلَّم يعني أن عملك وصل إلى معلمك. ولا تظهر الدرجة إلا عندما يُظهرها للصف.',
   },
 
+  // Lesson player
+  stuActivityNotFound: { en: 'Activity not found', ar: 'النشاط غير موجود' },
+  stuActivityNotFoundBody: {
+    en: 'It may have been moved, or it may not be open for your class yet.',
+    ar: 'ربما نُقل، أو ربما لم يُفتح لصفك بعد.',
+  },
+  stuBackToCourse: { en: 'Back to the course', ar: 'العودة إلى المقرر' },
+  stuKindLesson: { en: 'Lesson', ar: 'درس' },
+  stuKindBook: { en: 'Interactive book', ar: 'كتاب تفاعلي' },
+  stuKindQuiz: { en: 'Quiz', ar: 'اختبار قصير' },
+  stuKindManipulative: { en: 'Interactive tool', ar: 'أداة تفاعلية' },
+  stuKindAssignment: { en: 'Assignment', ar: 'واجب' },
+  stuStepNofM: { en: 'Step {n} of {m}', ar: 'الخطوة {n} من {m}' },
+  stuReadAloud: { en: 'Read this page out loud', ar: 'اقرأ هذه الصفحة بصوت عالٍ' },
+  stuStopReading: { en: 'Stop reading', ar: 'أوقف القراءة' },
+  stuReadingNow: {
+    en: 'Reading this part out loud',
+    ar: 'تجري قراءة هذا الجزء بصوت عالٍ',
+  },
+  stuMarkAsDone: { en: 'Mark as done', ar: 'ضع علامة الإنجاز' },
+  stuMarkedDone: { en: 'Marked as done', ar: 'وُضعت علامة الإنجاز' },
+  stuFinishActivity: { en: 'Finish', ar: 'إنهاء' },
+  stuDoneNote: {
+    en: 'Marking it done tells your teacher you have been through it. It is not a mark.',
+    ar: 'وضع علامة الإنجاز يخبر معلمك أنك اطّلعت عليه، وهي ليست درجة.',
+  },
+
+  // Lesson content
+  stuLesson1Title: { en: 'What you are learning', ar: 'ما ستتعلمه' },
+  stuLesson1Body: {
+    en: 'Two fractions can look different and still be worth the same amount. Half of a cake and two quarters of the same cake are the same amount of cake. Fractions like these are called equivalent.',
+    ar: 'قد يبدو كسران مختلفين وهما يساويان المقدار نفسه. فنصف الكعكة يساوي ربعين من الكعكة نفسها. والكسور التي على هذه الحال تسمى كسوراً متكافئة.',
+  },
+  stuLesson2Title: { en: 'Why it works', ar: 'لماذا يصح ذلك' },
+  stuLesson2Body: {
+    en: 'Multiply the top and the bottom by the same number and you cut every piece into smaller pieces. There are more pieces now and each one is smaller, so the amount in your hand has not changed.',
+    ar: 'إذا ضربت البسط والمقام في العدد نفسه فأنت تقسم كل جزء إلى أجزاء أصغر. فيصير عدد الأجزاء أكبر وحجم كل جزء أصغر، ويبقى المقدار كما هو.',
+  },
+  stuLesson3Title: { en: 'See it on a number line', ar: 'انظر إليه على خط الأعداد' },
+  stuLesson3Body: {
+    en: 'Mark 1/2 on a line from 0 to 1, then split the same line into quarters. The mark for 2/4 lands in exactly the same place, which is the clearest proof that the two fractions are equal.',
+    ar: 'حدد 1/2 على خط من 0 إلى 1، ثم قسّم الخط نفسه إلى أرباع. ستجد علامة 2/4 في الموضع نفسه تماماً، وهذا أوضح دليل على تساوي الكسرين.',
+  },
+  stuLesson4Title: { en: 'What to remember', ar: 'ما ينبغي أن تتذكره' },
+  stuLesson4Body: {
+    en: 'Multiply or divide the top and the bottom by the same number and the fraction keeps its value. Change only one of them and it does not.',
+    ar: 'إذا ضربت البسط والمقام في العدد نفسه أو قسمتهما عليه بقي الكسر محافظاً على قيمته. أما إذا غيّرت أحدهما وحده فلا يبقى كذلك.',
+  },
+  stuDiagramNote: {
+    en: 'Diagram: one cake cut into halves beside the same cake cut into quarters',
+    ar: 'رسم توضيحي: كعكة مقسومة إلى نصفين بجانب الكعكة نفسها مقسومة إلى أرباع',
+  },
+
+  // Interactive book content
+  stuBook1Title: { en: 'The river that went missing', ar: 'النهر الذي اختفى' },
+  stuBook1Body: {
+    en: 'Every summer the river beside the village grew thinner, until one year it was gone. The children walked along the dry bed looking for where it had gone.',
+    ar: 'في كل صيف كان النهر المجاور للقرية يضمر، حتى اختفى في إحدى السنوات. فسار الأطفال في مجراه الجاف يبحثون عن المكان الذي ذهب إليه.',
+  },
+  stuBook1Caption: {
+    en: 'Illustration: the dry river bed at the edge of the village',
+    ar: 'رسمة: مجرى النهر الجاف عند طرف القرية',
+  },
+  stuBook2Title: { en: 'Where the water goes', ar: 'إلى أين يذهب الماء' },
+  stuBook2Body: {
+    en: 'Water does not disappear. The sun lifts it from the surface as vapour, the air carries it, and it falls again somewhere else as rain.',
+    ar: 'الماء لا يختفي. فالشمس ترفعه عن السطح بخاراً، ويحمله الهواء، ثم يسقط مطراً في مكان آخر.',
+  },
+  stuBook2Caption: {
+    en: 'Illustration: the water cycle over a village and a hill',
+    ar: 'رسمة: دورة الماء فوق القرية والتل',
+  },
+  stuBook3Title: { en: 'What the children found', ar: 'ما وجده الأطفال' },
+  stuBook3Body: {
+    en: 'High on the hill they found the spring still running, turned aside into a new channel by a winter of heavy rain. The river had not gone. It had moved.',
+    ar: 'وفي أعلى التل وجدوا النبع ما زال يجري، وقد حوّله شتاء غزير المطر إلى مجرى جديد. فالنهر لم يذهب، بل انتقل.',
+  },
+  stuBook3Caption: {
+    en: 'Illustration: the spring running into its new channel',
+    ar: 'رسمة: النبع يجري في مجراه الجديد',
+  },
+  stuPageN: { en: 'Page {n}', ar: 'صفحة {n}' },
+  stuPagesNandM: { en: 'Pages {n} and {m}', ar: 'الصفحتان {n} و{m}' },
+  stuPreviousPages: { en: 'Previous pages', ar: 'الصفحتان السابقتان' },
+  stuNextPages: { en: 'Next pages', ar: 'الصفحتان التاليتان' },
+
+  // Interactive tool
+  stuToolName: { en: 'Fraction bars', ar: 'أشرطة الكسور' },
+  stuToolBody: {
+    en: 'Build a fraction with the bars, then line it up against another one to see which is bigger and by how much.',
+    ar: 'ابنِ كسراً بالأشرطة، ثم ضعه بمحاذاة كسر آخر لترى أيهما أكبر وبكم.',
+  },
+  stuToolPlaceholder: {
+    en: 'The interactive tool opens here',
+    ar: 'تُفتح الأداة التفاعلية هنا',
+  },
+  stuToolNote: {
+    en: 'Nothing you do with the tool is marked. It is here to be played with.',
+    ar: 'لا شيء مما تفعله بالأداة يُصحَّح، فهي هنا لتجربها كما تشاء.',
+  },
+
+  // Assignment and quiz, opened from here
+  stuAssignmentWhatToDo: { en: 'What to hand in', ar: 'ما المطلوب تسليمه' },
+  stuAssignmentBody: {
+    en: 'Write one paragraph explaining how you would check that two fractions are equivalent. Give one example of your own.',
+    ar: 'اكتب فقرة واحدة تشرح فيها كيف تتحقق من تكافؤ كسرين، واذكر مثالاً من عندك.',
+  },
+  stuHandInThereNote: {
+    en: 'You hand work in from your assignments list, so it reaches your teacher with the right date on it.',
+    ar: 'تُسلّم عملك من قائمة واجباتك، ليصل إلى معلمك بالتاريخ الصحيح.',
+  },
+  stuQuizHereTitle: { en: 'This one is a quiz', ar: 'هذا النشاط اختبار قصير' },
+  stuQuizHereBody: {
+    en: 'Quizzes open from your assignments list, where the timer and your attempts are kept.',
+    ar: 'تُفتح الاختبارات القصيرة من قائمة واجباتك، حيث يُحفظ الوقت وعدد محاولاتك.',
+  },
+  stuOpenInAssignments: { en: 'Open it in Assignments', ar: 'افتحه في الواجبات' },
+
   // ------------------------------------------------------------------
   // K1 to Grade 3. Everything below is read by a child of five to eight,
   // or read aloud to them. Short, warm, and nothing that sounds like a
@@ -362,4 +480,49 @@ export const student = {
   erlStickerRead10: { en: 'Read 10 stories', ar: 'قرأت 10 قصص' },
   erlStickerCounted200: { en: 'Counted to 200', ar: 'عددت حتى 200' },
   erlStickerTwoWeeks: { en: 'Two weeks in a row', ar: 'أسبوعان متتاليان' },
+
+  // Help. A child of five cannot read a list of answers, so the words here
+  // are the ones they would say out loud, and the teacher is the first one.
+  erlHelp: { en: 'Help', ar: 'مساعدة' },
+  erlHelpTitle: { en: 'Need some help?', ar: 'هل تحتاج مساعدة؟' },
+  erlHelpIntro: {
+    en: 'Tap the picture that looks like your problem.',
+    ar: 'اضغط على الصورة التي تشبه ما يحدث معك.',
+  },
+  erlReadThisToMe: { en: 'Read this to me', ar: 'اقرأ لي هذا' },
+  erlAskTeacher: { en: 'Ask my teacher', ar: 'اسأل معلمي' },
+  erlAskTeacherBody: {
+    en: 'Tap here and your teacher will know you need help.',
+    ar: 'اضغط هنا وسيعرف معلمك أنك تحتاج مساعدة.',
+  },
+  erlTeacherIsComing: { en: 'Your teacher is coming', ar: 'معلمك قادم إليك' },
+  erlTeacherIsComingBody: {
+    en: 'Stay here. You can keep looking at your work while you wait.',
+    ar: 'ابقَ هنا. ويمكنك أن تنظر إلى عملك ريثما يصل.',
+  },
+  erlIAmOkayNow: { en: 'I am okay now', ar: 'أنا بخير الآن' },
+  erlNoSound: { en: 'I cannot hear it', ar: 'لا أسمع الصوت' },
+  erlNoSoundHelp: {
+    en: 'Turn the sound up with the buttons on the side of your tablet, then tap the speaker again.',
+    ar: 'ارفع الصوت بالأزرار الموجودة على جانب جهازك، ثم اضغط على صورة السماعة من جديد.',
+  },
+  erlStuck: { en: 'I do not know what to do', ar: 'لا أعرف ماذا أفعل' },
+  erlStuckHelp: {
+    en: 'Tap the speaker to hear it again, and look at the picture one more time.',
+    ar: 'اضغط على السماعة لتسمعه من جديد، وانظر إلى الصورة مرة أخرى.',
+  },
+  erlTappedByMistake: {
+    en: 'I tapped something by mistake',
+    ar: 'ضغطت على شيء من دون قصد',
+  },
+  erlTappedByMistakeHelp: {
+    en: 'Nothing is broken. Tap the one you want and it will change.',
+    ar: 'لم يحدث شيء. اضغط على ما تريد وسيتغير.',
+  },
+  erlOkay: { en: 'Okay', ar: 'حسناً' },
+  erlAskingIsOkay: {
+    en: 'Asking for help is always a good thing to do.',
+    ar: 'طلب المساعدة شيء جميل دائماً.',
+  },
+  stuOpen: { en: 'Open', ar: 'افتح' },
 } satisfies Record<string, Phrase>

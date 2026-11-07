@@ -315,4 +315,133 @@ export const superAdmin = {
     en: 'Flag changes are logged against your account.',
     ar: 'تُسجَّل تغييرات المفاتيح على حسابك.',
   },
+
+  // Per school branding
+  saBranding: { en: 'Branding', ar: 'الهوية المرئية' },
+  saBrandingSubtitle: {
+    en: 'How this school appears to its own users',
+    ar: 'كيف تظهر هذه المدرسة لمستخدميها',
+  },
+  saBrandOptional: { en: 'Optional', ar: 'اختياري' },
+
+  // Logo
+  saBrandLogo: { en: 'School logo', ar: 'شعار المدرسة' },
+  saBrandCurrentLogo: { en: 'Current logo', ar: 'الشعار الحالي' },
+  saBrandLogoFile: { en: 'Uploaded file: {n}', ar: 'الملف المرفوع: {n}' },
+  saBrandNoLogo: { en: 'No logo uploaded', ar: 'لم يُرفع شعار' },
+  saBrandReplaceLogo: { en: 'Replace the logo', ar: 'استبدل الشعار' },
+  saBrandUploadLogo: { en: 'Upload a logo', ar: 'ارفع شعاراً' },
+  saBrandRemoveLogo: { en: 'Remove', ar: 'إزالة' },
+  saBrandLogoSpec: {
+    en: 'PNG or SVG, transparent background, at least 240 pixels on the long edge.',
+    ar: 'صيغة PNG أو SVG، بخلفية شفافة، و240 بكسلاً على الأقل في الضلع الأطول.',
+  },
+  saBrandLogoWhere: {
+    en: 'Appears on the sign in screen, in the sidebar, and on every printed report.',
+    ar: 'يظهر في شاشة تسجيل الدخول وفي الشريط الجانبي وعلى كل تقرير مطبوع.',
+  },
+  saBrandFallback: { en: 'When there is no logo', ar: 'عند غياب الشعار' },
+  saBrandFallbackPreview: { en: 'Fallback wordmark', ar: 'الشعار النصي البديل' },
+  saBrandOnReport: { en: 'On a report card', ar: 'على بطاقة الدرجات' },
+  saBrandFallbackNote: {
+    en: "The school name is set in type instead. It never falls back to the York Press mark, because a parent opening their child's report should see their child's school and not their school's publisher.",
+    ar: 'يُضبط اسم المدرسة بالخط بدلاً من ذلك. ولا يُستعاض عنه بعلامة York Press أبداً، لأن ولي الأمر الذي يفتح تقرير ابنه ينبغي أن يرى مدرسة ابنه لا ناشر كتبها.',
+  },
+
+  // Brand colour
+  saBrandAccent: { en: 'Brand colour', ar: 'لون العلامة' },
+  saBrandAccentHint: {
+    en: 'One accent per school. It carries white text wherever it is used, so it has to be dark enough to be read on.',
+    ar: 'لون مميز واحد لكل مدرسة. وهو يحمل نصاً أبيض أينما استُخدم، فيجب أن يكون داكناً بما يكفي ليُقرأ عليه.',
+  },
+  saBrandConsequence: { en: 'What the choice does', ar: 'ما يفعله هذا الاختيار' },
+  saBrandConsequenceNote: {
+    en: 'A swatch tells an operator nothing. These are the three places the accent actually lands, at the size a learner meets it.',
+    ar: 'العيّنة اللونية وحدها لا تقول للمشغّل شيئاً. وهذه هي المواضع الثلاثة التي يظهر فيها اللون فعلاً، بالحجم الذي يراه الطالب.',
+  },
+  saBrandPreviewButton: { en: 'Submit the assignment', ar: 'سلّم الواجب' },
+  saBrandPreviewProgress: { en: 'Unit 3 progress', ar: 'تقدم الوحدة الثالثة' },
+  saBrandContrastRatio: {
+    en: 'Contrast with white text: {n} to 1',
+    ar: 'التباين مع النص الأبيض: {n} إلى 1',
+  },
+  saBrandContrastPass: { en: 'Passes WCAG 2.2 AA', ar: 'يجتاز معيار WCAG 2.2 AA' },
+  saBrandContrastFail: { en: 'Fails WCAG 2.2 AA', ar: 'يرسب في معيار WCAG 2.2 AA' },
+  saBrandContrastFailNote: {
+    en: 'White text on this colour is below 4.5 to 1. The platform refuses the colour rather than shipping a button that a learner with low vision cannot read. A darker tone of the same hue passes.',
+    ar: 'النص الأبيض على هذا اللون دون 4.5 إلى 1. وترفض المنصة اللون بدل أن تُصدِر زراً لا يستطيع طالب ضعيف البصر قراءته. ودرجة أدكن من اللون نفسه تجتاز الفحص.',
+  },
+  saBrandRefused: { en: 'Refused', ar: 'مرفوض' },
+  saBrandCustomHex: { en: 'Or a specific value', ar: 'أو قيمة محددة' },
+  saBrandCustomHexHint: {
+    en: 'Six digit hex. Schools usually send the value from their own brand guide.',
+    ar: 'قيمة ست عشرية من ستة محارف. وعادة ترسل المدرسة القيمة من دليل هويتها.',
+  },
+  saBrandHueForest: { en: 'Forest', ar: 'أخضر داكن' },
+  saBrandHueTeal: { en: 'Teal', ar: 'أزرق مخضر' },
+  saBrandHueNavy: { en: 'Navy', ar: 'كحلي' },
+  saBrandHueMaroon: { en: 'Maroon', ar: 'عنابي' },
+  saBrandHueOlive: { en: 'Olive', ar: 'زيتوني' },
+  saBrandHuePaleYellow: { en: 'Pale yellow', ar: 'أصفر فاتح' },
+  saBrandHueSky: { en: 'Sky', ar: 'أزرق سماوي' },
+
+  // Subdomain
+  saBrandSubdomain: { en: 'Subdomain', ar: 'النطاق الفرعي' },
+  saBrandSubdomainHint: {
+    en: 'The address the school signs in at.',
+    ar: 'العنوان الذي تسجّل المدرسة الدخول منه.',
+  },
+  saBrandCurrentAddress: { en: 'Current address', ar: 'العنوان الحالي' },
+  saBrandNewAddress: { en: 'New address', ar: 'العنوان الجديد' },
+  saBrandAvailable: { en: 'Available', ar: 'متاح' },
+  saBrandTaken: { en: 'Taken by another school', ar: 'محجوز لمدرسة أخرى' },
+  saBrandReserved: { en: 'Reserved by York Press', ar: 'محجوز لـ York Press' },
+  saBrandSubdomainRules: {
+    en: 'Lowercase letters, numbers and hyphens. Between 3 and 30 characters.',
+    ar: 'حروف لاتينية صغيرة وأرقام وشرطات. وبين 3 و30 محرفاً.',
+  },
+  saBrandSubdomainBreaks: {
+    en: 'Changing this breaks every link already sent and every bookmark a teacher saved. The old address is not redirected. Move it during a holiday or not at all.',
+    ar: 'تغيير هذا يُعطّل كل رابط أُرسل من قبل وكل إشارة مرجعية حفظها معلم. ولا يُحوَّل العنوان القديم إلى الجديد. فانقله في عطلة أو لا تنقله.',
+  },
+
+  // The limits of branding
+  saBrandLimits: { en: 'What a school cannot change', ar: 'ما لا تستطيع المدرسة تغييره' },
+  saBrandSkinNotBehaviour: {
+    en: 'Branding is skin, not behaviour',
+    ar: 'الهوية المرئية مظهر لا سلوك',
+  },
+  saBrandLimitLayout: { en: 'Layout and navigation', ar: 'التخطيط والتنقل' },
+  saBrandLimitLayoutHint: {
+    en: 'Every school gets the same structure, so support can walk a teacher through a problem without first asking what their version looks like.',
+    ar: 'تحصل كل مدرسة على البنية نفسها، ليتمكن الدعم من إرشاد المعلم في أي مشكلة دون أن يسأله أولاً كيف تبدو نسخته.',
+  },
+  saBrandLimitTiers: { en: 'The age tier rules', ar: 'قواعد الفئات العمرية' },
+  saBrandLimitTiersHint: {
+    en: 'K1 to Grade 3 sees no percentages and no red. That is a pedagogical rule carried in the product, not a theme a school opts out of.',
+    ar: 'لا ترى المرحلة من الروضة الأولى إلى الصف الثالث نسباً مئوية ولا لوناً أحمر. وهذه قاعدة تربوية يحملها المنتج لا سمة تصميمية تتخلى عنها المدرسة.',
+  },
+  saBrandLimitGrades: { en: 'Anything that touches a grade', ar: 'كل ما يمس الدرجة' },
+  saBrandLimitGradesHint: {
+    en: 'How a mark is calculated, rounded and displayed follows the grading scale on the contract. A colour cannot reach it.',
+    ar: 'تتبع طريقة احتساب الدرجة وتقريبها وعرضها سلّم التقدير المنصوص عليه في العقد. ولا يستطيع لون أن يمسّها.',
+  },
+  saBrandLimitsNote: {
+    en: 'These are listed rather than quietly absent, so an operator can answer a school that asks. The answer is no, and the reason is that a support call, a report card and an accessibility audit have to mean the same thing in every tenant.',
+    ar: 'تُذكر هذه البنود بدل أن تغيب بصمت، كي يستطيع المشغّل الرد على مدرسة تسأل. والجواب لا، وسببه أن بلاغ الدعم وبطاقة الدرجات وتدقيق الوصولية يجب أن تعني الشيء نفسه لدى كل مستأجر.',
+  },
+
+  // Saving
+  saBrandSaved: {
+    en: 'Saved. The school sees the change at their next sign in.',
+    ar: 'تم الحفظ. وترى المدرسة التغيير عند تسجيل الدخول التالي.',
+  },
+  saBrandSaveBlocked: {
+    en: 'The brand colour fails the contrast check, so nothing on this screen can be saved.',
+    ar: 'لون العلامة يرسب في فحص التباين، فلا يمكن حفظ أي شيء في هذه الشاشة.',
+  },
+  saBrandChangesLogged: {
+    en: 'Branding changes are logged against your account and are visible to the school.',
+    ar: 'تُسجَّل تغييرات الهوية المرئية على حسابك وتراها المدرسة.',
+  },
 } satisfies Record<string, Phrase>

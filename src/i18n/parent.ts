@@ -283,4 +283,5 @@ export const parent = {
     en: '{n} is finishing their work and finding some of it hard. Their teacher is working on it with them.',
     ar: 'ينهي {n} أعماله ويجد بعضها صعباً، ومعلمه يعمل معه على ذلك.',
   },
+  parJustNow: { en: 'Just now', ar: 'الآن' },
 } satisfies Record<string, Phrase>
