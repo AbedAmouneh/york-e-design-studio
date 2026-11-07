@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { teacherClasses } from '@/data/teacher'
@@ -69,7 +70,7 @@ const kindTone = {
 } as const
 
 export function TeacherPlanner() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [classFilter, setClassFilter] = useState('all')
 
   const visible = plan.filter((card) =>
@@ -121,7 +122,7 @@ export function TeacherPlanner() {
             size="sm"
             onClick={() => setClassFilter(item.id)}
           >
-            {item.name}
+            {groupName(item, locale)}
           </Button>
         ))}
       </div>
@@ -159,7 +160,9 @@ export function TeacherPlanner() {
                       <p className="text-small font-medium leading-tight text-foreground">
                         {t(card.titleKey)}
                       </p>
-                      <p className="mt-1 text-caption text-muted-foreground">{classGroup?.name}</p>
+                      <p className="mt-1 text-caption text-muted-foreground">
+                        {groupName(classGroup, locale)}
+                      </p>
                       <div className="mt-2 flex items-center gap-1.5">
                         <Badge variant="outline">{card.standard}</Badge>
                         {card.kind === 'assessment' ? (
