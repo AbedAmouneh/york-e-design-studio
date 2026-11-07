@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { CircleHelp, Home, Sparkles, Star } from 'lucide-react'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { classOf, earlyStudent, standingOf } from '@/data/student'
 import type { StringKey } from '@/i18n'
@@ -25,7 +26,7 @@ const tabs: Array<{ to: string; labelKey: StringKey; icon: typeof Home; end?: bo
 ]
 
 export function EarlyApp() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const standing = standingOf(earlyStudent)
   const group = classOf(earlyStudent)
 
@@ -39,7 +40,9 @@ export function EarlyApp() {
           <span className="block text-subheading font-semibold text-foreground">
             {t('erlHello').replace('{n}', earlyStudent.firstName)}
           </span>
-          <span className="block text-small text-muted-foreground">{group?.name}</span>
+          <span className="block text-small text-muted-foreground">
+            {groupName(group, locale)}
+          </span>
         </span>
 
         {/*
