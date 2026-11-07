@@ -24,6 +24,8 @@ export const common = {
   // Names for controls that are only ever read aloud, never seen.
   dismiss: { en: 'Dismiss', ar: 'إغلاق التنبيه' },
   close: { en: 'Close', ar: 'إغلاق' },
+  // Labels the tier switch as studio furniture. No real student sees it.
+  tierSwitchLabel: { en: 'Studio view', ar: 'عرض الاستوديو' },
   switchToArabic: { en: 'العربية', ar: 'العربية' },
   switchToEnglish: { en: 'English', ar: 'English' },
 
