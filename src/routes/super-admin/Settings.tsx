@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 
 /**
  * Platform settings.
@@ -23,60 +24,60 @@ import { cn } from '@/lib/utils'
 
 interface Flag {
   id: string
-  label: string
-  hint: string
+  labelKey: StringKey
+  hintKey: StringKey
   on: boolean
-  rollout?: string
+  rolloutKey?: StringKey
 }
 
 const featureFlags: Flag[] = [
   {
     id: 'ai-teacher',
-    label: 'AI teacher tools',
-    hint: 'Teacher facing only. No student facing AI in this release.',
+    labelKey: 'saFlagAiTeacher',
+    hintKey: 'saFlagAiTeacherHint',
     on: true,
-    rollout: 'Cedar Valley only',
+    rolloutKey: 'saRolloutCedarOnly',
   },
   {
     id: 'adaptive',
-    label: 'Rule based adaptive practice',
-    hint: 'Tier 1. Needs skill tagging on the course to do anything.',
+    labelKey: 'saFlagAdaptive',
+    hintKey: 'saFlagAdaptiveHint',
     on: true,
-    rollout: 'All schools',
+    rolloutKey: 'saRolloutAll',
   },
   {
     id: 'parent-portal',
-    label: 'Parent sign in',
-    hint: 'Families see released marks and attendance.',
+    labelKey: 'saFlagParentPortal',
+    hintKey: 'saFlagParentPortalHint',
     on: true,
-    rollout: 'All schools',
+    rolloutKey: 'saRolloutAll',
   },
   {
     id: 'offline',
-    label: 'Offline desktop app',
-    hint: 'Not built. Phase 3 or later.',
+    labelKey: 'saFlagOffline',
+    hintKey: 'saFlagOfflineHint',
     on: false,
-    rollout: 'Not available',
+    rolloutKey: 'saRolloutNotAvailable',
   },
 ]
 
 const compliance: Flag[] = [
   {
     id: 'wcag',
-    label: 'WCAG 2.2 AA enforcement',
-    hint: 'Blocks publishing content that fails the automated checks.',
+    labelKey: 'saCompWcag',
+    hintKey: 'saCompWcagHint',
     on: true,
   },
   {
     id: 'residency',
-    label: 'Data residency by region',
-    hint: 'Tenant data stays in the region set at provisioning.',
+    labelKey: 'saCompResidency',
+    hintKey: 'saCompResidencyHint',
     on: true,
   },
   {
     id: 'audit',
-    label: 'Permanent audit trail',
-    hint: 'Grade changes and impersonation cannot be deleted by anyone.',
+    labelKey: 'saCompAudit',
+    hintKey: 'saCompAuditHint',
     on: true,
   },
 ]
@@ -90,12 +91,12 @@ export function SuperAdminSettings() {
 
   return (
     <Page>
-      <PageHeader title={t('navSettings')} subtitle="Applies to every school on the platform" />
+      <PageHeader title={t('navSettings')} subtitle={t('saSettingsSubtitle')} />
 
       <Card>
         <CardHeader>
-          <CardTitle>Feature flags</CardTitle>
-          <Badge variant="outline">Reversible</Badge>
+          <CardTitle>{t('saFeatureFlags')}</CardTitle>
+          <Badge variant="outline">{t('saReversible')}</Badge>
         </CardHeader>
         <CardContent className="space-y-2">
           {featureFlags.map((flag) => (
@@ -103,23 +104,23 @@ export function SuperAdminSettings() {
               key={flag.id}
               className={cn(
                 'flex items-center justify-between gap-4 rounded border border-border px-4 py-3',
-                flag.rollout === 'Not available' && 'opacity-60',
+                flag.rolloutKey === 'saRolloutNotAvailable' && 'opacity-60',
               )}
             >
               <span className="min-w-0 flex-1 text-small text-foreground">
-                {flag.label}
+                {t(flag.labelKey)}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  {flag.hint}
+                  {t(flag.hintKey)}
                 </span>
               </span>
-              {flag.rollout ? (
+              {flag.rolloutKey ? (
                 <Badge variant="outline" className="flex-none">
-                  {flag.rollout}
+                  {t(flag.rolloutKey)}
                 </Badge>
               ) : null}
               <Switch
                 checked={flags[flag.id] ?? false}
-                disabled={flag.rollout === 'Not available'}
+                disabled={flag.rolloutKey === 'saRolloutNotAvailable'}
                 onCheckedChange={() => {
                   setFlags((current) => ({ ...current, [flag.id]: !current[flag.id] }))
                   setSaved(false)
@@ -132,8 +133,8 @@ export function SuperAdminSettings() {
 
       <Card className="border-danger/30">
         <CardHeader>
-          <CardTitle>Compliance</CardTitle>
-          <Badge variant="danger">Not ordinary settings</Badge>
+          <CardTitle>{t('saCompliance')}</CardTitle>
+          <Badge variant="danger">{t('saNotOrdinarySettings')}</Badge>
         </CardHeader>
         <CardContent className="space-y-2">
           {compliance.map((flag) => (
@@ -142,33 +143,28 @@ export function SuperAdminSettings() {
               className="flex items-center justify-between gap-4 rounded border border-border bg-surface px-4 py-3"
             >
               <span className="min-w-0 flex-1 text-small text-foreground">
-                {flag.label}
+                {t(flag.labelKey)}
                 <span className="mt-0.5 block text-caption text-muted-foreground">
-                  {flag.hint}
+                  {t(flag.hintKey)}
                 </span>
               </span>
               <Badge variant="neutral" className="flex-none">
-                Locked on
+                {t('saLockedOn')}
               </Badge>
             </div>
           ))}
-          <p className="pt-1 text-caption text-muted-foreground">
-            These are shown rather than hidden so an operator can see what is guaranteed. Changing
-            any of them is a contractual decision and happens outside the product.
-          </p>
+          <p className="pt-1 text-caption text-muted-foreground">{t('saComplianceNote')}</p>
         </CardContent>
       </Card>
 
       <div className="flex items-center gap-3">
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
-          Save
+          {t('save')}
         </Button>
         {saved ? (
-          <span className="text-small text-success">Saved. Flags apply within a minute.</span>
+          <span className="text-small text-success">{t('saSavedFlags')}</span>
         ) : (
-          <span className="text-caption text-muted-foreground">
-            Flag changes are logged against your account.
-          </span>
+          <span className="text-caption text-muted-foreground">{t('saFlagChangesLogged')}</span>
         )}
       </div>
     </Page>

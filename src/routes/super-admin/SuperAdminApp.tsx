@@ -1,5 +1,6 @@
 import { BarChart3, BookOpen, Building2, LifeBuoy, Settings, Ticket } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
+import { useLocale } from '@/lib/i18n'
 
 /**
  * Super admin, York Press level.
@@ -21,12 +22,14 @@ const nav: NavItem[] = [
 ]
 
 export function SuperAdminApp() {
+  const { t } = useLocale()
+
   return (
     <AppShell
       nav={nav}
       schoolName="York Press"
-      userName="Platform operations"
-      userRole="Super admin"
+      userName={t('saPlatformOperations')}
+      userRole={t('tabSuperAdmin')}
     />
   )
 }

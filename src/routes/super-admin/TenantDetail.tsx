@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import {
   classesForSchool,
   courses,
@@ -22,6 +23,13 @@ import {
   studentsForSchool,
   teachersForSchool,
 } from '@/data/seed'
+import type { GradingScale } from '@/types'
+
+const scaleKey: Record<GradingScale, StringKey> = {
+  percentage: 'saScalePercentage',
+  letter: 'saScaleLetter',
+  band: 'saScaleBand',
+}
 
 /**
  * One tenant.
@@ -62,7 +70,7 @@ export function SuperAdminTenantDetail() {
             <Button variant="outline" size="sm" asChild>
               <Link to="/super-admin/support">
                 <LifeBuoy className="h-3.5 w-3.5" aria-hidden />
-                Support
+                {t('navSupport')}
               </Link>
             </Button>
           </div>
@@ -72,10 +80,9 @@ export function SuperAdminTenantDetail() {
       {school.status !== 'active' ? (
         <Card className="border-warning/40">
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
-            <Badge variant="warning">Provisioning</Badge>
+            <Badge variant="warning">{t('saStatusProvisioning')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              Users imported, courses assigned, teachers not yet trained. Nothing here is live to
-              learners until the school opens it.
+              {t('saProvisioningBanner')}
             </span>
           </CardContent>
         </Card>
@@ -83,38 +90,49 @@ export function SuperAdminTenantDetail() {
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Seats used"
+          label={t('saSeatsUsed')}
           value={`${seatUse}%`}
-          hint={`${school.seatsUsed} of ${school.seats}`}
+          hint={`${school.seatsUsed} ${t('ofTotal')} ${school.seats}`}
           emphasis={seatUse > 90}
         />
         <StatCard
-          label="Weekly adoption"
+          label={t('saWeeklyAdoption')}
           value={`${adoption}%`}
-          hint="Learners active in the last 7 days"
+          hint={t('saActiveLast7')}
           emphasis={adoption < 40}
         />
-        <StatCard label="Teachers" value={String(staff.length)} />
-        <StatCard label="Classes" value={String(groups.length)} />
+        <StatCard label={t('teachersCount')} value={String(staff.length)} />
+        <StatCard label={t('classesCount')} value={String(groups.length)} />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Contract</CardTitle>
+            <CardTitle>{t('saContract')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-small">
-            {[
-              ['Plan', 'School licence, annual'],
-              ['Seats', `${school.seats}`],
-              ['Renews', '1 September 2027'],
-              ['Grading scale', school.gradingScale],
-              ['Default language', school.locale === 'ar' ? 'Arabic' : 'English'],
-              ['Data region', school.country === 'Lebanon' ? 'EU' : 'Gulf'],
-            ].map(([label, value]) => (
-              <div key={label} className="flex justify-between gap-4 border-b border-border py-2 last:border-0">
-                <span className="text-muted-foreground">{label}</span>
-                <span className="capitalize text-foreground">{value}</span>
+            {(
+              [
+                ['saPlan', t('saPlanValue')],
+                ['saColSeats', `${school.seats}`],
+                ['saRenews', t('saRenewsDate')],
+                ['saGradingScale', t(scaleKey[school.gradingScale])],
+                [
+                  'saDefaultLanguage',
+                  t(school.locale === 'ar' ? 'saLangArabic' : 'saLangEnglish'),
+                ],
+                [
+                  'saDataRegion',
+                  t(school.country === 'Lebanon' ? 'saRegionEu' : 'saRegionGulf'),
+                ],
+              ] as Array<[StringKey, string]>
+            ).map(([labelKey, value]) => (
+              <div
+                key={labelKey}
+                className="flex justify-between gap-4 border-b border-border py-2 last:border-0"
+              >
+                <span className="text-muted-foreground">{t(labelKey)}</span>
+                <span className="text-foreground">{value}</span>
               </div>
             ))}
           </CardContent>
@@ -122,16 +140,16 @@ export function SuperAdminTenantDetail() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Licensed courses</CardTitle>
+            <CardTitle>{t('saLicensedCourses')}</CardTitle>
             <Badge variant="outline">{licensed.length}</Badge>
           </CardHeader>
           <CardContent className="px-0 pb-0">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Course</TableHead>
-                  <TableHead className="text-end">Grade</TableHead>
-                  <TableHead className="text-end">In use</TableHead>
+                  <TableHead>{t('colCourse')}</TableHead>
+                  <TableHead className="text-end">{t('saColGrade')}</TableHead>
+                  <TableHead className="text-end">{t('saColInUse')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -149,7 +167,9 @@ export function SuperAdminTenantDetail() {
                           inUse === 0 ? 'text-warning' : 'text-muted-foreground',
                         )}
                       >
-                        {inUse === 0 ? 'No classes' : `${inUse} classes`}
+                        {inUse === 0
+                          ? t('saNoClasses')
+                          : t('saNClasses').replace('{n}', String(inUse))}
                       </TableCell>
                     </TableRow>
                   )
@@ -162,23 +182,23 @@ export function SuperAdminTenantDetail() {
 
       <Card>
         <CardHeader>
-          <CardTitle>People</CardTitle>
+          <CardTitle>{t('saPeople')}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-3">
           <div className="rounded border border-border p-4">
-            <span className="text-small text-muted-foreground">Learners</span>
+            <span className="text-small text-muted-foreground">{t('learners')}</span>
             <p className="tabular mt-1.5 text-subheading font-semibold text-foreground">
               {learners.length}
             </p>
           </div>
           <div className="rounded border border-border p-4">
-            <span className="text-small text-muted-foreground">Teachers</span>
+            <span className="text-small text-muted-foreground">{t('teachersCount')}</span>
             <p className="tabular mt-1.5 text-subheading font-semibold text-foreground">
               {staff.length}
             </p>
           </div>
           <div className="rounded border border-border p-4">
-            <span className="text-small text-muted-foreground">Parents linked</span>
+            <span className="text-small text-muted-foreground">{t('saParentsLinked')}</span>
             <p className="tabular mt-1.5 text-subheading font-semibold text-foreground">
               {Math.round(learners.length * 0.82)}
             </p>

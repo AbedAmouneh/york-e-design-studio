@@ -50,10 +50,10 @@ export function SuperAdminCatalogue() {
     <Page>
       <PageHeader
         title={t('navCourses')}
-        subtitle={`${courses.length} published courses`}
+        subtitle={t('saNPublishedCourses').replace('{n}', String(courses.length))}
         actions={
           <Button variant="outline" size="sm">
-            Open the authoring platform
+            {t('saOpenAuthoring')}
           </Button>
         }
       />
@@ -61,11 +61,9 @@ export function SuperAdminCatalogue() {
       {untagged.length > 0 ? (
         <Card className="border-warning/40">
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
-            <Badge variant="warning">Metadata</Badge>
+            <Badge variant="warning">{t('saBadgeMetadata')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {untagged.length} published courses have activities with no skill tags. Those
-              activities cannot feed the skill drill down or adaptive practice in any school that
-              licenses them.
+              {t('saUntaggedNote').replace('{n}', String(untagged.length))}
             </span>
           </CardContent>
         </Card>
@@ -73,19 +71,19 @@ export function SuperAdminCatalogue() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Published</CardTitle>
+          <CardTitle>{t('saPublished')}</CardTitle>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Course</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead className="text-end">Grade</TableHead>
-                <TableHead className="text-end">Activities</TableHead>
-                <TableHead className="w-40">Tagged</TableHead>
-                <TableHead className="text-end">Schools</TableHead>
-                <TableHead className="text-end">Classes</TableHead>
+                <TableHead>{t('colCourse')}</TableHead>
+                <TableHead>{t('saColSubject')}</TableHead>
+                <TableHead className="text-end">{t('saColGrade')}</TableHead>
+                <TableHead className="text-end">{t('saColActivities')}</TableHead>
+                <TableHead className="w-40">{t('saColTagged')}</TableHead>
+                <TableHead className="text-end">{t('saColSchools')}</TableHead>
+                <TableHead className="text-end">{t('classesCount')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -143,10 +141,7 @@ export function SuperAdminCatalogue() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Schools counts licences. Classes counts actual use. A course licensed by three schools and
-        opened by nobody is a content problem, not a sales one.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('saCatalogueNote')}</p>
     </Page>
   )
 }

@@ -15,7 +15,43 @@ import {
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import { schools } from '@/data/seed'
+
+/**
+ * The history rows carry keys rather than copy. School names stay as data, and
+ * the class name inside "Teacher, Grade 6 Falcon" stays as it appears in the
+ * tenant's own records, because an audit line that renames what it is auditing
+ * is no longer an audit line.
+ */
+const sessions: Array<{
+  id: string
+  whoKey: StringKey
+  school: string
+  asKey: StringKey
+  reasonKey: StringKey
+  atKey: StringKey
+  minutes: number
+}> = [
+  {
+    id: 'imp-1',
+    whoKey: 'saPlatformOperations',
+    school: 'Al Noor International School',
+    asKey: 'saImpAs1',
+    reasonKey: 'saImpReason1',
+    atKey: 'saImpAt1',
+    minutes: 14,
+  },
+  {
+    id: 'imp-2',
+    whoKey: 'saPlatformOperations',
+    school: 'Cedar Valley School',
+    asKey: 'saImpAs2',
+    reasonKey: 'saImpReason2',
+    atKey: 'saImpAt2',
+    minutes: 22,
+  },
+]
 
 /**
  * Support and impersonation.
@@ -40,49 +76,26 @@ export function SuperAdminSupport() {
   const [target, setTarget] = useState<string | null>(null)
   const [active, setActive] = useState(false)
 
-  const sessions = [
-    {
-      id: 'imp-1',
-      who: 'Platform operations',
-      school: 'Al Noor International School',
-      as: 'Teacher, Grade 6 Falcon',
-      reason: 'Gradebook totals reported wrong after a scale change',
-      at: '9 Feb, 11:20',
-      minutes: 14,
-    },
-    {
-      id: 'imp-2',
-      who: 'Platform operations',
-      school: 'Cedar Valley School',
-      as: 'School admin',
-      reason: 'Bulk import failed on 38 rows, reproducing',
-      at: '6 Feb, 16:05',
-      minutes: 22,
-    },
-  ]
-
   return (
     <Page>
-      <PageHeader title={t('navSupport')} subtitle="View a school as one of its users" />
+      <PageHeader title={t('navSupport')} subtitle={t('saSupportSubtitle')} />
 
       <Card className="border-danger/40">
         <CardContent className="flex flex-wrap items-start gap-3 p-4">
           <ShieldAlert className="mt-0.5 h-4 w-4 flex-none text-danger" aria-hidden />
           <span className="min-w-0 flex-1 text-small text-foreground">
-            Impersonation is read only and time boxed to 30 minutes. The school's own admin sees an
-            entry in their activity log while the session is running, not afterwards. Every session
-            below is permanent and cannot be deleted by anyone, including York Press.
+            {t('saImpersonationBanner')}
           </span>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Start a session</CardTitle>
+          <CardTitle>{t('saStartSession')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <span className="text-small font-medium text-foreground">School</span>
+            <span className="text-small font-medium text-foreground">{t('saColSchool')}</span>
             <div className="flex flex-wrap gap-2">
               {schools.map((school) => (
                 <button
@@ -103,17 +116,13 @@ export function SuperAdminSupport() {
           </div>
 
           <label className="flex flex-col gap-1.5">
-            <span className="text-small font-medium text-foreground">
-              Why do you need to do this
-            </span>
+            <span className="text-small font-medium text-foreground">{t('saWhyNeeded')}</span>
             <Input
               value={reason}
               onChange={(event) => setReason(event.target.value)}
-              placeholder="Reproducing a bug the school reported, with a ticket number"
+              placeholder={t('saReasonPlaceholder')}
             />
-            <span className="text-caption text-muted-foreground">
-              Free text on purpose. A list of reasons becomes one reason everybody picks.
-            </span>
+            <span className="text-caption text-muted-foreground">{t('saFreeTextNote')}</span>
           </label>
 
           <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
@@ -124,17 +133,15 @@ export function SuperAdminSupport() {
               onClick={() => setActive(true)}
             >
               <Eye className="h-3.5 w-3.5" aria-hidden />
-              Start a read only session
+              {t('saStartReadOnly')}
             </Button>
             {active ? (
               <span className="flex items-center gap-2 text-small text-danger">
                 <AlertTriangle className="h-4 w-4" aria-hidden />
-                Session running. 30 minutes remaining. The school has been notified.
+                {t('saSessionRunning')}
               </span>
             ) : (
-              <span className="text-caption text-muted-foreground">
-                A reason of at least a few words is required before this can start.
-              </span>
+              <span className="text-caption text-muted-foreground">{t('saReasonRequired')}</span>
             )}
           </div>
         </CardContent>
@@ -142,34 +149,38 @@ export function SuperAdminSupport() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Session history</CardTitle>
-          <Badge variant="outline">Permanent</Badge>
+          <CardTitle>{t('saSessionHistory')}</CardTitle>
+          <Badge variant="outline">{t('saPermanent')}</Badge>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Who</TableHead>
-                <TableHead>School</TableHead>
-                <TableHead>Viewed as</TableHead>
-                <TableHead>Reason</TableHead>
-                <TableHead>When</TableHead>
-                <TableHead className="text-end">Length</TableHead>
+                <TableHead>{t('saColWho')}</TableHead>
+                <TableHead>{t('saColSchool')}</TableHead>
+                <TableHead>{t('saColViewedAs')}</TableHead>
+                <TableHead>{t('saColReason')}</TableHead>
+                <TableHead>{t('colWhen')}</TableHead>
+                <TableHead className="text-end">{t('saColLength')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {sessions.map((session) => (
                 <TableRow key={session.id}>
-                  <TableCell className="font-medium text-foreground">{session.who}</TableCell>
+                  <TableCell className="font-medium text-foreground">
+                    {t(session.whoKey)}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{session.school}</TableCell>
-                  <TableCell className="text-muted-foreground">{session.as}</TableCell>
+                  <TableCell className="text-muted-foreground">{t(session.asKey)}</TableCell>
                   <TableCell className="max-w-[280px] text-muted-foreground">
-                    {session.reason}
+                    {t(session.reasonKey)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-muted-foreground">
-                    {session.at}
+                    {t(session.atKey)}
                   </TableCell>
-                  <TableCell className="tabular text-end">{session.minutes} min</TableCell>
+                  <TableCell className="tabular text-end">
+                    {t('saNMinutes').replace('{n}', String(session.minutes))}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

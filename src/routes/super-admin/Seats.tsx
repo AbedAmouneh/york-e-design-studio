@@ -42,29 +42,36 @@ export function SuperAdminSeats() {
 
   return (
     <Page>
-      <PageHeader title={t('navSeats')} subtitle="Across every school" />
+      <PageHeader title={t('navSeats')} subtitle={t('saAcrossEverySchool')} />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Seats sold" value={String(totalSeats)} />
+        <StatCard label={t('saSeatsSold')} value={String(totalSeats)} />
         <StatCard
-          label="Seats assigned"
+          label={t('saSeatsAssigned')}
           value={`${Math.round((totalUsed / totalSeats) * 100)}%`}
-          hint={`${totalUsed} learners`}
+          hint={t('saNLearners').replace('{n}', String(totalUsed))}
         />
-        <StatCard label="Near capacity" value={String(tight.length)} emphasis={tight.length > 0} />
-        <StatCard label="Barely used" value={String(idle.length)} emphasis={idle.length > 0} />
+        <StatCard
+          label={t('saNearCapacity')}
+          value={String(tight.length)}
+          emphasis={tight.length > 0}
+        />
+        <StatCard
+          label={t('saBarelyUsed')}
+          value={String(idle.length)}
+          emphasis={idle.length > 0}
+        />
       </div>
 
       {tight.length > 0 ? (
         <Card className="border-accent/50">
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
-            <Badge variant="accent">Sales</Badge>
+            <Badge variant="accent">{t('saBadgeSales')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {tight.map((row) => row.school.name).join(', ')} is above 90% of its seats with two
-              terms left on the contract.
+              {t('saTightNote').replace('{n}', tight.map((row) => row.school.name).join(', '))}
             </span>
             <Button variant="outline" size="sm">
-              Flag to the account team
+              {t('saFlagAccountTeam')}
             </Button>
           </CardContent>
         </Card>
@@ -73,13 +80,12 @@ export function SuperAdminSeats() {
       {idle.length > 0 ? (
         <Card className="border-warning/40">
           <CardContent className="flex flex-wrap items-center gap-3 p-4">
-            <Badge variant="warning">Renewal risk</Badge>
+            <Badge variant="warning">{t('saRenewalRisk')}</Badge>
             <span className="min-w-0 flex-1 text-small text-foreground">
-              {idle.map((row) => row.school.name).join(', ')} is paying for seats that almost
-              nobody is signing in to use. That is a renewal conversation, not a support ticket.
+              {t('saIdleNote').replace('{n}', idle.map((row) => row.school.name).join(', '))}
             </span>
             <Button variant="outline" size="sm">
-              Open a check in
+              {t('saOpenCheckIn')}
             </Button>
           </CardContent>
         </Card>
@@ -87,18 +93,18 @@ export function SuperAdminSeats() {
 
       <Card>
         <CardHeader>
-          <CardTitle>By school</CardTitle>
+          <CardTitle>{t('saBySchool')}</CardTitle>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>School</TableHead>
-                <TableHead className="text-end">Seats</TableHead>
-                <TableHead className="text-end">Assigned</TableHead>
-                <TableHead className="w-44">Assigned</TableHead>
-                <TableHead className="w-44">Active weekly</TableHead>
-                <TableHead>Flag</TableHead>
+                <TableHead>{t('saColSchool')}</TableHead>
+                <TableHead className="text-end">{t('saColSeats')}</TableHead>
+                <TableHead className="text-end">{t('saColAssigned')}</TableHead>
+                <TableHead className="w-44">{t('saColAssigned')}</TableHead>
+                <TableHead className="w-44">{t('saColActiveWeekly')}</TableHead>
+                <TableHead>{t('saColFlag')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -146,11 +152,11 @@ export function SuperAdminSeats() {
                   </TableCell>
                   <TableCell>
                     {row.state === 'tight' ? (
-                      <Badge variant="accent">Near capacity</Badge>
+                      <Badge variant="accent">{t('saNearCapacity')}</Badge>
                     ) : row.state === 'idle' ? (
-                      <Badge variant="danger">Barely used</Badge>
+                      <Badge variant="danger">{t('saBarelyUsed')}</Badge>
                     ) : (
-                      <Badge variant="success">Healthy</Badge>
+                      <Badge variant="success">{t('saHealthy')}</Badge>
                     )}
                   </TableCell>
                 </TableRow>
@@ -160,11 +166,7 @@ export function SuperAdminSeats() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Assigned means a learner holds the seat. Active weekly means they signed in and did
-        something. A school can be at 100% assigned and 10% active, and that is the number that
-        predicts a renewal.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('saSeatsNote')}</p>
     </Page>
   )
 }

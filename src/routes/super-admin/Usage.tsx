@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import { schools } from '@/data/seed'
 
 /**
@@ -29,52 +30,69 @@ import { schools } from '@/data/seed'
  */
 
 const weekly = [
-  { week: 'W1', cedar: 780, noor: 410, rawabi: 0 },
-  { week: 'W2', cedar: 910, noor: 440, rawabi: 0 },
-  { week: 'W3', cedar: 1040, noor: 460, rawabi: 20 },
-  { week: 'W4', cedar: 1105, noor: 430, rawabi: 30 },
-  { week: 'W5', cedar: 1180, noor: 455, rawabi: 38 },
-  { week: 'W6', cedar: 1210, noor: 448, rawabi: 41 },
+  { n: 1, cedar: 780, noor: 410, rawabi: 0 },
+  { n: 2, cedar: 910, noor: 440, rawabi: 0 },
+  { n: 3, cedar: 1040, noor: 460, rawabi: 20 },
+  { n: 4, cedar: 1105, noor: 430, rawabi: 30 },
+  { n: 5, cedar: 1180, noor: 455, rawabi: 38 },
+  { n: 6, cedar: 1210, noor: 448, rawabi: 41 },
 ]
 
-const devices = [
-  { label: 'School desktop', share: 46 },
-  { label: 'School tablet', share: 28 },
-  { label: 'Home laptop', share: 18 },
-  { label: 'Phone', share: 8 },
+const devices: Array<{ labelKey: StringKey; share: number }> = [
+  { labelKey: 'saDeviceSchoolDesktop', share: 46 },
+  { labelKey: 'saDeviceSchoolTablet', share: 28 },
+  { labelKey: 'saDeviceHomeLaptop', share: 18 },
+  { labelKey: 'saDevicePhone', share: 8 },
 ]
 
-const features = [
-  { label: 'Quizzes', share: 92 },
-  { label: 'Interactive books', share: 74 },
-  { label: 'Gradebook', share: 68 },
-  { label: 'Manipulatives', share: 41 },
-  { label: 'Announcements', share: 37 },
-  { label: 'Parent sign in', share: 29 },
+const features: Array<{ labelKey: StringKey; share: number }> = [
+  { labelKey: 'saFeatQuizzes', share: 92 },
+  { labelKey: 'saFeatInteractiveBooks', share: 74 },
+  { labelKey: 'saFeatGradebook', share: 68 },
+  { labelKey: 'saFeatManipulatives', share: 41 },
+  { labelKey: 'saFeatAnnouncements', share: 37 },
+  { labelKey: 'saFeatParentSignIn', share: 29 },
 ]
 
 export function SuperAdminUsage() {
   const { t, dir } = useLocale()
 
+  const weeklyData = weekly.map((row) => ({
+    ...row,
+    week: t('saWeekLabel').replace('{n}', String(row.n)),
+  }))
+
   return (
     <Page>
-      <PageHeader title={t('navUsage')} subtitle="All schools · last six weeks" />
+      <PageHeader title={t('navUsage')} subtitle={t('saUsageSubtitle')} />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Weekly active learners" value="1,700" hint="Across three schools" />
-        <StatCard label="Weekly active teachers" value="140" />
-        <StatCard label="Parent sign ins" value="29%" hint="Of linked parents" emphasis />
-        <StatCard label="Schools live" value={String(schools.filter((s) => s.status === 'active').length)} />
+        <StatCard
+          label={t('saWeeklyActiveLearners')}
+          value="1,700"
+          hint={t('saAcrossThreeSchools')}
+        />
+        <StatCard label={t('saWeeklyActiveTeachers')} value="140" />
+        <StatCard
+          label={t('saParentSignIns')}
+          value="29%"
+          hint={t('saOfLinkedParents')}
+          emphasis
+        />
+        <StatCard
+          label={t('saSchoolsLive')}
+          value={String(schools.filter((s) => s.status === 'active').length)}
+        />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Weekly active learners by school</CardTitle>
+          <CardTitle>{t('saWeeklyBySchool')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={weekly} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+              <AreaChart data={weeklyData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis
                   dataKey="week"
@@ -133,14 +151,14 @@ export function SuperAdminUsage() {
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>What they use it on</CardTitle>
-            <Badge variant="outline">Devices</Badge>
+            <CardTitle>{t('saWhatTheyUseItOn')}</CardTitle>
+            <Badge variant="outline">{t('saDevices')}</Badge>
           </CardHeader>
           <CardContent className="space-y-3">
             {devices.map((row) => (
-              <div key={row.label} className="space-y-1.5">
+              <div key={row.labelKey} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3 text-small">
-                  <span className="text-foreground">{row.label}</span>
+                  <span className="text-foreground">{t(row.labelKey)}</span>
                   <span className="tabular text-muted-foreground">{row.share}%</span>
                 </div>
                 <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -151,23 +169,20 @@ export function SuperAdminUsage() {
                 </span>
               </div>
             ))}
-            <p className="pt-1 text-caption text-muted-foreground">
-              Three quarters of use is on school hardware, which is the number that decides how
-              much the offline work matters.
-            </p>
+            <p className="pt-1 text-caption text-muted-foreground">{t('saDevicesNote')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Feature adoption</CardTitle>
-            <Badge variant="outline">Of active schools</Badge>
+            <CardTitle>{t('saFeatureAdoption')}</CardTitle>
+            <Badge variant="outline">{t('saOfActiveSchools')}</Badge>
           </CardHeader>
           <CardContent className="space-y-3">
             {features.map((row) => (
-              <div key={row.label} className="space-y-1.5">
+              <div key={row.labelKey} className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3 text-small">
-                  <span className="text-foreground">{row.label}</span>
+                  <span className="text-foreground">{t(row.labelKey)}</span>
                   <span
                     className={cn(
                       'tabular',

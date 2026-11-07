@@ -17,7 +17,26 @@ import {
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import type { StringKey } from '@/i18n'
 import { classesForSchool, schools, studentsForSchool, teachersForSchool } from '@/data/seed'
+import type { GradingScale, School } from '@/types'
+
+/**
+ * Status and grading scale arrive as data, not as display text, so they are
+ * mapped to keys here rather than printed raw. Printing them raw is how an
+ * Arabic screen ends up saying "provisioning".
+ */
+const statusKey: Record<School['status'], StringKey> = {
+  active: 'saStatusActive',
+  provisioning: 'saStatusProvisioning',
+  suspended: 'saStatusSuspended',
+}
+
+const scaleKey: Record<GradingScale, StringKey> = {
+  percentage: 'saScalePercentage',
+  letter: 'saScaleLetter',
+  band: 'saScaleBand',
+}
 
 /**
  * Tenants.
@@ -55,29 +74,32 @@ export function SuperAdminTenants() {
     <Page>
       <PageHeader
         title={t('navTenants')}
-        subtitle="Every school on the platform"
+        subtitle={t('saTenantsSubtitle')}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/super-admin/provision">
               <Plus className="h-3.5 w-3.5" aria-hidden />
-              Provision a school
+              {t('saProvisionSchool')}
             </Link>
           </Button>
         }
       />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Schools" value={String(schools.length)} />
+        <StatCard label={t('saStatSchools')} value={String(schools.length)} />
         <StatCard
-          label="Active"
+          label={t('saStatActive')}
           value={String(schools.filter((s) => s.status === 'active').length)}
         />
         <StatCard
-          label="Seats used"
+          label={t('saSeatsUsed')}
           value={`${Math.round((usedSeats / totalSeats) * 100)}%`}
-          hint={`${usedSeats} of ${totalSeats}`}
+          hint={`${usedSeats} ${t('ofTotal')} ${totalSeats}`}
         />
-        <StatCard label="Countries" value={String(new Set(schools.map((s) => s.country)).size)} />
+        <StatCard
+          label={t('saStatCountries')}
+          value={String(new Set(schools.map((s) => s.country)).size)}
+        />
       </div>
 
       <Card>
@@ -94,13 +116,13 @@ export function SuperAdminTenants() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>School</TableHead>
-                  <TableHead>Country</TableHead>
-                  <TableHead>Language</TableHead>
-                  <TableHead>Scale</TableHead>
-                  <TableHead className="text-end">Learners</TableHead>
-                  <TableHead className="w-44">Seats</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t('saColSchool')}</TableHead>
+                  <TableHead>{t('saColCountry')}</TableHead>
+                  <TableHead>{t('saColLanguage')}</TableHead>
+                  <TableHead>{t('saColScale')}</TableHead>
+                  <TableHead className="text-end">{t('learners')}</TableHead>
+                  <TableHead className="w-44">{t('saColSeats')}</TableHead>
+                  <TableHead>{t('colStatus')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -122,11 +144,11 @@ export function SuperAdminTenants() {
                       <TableCell className="text-muted-foreground">{row.school.country}</TableCell>
                       <TableCell>
                         <Badge variant={row.school.locale === 'ar' ? 'accent' : 'outline'}>
-                          {row.school.locale === 'ar' ? 'Arabic' : 'English'}
+                          {t(row.school.locale === 'ar' ? 'saLangArabic' : 'saLangEnglish')}
                         </Badge>
                       </TableCell>
-                      <TableCell className="capitalize text-muted-foreground">
-                        {row.school.gradingScale}
+                      <TableCell className="text-muted-foreground">
+                        {t(scaleKey[row.school.gradingScale])}
                       </TableCell>
                       <TableCell className="tabular text-end">{row.learners}</TableCell>
                       <TableCell>
@@ -154,7 +176,7 @@ export function SuperAdminTenants() {
                         <Badge
                           variant={row.school.status === 'active' ? 'success' : 'warning'}
                         >
-                          {row.school.status === 'active' ? 'Active' : 'Provisioning'}
+                          {t(statusKey[row.school.status])}
                         </Badge>
                       </TableCell>
                     </TableRow>
@@ -166,10 +188,7 @@ export function SuperAdminTenants() {
         </CardContent>
       </Card>
 
-      <p className="text-caption text-muted-foreground">
-        Each school is a separate tenant. No query on this screen can reach another school's
-        learner data, which is the multi-tenancy requirement rather than a display choice.
-      </p>
+      <p className="text-caption text-muted-foreground">{t('saTenantsNote')}</p>
     </Page>
   )
 }
