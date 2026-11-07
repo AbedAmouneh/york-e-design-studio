@@ -24,6 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import { attendance, guardians, mastery, skills } from '@/data/seed'
 import {
@@ -109,7 +110,7 @@ export function TeacherStudentDetail() {
       <PageHeader
         title={fullName(student)}
         subtitle={t('tchStudentSubtitle')
-          .replace('{c}', classGroup?.name ?? '')
+          .replace('{c}', groupName(classGroup, locale))
           .replace('{g}', String(classGroup?.grade ?? ''))}
         actions={
           <div className="flex items-center gap-2">
@@ -257,7 +258,7 @@ export function TeacherStudentDetail() {
                             : t('colActivity')}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {assignment ? classById(assignment.classId)?.name : '—'}
+                          {assignment ? groupName(classById(assignment.classId), locale) : '—'}
                         </TableCell>
                         <TableCell className="tabular text-end">
                           {submission.score ?? '—'}
