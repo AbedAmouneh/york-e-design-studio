@@ -66,27 +66,81 @@ export const designSystem = {
     ar: 'المكونات نفسها داخل ‎.learner-scope‎. زوايا أوسع، ولون أساسي أزرق مخضر، وسطح دافئ. ولا أحمر ولا نسب مئوية في هذه الفئة إطلاقاً.',
   },
 
-  dsNotBuilt: { en: 'Not built yet', ar: 'لم يُبنَ بعد' },
+  dsNotBuilt: { en: 'Still missing', ar: 'ما زال ناقصاً' },
   dsNotBuiltNote: {
-    en: 'Listed so nobody assumes these exist. The Radix packages are installed, the wrappers are not written.',
-    ar: 'مذكورة هنا حتى لا يفترض أحد وجودها. حزم Radix مثبّتة، لكن الأغلفة لم تُكتب بعد.',
+    en: 'Listed so nobody assumes these exist. Everything above this line is written and in the repository.',
+    ar: 'مذكورة هنا حتى لا يفترض أحد وجودها. وكل ما فوق هذا السطر مكتوب وموجود في المستودع.',
   },
-  dsMissingLoading: {
-    en: 'No loading or pending state on Button. Every submit in the studio is instant.',
-    ar: 'لا توجد حالة تحميل أو انتظار في الزر. كل إرسال في الاستوديو فوري.',
+  dsMissingRadio: {
+    en: 'No radio group. Screens that needed one used a row of buttons, which is not the same thing to a screen reader.',
+    ar: 'لا توجد مجموعة أزرار اختيار. والشاشات التي احتاجت واحدة استخدمت صف أزرار، وهو ليس الشيء نفسه لقارئ الشاشة.',
   },
-  dsMissingInputError: {
-    en: 'No error variant on Input. The pattern below overrides the border by class, which is a decision to make properly before build.',
-    ar: 'لا يوجد نمط خطأ في حقل الإدخال. والنمط أدناه يتجاوز الحد بصنف، وهو قرار ينبغي حسمه قبل التنفيذ.',
+  dsMissingDatePicker: {
+    en: 'No date picker. Due dates are typed. Both calendars and both numeral systems are a real decision, not a component choice.',
+    ar: 'لا يوجد منتقي تواريخ. وتواريخ التسليم تُكتب يدوياً. فالتقويمان ونظاما الأرقام قرار حقيقي لا مجرد اختيار مكوّن.',
   },
-  dsMissingPrimitives: {
-    en: 'No Select, Dialog, Tooltip, Popover, Dropdown, Progress, Avatar or Separator wrapper. Screens that needed one built it inline.',
-    ar: 'لا أغلفة للقوائم المنسدلة أو الحوارات أو التلميحات أو النوافذ المنبثقة أو شريط التقدم أو الصورة الرمزية أو الفاصل. والشاشات التي احتاجت أحدها بنته داخلياً.',
+  dsMissingFileUpload: {
+    en: 'No file upload. The bulk import screen draws its own drop zone and it does not accept a real file.',
+    ar: 'لا يوجد رفع ملفات. وشاشة الاستيراد المجمّع ترسم منطقة إفلات خاصة بها ولا تقبل ملفاً حقيقياً.',
   },
-  dsMissingToast: {
-    en: 'No toast or inline save confirmation component. Three screens each wrote their own.',
-    ar: 'لا يوجد مكوّن تنبيه عابر أو تأكيد حفظ. وثلاث شاشات كتبت نسختها الخاصة.',
+  dsMigrationNote: {
+    en: 'Seven screens wrote their own save confirmation before SavedIndicator existed, and twelve drew their own progress bar. Both now have one definition. Migrating the existing screens onto them is a separate pass, not done.',
+    ar: 'سبع شاشات كتبت تأكيد الحفظ الخاص بها قبل وجود ‎SavedIndicator‎، واثنتا عشرة رسمت شريط تقدمها. ولكليهما الآن تعريف واحد. ونقل الشاشات القائمة إليهما مرحلة منفصلة لم تُنفّذ بعد.',
   },
+
+  // Components added 7 November
+  dsSelect: { en: 'Select', ar: 'القائمة المنسدلة' },
+  dsDialog: { en: 'Dialog', ar: 'الحوار' },
+  dsTooltip: { en: 'Tooltip', ar: 'التلميح' },
+  dsPopover: { en: 'Popover', ar: 'النافذة المنبثقة' },
+  dsDropdown: { en: 'Dropdown menu', ar: 'قائمة الإجراءات' },
+  dsProgress: { en: 'Progress', ar: 'شريط التقدم' },
+  dsAvatar: { en: 'Avatar', ar: 'الصورة الرمزية' },
+  dsSeparator: { en: 'Separator', ar: 'الفاصل' },
+  dsFeedback: { en: 'Toast and save confirmation', ar: 'التنبيه وتأكيد الحفظ' },
+
+  dsStateLoading: { en: 'Loading', ar: 'جارٍ التنفيذ' },
+  dsStateOpen: { en: 'Open it', ar: 'افتحه' },
+  dsStateHoverMe: { en: 'Hover or focus', ar: 'حوّم أو ركّز' },
+  dsStateInline: { en: 'Inline, beside the control', ar: 'بجانب عنصر التحكم' },
+  dsStateCorner: { en: 'Corner, after the fact', ar: 'في الزاوية، بعد الحدث' },
+
+  dsSelectNote: {
+    en: 'Radix rather than a native select, so an option can carry two lines. The list takes the trigger width and flips side in Arabic on its own.',
+    ar: 'من Radix لا من العنصر الأصلي، ليتسع الخيار لسطرين. وتأخذ القائمة عرض الزر وتنقلب جهتها في العربية من تلقاء نفسها.',
+  },
+  dsDialogNote: {
+    en: 'Focus moves in and is trapped, Escape closes, the page behind is inert, focus returns to whatever opened it. The close button takes its name as a required prop so it cannot ship English into Arabic.',
+    ar: 'ينتقل التركيز إلى الداخل ويُحتجز، ومفتاح الهروب يغلق، والصفحة خلفه معطّلة، ويعود التركيز إلى ما فتحه. ويأخذ زر الإغلاق اسمه كخاصية إلزامية حتى لا تتسرب الإنجليزية إلى العربية.',
+  },
+  dsTooltipNote: {
+    en: 'A hint, never the only place something lives. It does not appear on touch and it does not reach a screen reader that is reading rather than focusing.',
+    ar: 'تلميح، لا المكان الوحيد للمعلومة. فهو لا يظهر باللمس ولا يصل إلى قارئ الشاشة حين يقرأ دون تركيز.',
+  },
+  dsProgressNote: {
+    en: 'The label is a required prop. A bare bar announces a number with no subject, which passes an automated audit and means nothing to the person listening.',
+    ar: 'التسمية خاصية إلزامية. فالشريط المجرد يعلن رقماً بلا موضوع، وهو ما يجتاز الفحص الآلي ولا يعني شيئاً لمن يسمعه.',
+  },
+  dsFeedbackNote: {
+    en: 'Two components, deliberately. A save is confirmed where the action was. The corner is for something that finished after the person moved on. The live region is mounted empty from first paint, because a region created at the same moment as its message is never announced.',
+    ar: 'مكوّنان، عن قصد. فالحفظ يُؤكَّد في موضع الإجراء، والزاوية لما انتهى بعد أن انتقل الشخص. والمنطقة الحيّة مثبتة فارغة منذ أول رسم، لأن المنطقة التي تُنشأ مع رسالتها لا تُعلَن أبداً.',
+  },
+  dsToastDemo: { en: 'Show a toast', ar: 'أظهر تنبيهاً' },
+  dsSavedDemo: { en: 'Save', ar: 'احفظ' },
+  dsTooltipDemo: { en: 'Explains the control it sits on', ar: 'يشرح العنصر الذي يقف عليه' },
+  dsDialogTitle: { en: 'Remove this student from the class?', ar: 'إزالة هذا الطالب من الصف؟' },
+  dsDialogBody: {
+    en: 'Their work and grades stay in the gradebook. They lose access to the course from the next sign in.',
+    ar: 'تبقى أعماله ودرجاته في سجل الدرجات، ويفقد الوصول إلى المقرر من تسجيل الدخول التالي.',
+  },
+  dsPopoverBody: {
+    en: 'For content a person works with. If they only read it, that is a tooltip.',
+    ar: 'لمحتوى يتفاعل معه الشخص. وإن كان للقراءة فقط فذلك تلميح.',
+  },
+  dsMenuEdit: { en: 'Edit', ar: 'تعديل' },
+  dsMenuDuplicate: { en: 'Duplicate', ar: 'تكرار' },
+  dsMenuRemove: { en: 'Remove', ar: 'إزالة' },
+  dsPickClass: { en: 'Pick a class', ar: 'اختر صفاً' },
 
   // Tokens
   dsTokens: { en: 'Design tokens', ar: 'رموز التصميم' },
