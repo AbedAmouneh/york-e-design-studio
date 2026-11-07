@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
@@ -16,6 +17,15 @@ interface AppShellProps {
   schoolName: string
   userName: string
   userRole: string
+  /**
+   * Studio furniture to sit above the navigation, nothing a real user sees.
+   *
+   * Optional, and only the student shell passes anything, so every other role
+   * is unchanged. It sits above the nav rather than below it because a control
+   * that changes who you are viewing as belongs before the list of places that
+   * person can go, not after it.
+   */
+  aboveNav?: ReactNode
 }
 
 /**
@@ -25,7 +35,7 @@ interface AppShellProps {
  * active item is marked by a yellow inline-start rule, which is the one place
  * the brand colour appears in navigation.
  */
-export function AppShell({ nav, schoolName, userName, userRole }: AppShellProps) {
+export function AppShell({ nav, schoolName, userName, userRole, aboveNav }: AppShellProps) {
   const { t } = useLocale()
 
   return (
@@ -34,6 +44,10 @@ export function AppShell({ nav, schoolName, userName, userRole }: AppShellProps)
         <div className="flex h-14 flex-none items-center border-b border-border px-4">
           <span className="truncate text-small font-semibold text-foreground">{schoolName}</span>
         </div>
+
+        {aboveNav ? (
+          <div className="flex-none border-b border-border p-3">{aboveNav}</div>
+        ) : null}
 
         <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
           {nav.map((item) => {
