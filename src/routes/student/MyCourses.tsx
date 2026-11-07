@@ -4,6 +4,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { classOf, coursesOf, upperStudent, visibleWork } from '@/data/student'
 
 /**
@@ -25,7 +26,7 @@ export function StudentMyCourses() {
     <Page>
       <PageHeader
         title={t('navMyCourses')}
-        subtitle={`${group?.name} · ${t('stuCoursesThisTerm').replace('{n}', String(myCourses.length))}`}
+        subtitle={`${groupName(group, locale)} · ${t('stuCoursesThisTerm').replace('{n}', String(myCourses.length))}`}
       />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
