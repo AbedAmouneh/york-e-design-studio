@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/lib/i18n'
+import { schoolName, schoolPlace } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import { schools } from '@/data/seed'
@@ -92,7 +93,7 @@ function initialDraft(schoolId: string) {
 
 export function SuperAdminBranding() {
   const { tenantId = '' } = useParams()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   const school = schools.find((item) => item.id === tenantId) ?? schools[0]
   const current = branding[school.id] ?? branding['sch-cedar']
@@ -135,12 +136,12 @@ export function SuperAdminBranding() {
     <Page>
       <PageHeader
         title={t('saBranding')}
-        subtitle={`${school.name} · ${t('saBrandingSubtitle')}`}
+        subtitle={`${schoolName(school, locale)} · ${t('saBrandingSubtitle')}`}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to={`/super-admin/tenant/${school.id}`}>
               <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              {school.name}
+              {schoolName(school, locale)}
             </Link>
           </Button>
         }
@@ -159,7 +160,7 @@ export function SuperAdminBranding() {
                 : 'border-border text-muted-foreground hover:bg-background',
             )}
           >
-            {item.name}
+            {schoolName(item, locale)}
           </Link>
         ))}
       </div>
@@ -187,10 +188,17 @@ export function SuperAdminBranding() {
                     style={{ backgroundColor: draft.accent, color: '#FFFFFF' }}
                     aria-hidden
                   >
+                    {/*
+                      Latin initials on purpose, even in Arabic. The tile is a
+                      stand in for a crest rather than a piece of text, and an
+                      Arabic name has no initialism: the same function on
+                      "مدرسة وادي الأرز" returns the first letters of "school"
+                      and "valley", which is a mark of nothing.
+                    */}
                     {initials(school.name)}
                   </span>
                   <span className="min-w-0 flex-1 text-small text-foreground">
-                    {school.name}
+                    {schoolName(school, locale)}
                     <span className="mt-0.5 block break-all text-caption text-muted-foreground">
                       {t('saBrandLogoFile').replace('{n}', draft.logoFile)}
                     </span>
@@ -239,10 +247,10 @@ export function SuperAdminBranding() {
             <div className="rounded border border-border bg-background p-4">
               <span className="text-caption text-muted-foreground">{t('saBrandOnReport')}</span>
               <p className="mt-2 text-subheading font-semibold tracking-tight text-foreground">
-                {school.name}
+                {schoolName(school, locale)}
               </p>
               <p className="mt-0.5 text-caption text-muted-foreground">
-                {school.city}, {school.country}
+                {schoolPlace(school, locale)}
               </p>
               <Badge variant="outline" className="mt-3">
                 {t('saBrandFallbackPreview')}
