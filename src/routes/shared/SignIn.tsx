@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
+import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 
 /**
  * Sign in.
@@ -25,6 +27,15 @@ import { cn } from '@/lib/utils'
 
 type Mode = 'adult' | 'child'
 
+/*
+  The demo school is read from the seed, not written here. This is the first
+  screen a reviewer opens, so a hardcoded "Cedar Valley School" would have been
+  the first English word on an Arabic page, right under a language switch that
+  is on this screen precisely so an Arabic reader never has to navigate English
+  to reach Arabic.
+*/
+const demoSchool = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)
+
 export function SharedSignIn() {
   const { t, locale, toggleLocale } = useLocale()
   const [mode, setMode] = useState<Mode>('adult')
@@ -42,7 +53,9 @@ export function SharedSignIn() {
             </span>
             <span className="flex flex-col leading-none">
               <span className="text-small font-semibold text-foreground">York-E</span>
-              <span className="text-caption text-muted-foreground">Cedar Valley School</span>
+              <span className="text-caption text-muted-foreground">
+                {schoolName(demoSchool, locale)}
+              </span>
             </span>
           </div>
 
