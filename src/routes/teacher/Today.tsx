@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import {
   atRiskInClass,
@@ -34,7 +35,7 @@ const periods = [
 ] as const
 
 export function TeacherToday() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const totals = teacherTotals()
   const queue = needsGradingQueue().slice(0, 4)
 
@@ -109,7 +110,7 @@ export function TeacherToday() {
                   <span className="min-w-0 flex-1 leading-tight">
                     <span className="flex items-center gap-2">
                       <span className="truncate text-small font-medium text-foreground">
-                        {classGroup.name}
+                        {groupName(classGroup, locale)}
                       </span>
                       {early ? (
                         <Badge variant="outline" className="flex-none">
@@ -150,7 +151,7 @@ export function TeacherToday() {
                     {item.activity?.title ?? t('colActivity')}
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
-                    {item.classGroup?.name}
+                    {groupName(item.classGroup, locale)}
                   </span>
                 </span>
                 <span
@@ -199,7 +200,7 @@ export function TeacherToday() {
                       {fullName(student)}
                     </span>
                     <span className="block truncate text-caption text-muted-foreground">
-                      {classGroup.name}
+                      {groupName(classGroup, locale)}
                     </span>
                   </span>
                   {/*
@@ -236,7 +237,7 @@ export function TeacherToday() {
                   className="flex items-center gap-3 rounded px-2 py-2 transition-colors hover:bg-surface"
                 >
                   <span className="min-w-0 flex-1 truncate text-small font-medium text-foreground">
-                    {classGroup.name}
+                    {groupName(classGroup, locale)}
                   </span>
                   <span className="h-1.5 w-24 flex-none overflow-hidden rounded-full bg-muted">
                     <span
