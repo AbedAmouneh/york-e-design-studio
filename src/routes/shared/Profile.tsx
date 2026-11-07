@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
+import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 
 /**
  * Profile.
@@ -28,6 +30,7 @@ export function SharedProfile() {
   const [saved, setSaved] = useState(false)
 
   const name = 'Ziad Mansour'
+  const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)
 
   return (
     <Page>
@@ -64,10 +67,11 @@ export function SharedProfile() {
 
           <div className="grid gap-2 sm:grid-cols-2">
             {[
-              // The school name is the school's own, not copy, so it is not
-              // translated. The role is a platform word and is.
+              // Both localise. The school's Arabic name is its own name too,
+              // not a translation of the English one, and every other screen
+              // now reads it through the same helper.
               [t('shRole'), t('tabTeacher')],
-              [t('shSchool'), 'Cedar Valley School'],
+              [t('shSchool'), schoolName(school, locale)],
             ].map(([label, value]) => (
               <div
                 key={label}
