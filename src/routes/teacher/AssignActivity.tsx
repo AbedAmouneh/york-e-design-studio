@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input, SearchInput } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import { useStudioState } from '@/lib/studioState'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { coursesForClass, studentsInClass, teacherClasses, fullName } from '@/data/teacher'
@@ -39,6 +40,7 @@ type Step = 'what' | 'who' | 'when' | 'done'
 
 export function TeacherAssignActivity() {
   const [params] = useSearchParams()
+  const assignActivity = useStudioState((state) => state.assignActivity)
   const { t, locale } = useLocale()
 
   const [step, setStep] = useState<Step>('what')
@@ -381,7 +383,34 @@ export function TeacherAssignActivity() {
               <Button variant="ghost" size="sm" onClick={() => setStep('who')}>
                 {t('back')}
               </Button>
-              <Button variant="accent" size="sm" onClick={() => setStep('done')}>
+              <Button
+                variant="accent"
+                size="sm"
+                onClick={() => {
+                  /*
+                   * The moment the flow stops being a demo. Writing to the
+                   * studio state is what makes this activity turn up on the
+                   * student's due work a few clicks later.
+                   */
+                  if (chosen) {
+                    assignActivity({
+                      id: `asg-live-${Date.now()}`,
+                      activityId: chosen.activity.id,
+                      classId,
+                      activityTitle: chosen.activity.title,
+                      activityTitleAr: chosen.activity.titleAr,
+                      courseTitle: chosen.course.title,
+                      courseTitleAr: chosen.course.titleAr,
+                      dueOn,
+                      attempts,
+                      releaseMode: release,
+                      graded,
+                      studentIds: wholeClass ? null : Array.from(studentIds),
+                    })
+                  }
+                  setStep('done')
+                }}
+              >
                 {t('tchAssignToNStudents').replace('{n}', String(recipients))}
               </Button>
             </div>
