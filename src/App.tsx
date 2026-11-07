@@ -94,6 +94,13 @@ import { SharedProfile } from '@/routes/shared/Profile'
 import { SharedNotifications } from '@/routes/shared/Notifications'
 import { SharedEmptyState } from '@/routes/shared/EmptyState'
 import { SharedErrorState } from '@/routes/shared/ErrorState'
+import { SharedSchoolSelection } from '@/routes/shared/SchoolSelection'
+import { SharedHelpCentre } from '@/routes/shared/HelpCentre'
+import { SharedSupportTicket } from '@/routes/shared/SupportTicket'
+import { StudentLessonPlayer } from '@/routes/student/LessonPlayer'
+import { EarlyHelp } from '@/routes/student/early/Help'
+import { SuperAdminBranding } from '@/routes/super-admin/Branding'
+import { TeacherCourseSearch } from '@/routes/teacher/CourseSearch'
 
 export default function App() {
   return (
@@ -109,6 +116,11 @@ export default function App() {
       <Route path="/student/early/done" element={<EarlyWellDone />} />
       <Route path="/shared/sign-in" element={<SharedSignIn />} />
       <Route path="/shared/forgot" element={<SharedForgotPassword />} />
+      <Route path="/shared/schools" element={<SharedSchoolSelection />} />
+      <Route
+        path="/student/courses/:courseId/activity/:activityId"
+        element={<StudentLessonPlayer />}
+      />
 
       <Route element={<StudioShell />}>
         <Route index element={<Navigate to="/school-admin" replace />} />
@@ -136,6 +148,10 @@ export default function App() {
           <Route path="classes" element={<TeacherMyClasses />} />
           <Route path="classes/:classId" element={<TeacherClassHome />} />
           <Route path="classes/:classId/course/:courseId" element={<TeacherCoursePlayer />} />
+          <Route
+            path="classes/:classId/course/:courseId/search"
+            element={<TeacherCourseSearch />}
+          />
           <Route path="library" element={<TeacherLibrary />} />
           <Route path="assign" element={<TeacherAssignActivity />} />
           <Route path="planner" element={<TeacherPlanner />} />
@@ -158,6 +174,7 @@ export default function App() {
         <Route path="super-admin" element={<SuperAdminApp />}>
           <Route index element={<SuperAdminTenants />} />
           <Route path="tenant/:tenantId" element={<SuperAdminTenantDetail />} />
+          <Route path="tenant/:tenantId/branding" element={<SuperAdminBranding />} />
           <Route path="provision" element={<SuperAdminProvision />} />
           <Route path="seats" element={<SuperAdminSeats />} />
           <Route path="catalogue" element={<SuperAdminCatalogue />} />
@@ -189,6 +206,7 @@ export default function App() {
           <Route index element={<EarlyHome />} />
           <Route path="activities" element={<EarlyActivities />} />
           <Route path="stickers" element={<EarlyStickers />} />
+          <Route path="help" element={<EarlyHelp />} />
         </Route>
         <Route path="parent" element={<ParentApp />}>
           <Route index element={<ParentMyChildren />} />
@@ -207,6 +225,8 @@ export default function App() {
           <Route path="notifications" element={<SharedNotifications />} />
           <Route path="empty" element={<SharedEmptyState />} />
           <Route path="error" element={<SharedErrorState />} />
+          <Route path="help" element={<SharedHelpCentre />} />
+          <Route path="support" element={<SharedSupportTicket />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
