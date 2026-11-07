@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
 import { useStudioState } from '@/lib/studioState'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import {
   demoTeacher,
@@ -54,7 +55,7 @@ const trendTone: Record<Trend, string> = {
 type StatusFilter = 'all' | ProgressStatus
 
 export function TeacherStudents() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [classFilter, setClassFilter] = useState('all')
   const [status, setStatus] = useState<StatusFilter>('all')
   const [query, setQuery] = useState('')
@@ -149,7 +150,7 @@ export function TeacherStudents() {
               size="sm"
               onClick={() => setClassFilter(item.id)}
             >
-              {item.name}
+              {groupName(item, locale)}
             </Button>
           ))}
         </div>
@@ -285,7 +286,9 @@ export function TeacherStudents() {
                         {fullName(student)}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{classGroup.name}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {groupName(classGroup, locale)}
+                    </TableCell>
                     <TableCell className="tabular text-end">{standing.average}%</TableCell>
                     <TableCell>
                       <span
