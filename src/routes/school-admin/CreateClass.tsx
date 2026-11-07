@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input, SearchInput } from '@/components/ui/input'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
-import { courses, DEFAULT_SCHOOL_ID, students, teachersForSchool } from '@/data/seed'
+import { courses, DEFAULT_SCHOOL_ID, schools, students, teachersForSchool } from '@/data/seed'
 
 /**
  * Flow 5 of 8: create a class.
@@ -31,6 +32,7 @@ export function SchoolAdminCreateClass() {
   const [studentIds, setStudentIds] = useState<Set<string>>(new Set())
   const [query, setQuery] = useState('')
 
+  const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)!
   const schoolTeachers = teachersForSchool(DEFAULT_SCHOOL_ID)
   const gradeCourses = useMemo(
     () => courses.filter((course) => course.grade === grade),
@@ -66,7 +68,7 @@ export function SchoolAdminCreateClass() {
     <Page>
       <PageHeader
         title={t('admCreateClass')}
-        subtitle="Cedar Valley School"
+        subtitle={schoolName(school, locale)}
         actions={
           <Button variant="ghost" size="sm" asChild>
             <Link to="/school-admin/classes">
