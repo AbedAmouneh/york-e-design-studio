@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { schools } from '@/data/seed'
 import { useLocale } from '@/lib/i18n'
+import { schoolName, schoolPlace } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 
@@ -88,7 +89,7 @@ const cases: Record<Case, { name: string; options: Option[] }> = {
 }
 
 export function SharedSchoolSelection() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [current, setCurrent] = useState<Case>('teacher')
   const [picked, setPicked] = useState<string | null>(null)
   const [remember, setRemember] = useState(false)
@@ -166,17 +167,24 @@ export function SharedSchoolSelection() {
                     chosen ? 'bg-accent text-accent-foreground' : 'bg-muted text-foreground',
                   )}
                 >
+                  {/*
+                    The letter stays Latin in both languages. It is a mark
+                    standing in for a crest rather than text, and the first
+                    character of an Arabic school name is almost always the م of
+                    "مدرسة", which would give every school here the same tile.
+                  */}
                   {chosen ? <Check className="h-4 w-4" aria-hidden /> : school.name.slice(0, 1)}
                 </span>
 
                 <span className="min-w-0 flex-1 leading-tight">
                   <span className="flex flex-wrap items-center gap-2">
-                    {/* The school name and its city are the school's own, so neither is translated. */}
-                    <span className="text-small font-medium text-foreground">{school.name}</span>
+                    <span className="text-small font-medium text-foreground">
+                      {schoolName(school, locale)}
+                    </span>
                     <Badge variant="outline">{t(option.roleKey)}</Badge>
                   </span>
                   <span className="mt-0.5 block text-caption text-muted-foreground">
-                    {school.city}, {school.country}
+                    {schoolPlace(school, locale)}
                   </span>
 
                   <span className="mt-2.5 flex items-start gap-2">
