@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import { classes, standings, students, teachers } from '@/data/seed'
@@ -23,7 +24,7 @@ import { classes, standings, students, teachers } from '@/data/seed'
  * it means.
  */
 export function CoordinatorFlagged() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [done, setDone] = useState<string | null>(null)
 
@@ -137,7 +138,7 @@ export function CoordinatorFlagged() {
                     {name}
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
-                    {row.group.name} ·{' '}
+                    {groupName(row.group, locale)} ·{' '}
                     {row.teacher
                       ? `${row.teacher.firstName} ${row.teacher.lastName}`
                       : t('coUnassigned')}
