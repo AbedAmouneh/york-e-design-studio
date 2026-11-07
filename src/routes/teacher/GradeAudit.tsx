@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { fullName, studentsInClass, teacherClasses } from '@/data/teacher'
 
@@ -95,13 +96,17 @@ function buildChanges(): ChangeRecord[] {
 }
 
 export function TeacherGradeAudit() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [query, setQuery] = useState('')
   const changes = buildChanges()
 
   const allStudents = teacherClasses.flatMap((item) => studentsInClass(item.id))
   const nameFor = (id: string) => fullName(allStudents.find((student) => student.id === id))
-  const classFor = (id: string) => teacherClasses.find((item) => item.id === id)?.name ?? '—'
+  const classFor = (id: string) =>
+    groupName(
+      teacherClasses.find((item) => item.id === id),
+      locale,
+    ) || '—'
 
   const rows = changes.filter((change) =>
     query ? nameFor(change.studentId).toLowerCase().includes(query.toLowerCase()) : true,
