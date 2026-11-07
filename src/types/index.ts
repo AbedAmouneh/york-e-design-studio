@@ -28,8 +28,20 @@ export type GradingScale = 'percentage' | 'letter' | 'band'
 export interface School {
   id: string
   name: string
+  /**
+   * Required for the same reason `ClassGroup.nameAr` is. A school's name sits
+   * in the sidebar of every staff screen and across the whole operator view,
+   * so leaving it English-only put "Cedar Valley School" on an otherwise
+   * Arabic page in more places than a reviewer could be asked to catch.
+   *
+   * These are the schools' own Arabic names, not transliterations. A school in
+   * Beirut or Amman has both, and prints whichever the audience reads.
+   */
+  nameAr: string
   city: string
+  cityAr: string
   country: string
+  countryAr: string
   locale: Locale
   gradingScale: GradingScale
   academicYear: string
@@ -95,6 +107,14 @@ export interface ClassGroup {
   id: string
   schoolId: string
   name: string
+  /**
+   * Required, not optional. A class name is the one piece of seed data that
+   * appears on nearly every screen in both roles, so an optional field here
+   * would let an English name reach an Arabic page silently. Making it
+   * required turns that into a compile error instead, the same reason every
+   * `Phrase` carries both languages.
+   */
+  nameAr: string
   grade: number
   ageTier: AgeTier
   teacherIds: string[]
