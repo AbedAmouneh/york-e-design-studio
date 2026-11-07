@@ -58,8 +58,11 @@ export const schools: School[] = [
   {
     id: 'sch-cedar',
     name: 'Cedar Valley School',
+    nameAr: 'مدرسة وادي الأرز',
     city: 'Beirut',
+    cityAr: 'بيروت',
     country: 'Lebanon',
+    countryAr: 'لبنان',
     locale: 'en',
     gradingScale: 'percentage',
     academicYear: '2026 to 2027',
@@ -70,8 +73,11 @@ export const schools: School[] = [
   {
     id: 'sch-noor',
     name: 'Al Noor International School',
+    nameAr: 'مدرسة النور الدولية',
     city: 'Dubai',
+    cityAr: 'دبي',
     country: 'United Arab Emirates',
+    countryAr: 'الإمارات العربية المتحدة',
     locale: 'en',
     gradingScale: 'letter',
     academicYear: '2026 to 2027',
@@ -82,8 +88,11 @@ export const schools: School[] = [
   {
     id: 'sch-rawabi',
     name: 'Rawabi Academy',
+    nameAr: 'أكاديمية الروابي',
     city: 'Amman',
+    cityAr: 'عمّان',
     country: 'Jordan',
+    countryAr: 'الأردن',
     locale: 'ar',
     gradingScale: 'band',
     academicYear: '2026 to 2027',
@@ -244,16 +253,32 @@ export const teachers: Teacher[] = [
   }
 })
 
-const classDefinitions: Array<{ schoolId: string; name: string; grade: number; size: number }> = [
-  { schoolId: 'sch-cedar', name: 'Grade 2 Olive', grade: 2, size: 22 },
-  { schoolId: 'sch-cedar', name: 'Grade 2 Pine', grade: 2, size: 21 },
-  { schoolId: 'sch-cedar', name: 'Grade 6 Cedar', grade: 6, size: 26 },
-  { schoolId: 'sch-cedar', name: 'Grade 6 Maple', grade: 6, size: 25 },
-  { schoolId: 'sch-cedar', name: 'Grade 7 Jasmine', grade: 7, size: 24 },
-  { schoolId: 'sch-cedar', name: 'Grade 7 Laurel', grade: 7, size: 23 },
-  { schoolId: 'sch-noor', name: 'Grade 6 Falcon', grade: 6, size: 20 },
-  { schoolId: 'sch-noor', name: 'Grade 7 Oryx', grade: 7, size: 19 },
-  { schoolId: 'sch-rawabi', name: 'الصف السابع، شعبة أ', grade: 7, size: 18 },
+/**
+ * Classes are named "Grade N <section>" in English and "الصف <N>، شعبة <قسم>"
+ * in Arabic. The section word is translated rather than transliterated, so
+ * Olive is الزيتون and not أوليف: these are tree and plant names a school
+ * actually picks, and a transliterated one reads as a foreign label.
+ *
+ * Al Noor Dubai keeps falcon and oryx, which are the local choices there.
+ * Rawabi Amman was always Arabic-first, so its English name is the one that
+ * had to be written.
+ */
+const classDefinitions: Array<{
+  schoolId: string
+  name: string
+  nameAr: string
+  grade: number
+  size: number
+}> = [
+  { schoolId: 'sch-cedar', name: 'Grade 2 Olive', nameAr: 'الصف الثاني، شعبة الزيتون', grade: 2, size: 22 },
+  { schoolId: 'sch-cedar', name: 'Grade 2 Pine', nameAr: 'الصف الثاني، شعبة الصنوبر', grade: 2, size: 21 },
+  { schoolId: 'sch-cedar', name: 'Grade 6 Cedar', nameAr: 'الصف السادس، شعبة الأرز', grade: 6, size: 26 },
+  { schoolId: 'sch-cedar', name: 'Grade 6 Maple', nameAr: 'الصف السادس، شعبة القيقب', grade: 6, size: 25 },
+  { schoolId: 'sch-cedar', name: 'Grade 7 Jasmine', nameAr: 'الصف السابع، شعبة الياسمين', grade: 7, size: 24 },
+  { schoolId: 'sch-cedar', name: 'Grade 7 Laurel', nameAr: 'الصف السابع، شعبة الغار', grade: 7, size: 23 },
+  { schoolId: 'sch-noor', name: 'Grade 6 Falcon', nameAr: 'الصف السادس، شعبة الصقر', grade: 6, size: 20 },
+  { schoolId: 'sch-noor', name: 'Grade 7 Oryx', nameAr: 'الصف السابع، شعبة المها', grade: 7, size: 19 },
+  { schoolId: 'sch-rawabi', name: 'Grade 7 Section A', nameAr: 'الصف السابع، شعبة أ', grade: 7, size: 18 },
 ]
 
 export const students: Student[] = []
@@ -293,6 +318,7 @@ classDefinitions.forEach((definition, classIndex) => {
     id: classId,
     schoolId: definition.schoolId,
     name: definition.name,
+    nameAr: definition.nameAr,
     grade: definition.grade,
     ageTier,
     teacherIds: teacher ? [teacher.id] : [],
