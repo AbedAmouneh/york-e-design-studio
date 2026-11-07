@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { teacherClasses } from '@/data/teacher'
 
@@ -39,7 +40,7 @@ const initialCategories: Category[] = [
 ]
 
 export function TeacherGradebookSettings() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [classId, setClassId] = useState(teacherClasses[1]?.id ?? teacherClasses[0].id)
   const [categories, setCategories] = useState(initialCategories)
   const [lateRule, setLateRule] = useState<'none' | 'percent' | 'zero'>('percent')
@@ -79,7 +80,7 @@ export function TeacherGradebookSettings() {
             size="sm"
             onClick={() => setClassId(item.id)}
           >
-            {item.name}
+            {groupName(item, locale)}
           </Button>
         ))}
       </div>
