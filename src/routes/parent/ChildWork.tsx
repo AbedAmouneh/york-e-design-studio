@@ -12,13 +12,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { useStudentDue, useStudentReleased } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
 import {
   childById,
   children,
   isEarly,
-  pendingWorkFor,
-  releasedWorkFor,
 } from '@/data/parent'
 
 /**
@@ -38,8 +37,8 @@ export function ParentChildWork() {
   const child = childById(childId) ?? children[0]
   const early = isEarly(child)
 
-  const due = pendingWorkFor(child)
-  const marks = releasedWorkFor(child)
+  const due = useStudentDue(child)
+  const marks = useStudentReleased(child)
 
   return (
     <Page>

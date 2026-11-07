@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn, initials } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
+import { useFamilyMessages } from '@/lib/liveData'
 import type { StringKey } from '@/i18n'
 import { children, parentName } from '@/data/parent'
 
@@ -91,6 +92,14 @@ export function ParentMessages() {
   const [sent, setSent] = useState(false)
 
   const current = threads.find((item) => item.id === active) ?? threads[0]
+
+  /*
+   * Anything the teacher sent from the at risk bulk bar, newest first and
+   * above the sample thread. This is the third of the three propagations: the
+   * message exists here because it was sent two screens ago, not because it
+   * was seeded.
+   */
+  const live = useFamilyMessages(children.map((child) => child.id))
   const staffNameOf = (item: Thread) => item.staff ?? t(item.staffKey as StringKey)
 
   return (
@@ -146,6 +155,22 @@ export function ParentMessages() {
             </div>
 
             <div className="space-y-3">
+              {live.map((message) => (
+                <div
+                  key={message.id}
+                  className="max-w-[80%] rounded border border-accent/50 bg-background p-3.5"
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-caption font-semibold text-foreground">
+                      {message.from}
+                    </span>
+                    <span className="text-caption text-muted-foreground">{t('parJustNow')}</span>
+                  </div>
+                  <p className="mt-1.5 text-small text-foreground">
+                    {t(message.bodyKey as StringKey)}
+                  </p>
+                </div>
+              ))}
               {thread.map((message) => (
                 <div
                   key={message.id}

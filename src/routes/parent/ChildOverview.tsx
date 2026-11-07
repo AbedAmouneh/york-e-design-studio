@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { useStudentDue, useStudentReleased } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
 import {
   attendanceSummary,
@@ -15,8 +16,6 @@ import {
   earlySummaryKey,
   fullNameOf,
   isEarly,
-  pendingWorkFor,
-  releasedWorkFor,
   standingOfChild,
 } from '@/data/parent'
 
@@ -39,8 +38,8 @@ export function ParentChildOverview() {
   const standing = standingOfChild(child)
   const group = classOfChild(child)
   const early = isEarly(child)
-  const due = pendingWorkFor(child)
-  const marks = releasedWorkFor(child)
+  const due = useStudentDue(child)
+  const marks = useStudentReleased(child)
   const attendance = attendanceSummary(child)
 
   return (
