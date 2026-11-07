@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { useStudentDue, useStudentReleased } from '@/lib/liveData'
 import { cn } from '@/lib/utils'
 import {
@@ -40,7 +41,7 @@ export function StudentDashboard() {
     <Page>
       <PageHeader
         title={t('stuHello').replace('{n}', upperStudent.firstName)}
-        subtitle={`${group?.name} · ${t('stuTermWeek')}`}
+        subtitle={`${groupName(group, locale)} · ${t('stuTermWeek')}`}
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
