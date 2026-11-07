@@ -272,7 +272,7 @@ export const schoolAdmin = {
   },
   admScalePerSchoolNote: {
     en: 'Al Noor in Dubai uses letters and Rawabi in Amman uses bands, which is why this is per school rather than per platform.',
-    ar: 'مدرسة Al Noor في دبي تستخدم الحروف، ومدرسة Rawabi في عمّان تستخدم المستويات، ولهذا يكون الضبط لكل مدرسة لا لكل منصة.',
+    ar: 'مدرسة النور في دبي تستخدم الحروف، وأكاديمية الروابي في عمّان تستخدم المستويات، ولهذا يكون الضبط لكل مدرسة لا لكل منصة.',
   },
   admReadOnlyInMvp: { en: 'Read only in the MVP', ar: 'للقراءة فقط في النسخة الأولى' },
   admRoleAdminShort: { en: 'Admin', ar: 'الإدارة' },
@@ -300,7 +300,7 @@ export const schoolAdmin = {
   // Reports
   admReportsSubtitle: {
     en: 'Cedar Valley School · Term 2, 11 January to 2 April 2027',
-    ar: 'Cedar Valley School · الفصل الثاني، ١١ كانون الثاني إلى ٢ نيسان ٢٠٢٧',
+    ar: 'مدرسة وادي الأرز · الفصل الثاني، ١١ كانون الثاني إلى ٢ نيسان ٢٠٢٧',
   },
   admReportProgress: { en: 'Progress by class', ar: 'التقدم حسب الشعبة' },
   admReportProgressDesc: {
@@ -349,7 +349,7 @@ export const schoolAdmin = {
   // Analytics
   admAnalyticsSubtitle: {
     en: 'Cedar Valley School · Term 2',
-    ar: 'Cedar Valley School · الفصل الثاني',
+    ar: 'مدرسة وادي الأرز · الفصل الثاني',
   },
   admTabProgress: { en: 'Progress', ar: 'التقدم' },
   admTabSkills: { en: 'Skills', ar: 'المهارات' },
