@@ -7,6 +7,7 @@ import {
   FileQuestion,
   PenLine,
   Play,
+  Search,
   Shapes,
 } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
@@ -76,12 +77,20 @@ export function TeacherCoursePlayer() {
           .replace('{c}', classGroup?.name ?? '')
           .replace('{n}', String(course.units.length))}
         actions={
-          <Button variant="ghost" size="sm" asChild>
-            <Link to={`/teacher/classes/${classId}`}>
-              <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
-              {t('tchBackToClass')}
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/teacher/classes/${classId}/course/${courseId}/search`}>
+                <Search className="h-3.5 w-3.5" aria-hidden />
+                {t('tchSearchThisCourse')}
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to={`/teacher/classes/${classId}`}>
+                <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
+                {t('tchBackToClass')}
+              </Link>
+            </Button>
+          </div>
         }
       />
 

@@ -1,5 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom'
-import { Home, Sparkles, Star } from 'lucide-react'
+import { Link, NavLink, Outlet } from 'react-router-dom'
+import { CircleHelp, Home, Sparkles, Star } from 'lucide-react'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { classOf, earlyStudent, standingOf } from '@/data/student'
@@ -52,6 +52,20 @@ export function EarlyApp() {
             {(standing?.stars ?? 1) * 9}
           </span>
         </span>
+
+        {/*
+          Help sits in the header rather than as a fourth tab. Three large
+          targets along the bottom is already the most a young child tracks,
+          and help is something they reach for in a moment of trouble rather
+          than something they browse to.
+        */}
+        <Link
+          to="/student/early/help"
+          aria-label={t('erlHelp')}
+          className="grid h-12 w-12 flex-none place-items-center rounded-full bg-surface text-primary transition-colors hover:bg-primary/10"
+        >
+          <CircleHelp className="h-6 w-6" aria-hidden />
+        </Link>
       </header>
 
       <main className="min-h-0 flex-1 overflow-y-auto px-6 pb-4">

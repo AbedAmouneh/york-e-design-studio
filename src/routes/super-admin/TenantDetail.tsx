@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, LifeBuoy } from 'lucide-react'
+import { ArrowLeft, LifeBuoy, Palette } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -65,6 +65,12 @@ export function SuperAdminTenantDetail() {
               <Link to="/super-admin">
                 <ArrowLeft className="h-3.5 w-3.5 rtl:-scale-x-100" aria-hidden />
                 {t('navTenants')}
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/super-admin/tenant/${school.id}/branding`}>
+                <Palette className="h-3.5 w-3.5" aria-hidden />
+                {t('saBranding')}
               </Link>
             </Button>
             <Button variant="outline" size="sm" asChild>

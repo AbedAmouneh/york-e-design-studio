@@ -172,6 +172,16 @@ export function StudentCoursePlayer() {
                           </Badge>
                         ) : null}
 
+                        {state !== 'locked' && activity.kind !== 'quiz' ? (
+                          <Button variant="outline" size="sm" className="flex-none" asChild>
+                            <Link
+                              to={`/student/courses/${course.id}/activity/${activity.id}`}
+                            >
+                              {t('stuOpen')}
+                            </Link>
+                          </Button>
+                        ) : null}
+
                         {state === 'todo' ? (
                           <Button variant="accent" size="sm" className="flex-none" asChild>
                             <Link to="/student/assignments">{t('start')}</Link>
