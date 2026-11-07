@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn, initials } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import {
   attendanceSummary,
   children,
@@ -31,7 +32,7 @@ import {
  * rule applied to the same screen at the same moment.
  */
 export function ParentMyChildren() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   return (
     <Page>
@@ -58,7 +59,7 @@ export function ParentMyChildren() {
                       {fullNameOf(child)}
                     </span>
                     <span className="block truncate text-small text-muted-foreground">
-                      {group?.name}
+                      {groupName(group, locale)}
                     </span>
                   </span>
                   {early ? <Badge variant="outline">{t('parK1ToG3')}</Badge> : null}
