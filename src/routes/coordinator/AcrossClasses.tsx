@@ -3,7 +3,9 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
+import { classes } from '@/data/seed'
 import type { StringKey } from '@/i18n'
 
 /**
@@ -33,19 +35,36 @@ const byQuestion: Array<{
   { questionKey: 'coQ5WordProblem', cedar: 74, maple: 69, jasmine: 72, laurel: 77 },
 ]
 
+/**
+ * Each series carries the class id rather than the class name, for the same
+ * reason the standards grid does: one place names a class, and the legend
+ * follows the language on screen instead of staying English.
+ *
+ * The short `key` stays, because it is the field name inside `byQuestion` and
+ * what Recharts reads off each bar.
+ */
 const series = [
-  { key: 'cedar', label: 'Grade 6 Cedar', colour: 'hsl(var(--foreground))' },
-  { key: 'maple', label: 'Grade 6 Maple', colour: 'hsl(var(--warning))' },
-  { key: 'jasmine', label: 'Grade 7 Jasmine', colour: 'hsl(var(--muted-foreground))' },
-  { key: 'laurel', label: 'Grade 7 Laurel', colour: 'hsl(var(--accent))' },
+  { key: 'cedar', classId: 'cls-3', colour: 'hsl(var(--foreground))' },
+  { key: 'maple', classId: 'cls-4', colour: 'hsl(var(--warning))' },
+  { key: 'jasmine', classId: 'cls-5', colour: 'hsl(var(--muted-foreground))' },
+  { key: 'laurel', classId: 'cls-6', colour: 'hsl(var(--accent))' },
 ]
 
 export function CoordinatorAcrossClasses() {
-  const { t, dir } = useLocale()
+  const { t, dir, locale } = useLocale()
 
   // Recharts reads its axis labels off the data, so the question names have to
   // be resolved here rather than held translated in the module scope array.
   const chartData = byQuestion.map((row) => ({ ...row, question: t(row.questionKey) }))
+
+  // Same reason as the question names above: the legend label is data to
+  // Recharts, so it has to be resolved on render rather than frozen in module
+  // scope where a language switch would never reach it.
+  const labelFor = (classId: string) =>
+    groupName(
+      classes.find((group) => group.id === classId),
+      locale,
+    )
 
   const gaps = byQuestion
     .map((row) => {
@@ -90,7 +109,12 @@ export function CoordinatorAcrossClasses() {
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 {series.map((item) => (
-                  <Bar key={item.key} dataKey={item.key} name={item.label} fill={item.colour} />
+                  <Bar
+                    key={item.key}
+                    dataKey={item.key}
+                    name={labelFor(item.classId)}
+                    fill={item.colour}
+                  />
                 ))}
               </BarChart>
             </ResponsiveContainer>
@@ -139,7 +163,7 @@ export function CoordinatorAcrossClasses() {
             {t('coWorthALook')}
           </Badge>
           <p className="min-w-0 flex-1 text-small text-foreground">
-            {t('coAcrossInsight').replace('{c}', series[1].label)}
+            {t('coAcrossInsight').replace('{c}', labelFor(series[1].classId))}
           </p>
         </CardContent>
       </Card>
