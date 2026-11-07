@@ -1,6 +1,7 @@
 import { BookOpen, LayoutDashboard, ListChecks, Target, Users } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
 import { useLocale } from '@/lib/i18n'
+import { schoolName } from '@/lib/names'
 import { DEFAULT_SCHOOL_ID, schools } from '@/data/seed'
 
 /**
@@ -23,12 +24,13 @@ const nav: NavItem[] = [
 ]
 
 export function CoordinatorApp() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const school = schools.find((item) => item.id === DEFAULT_SCHOOL_ID)!
+  const schoolLabel = schoolName(school, locale)
   return (
     <AppShell
       nav={nav}
-      schoolName={school.name}
+      schoolName={schoolLabel}
       userName="Maya Haddad"
       userRole={t('coRoleTitle')}
     />
