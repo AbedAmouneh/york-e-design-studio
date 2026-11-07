@@ -8,6 +8,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
+import { TierSwitch } from '@/components/studio/TierSwitch'
 import { useLocale } from '@/lib/i18n'
 import { groupName, schoolName } from '@/lib/names'
 import { classOf, upperStudent } from '@/data/student'
@@ -51,6 +52,7 @@ export function StudentApp() {
       schoolName={schoolLabel}
       userName={`${upperStudent.firstName} ${upperStudent.lastName}`}
       userRole={t('stuGradeN').replace('{n}', String(group?.grade ?? 6))}
+      aboveNav={<TierSwitch />}
     />
   )
 }
