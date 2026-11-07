@@ -15,6 +15,7 @@ import {
 import { schools } from '@/data/seed'
 import { useLocale } from '@/lib/i18n'
 import type { StringKey } from '@/i18n'
+import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 
 /**
@@ -118,7 +119,7 @@ const tickets: Ticket[] = [
 ]
 
 export function SharedSupportTicket() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [schoolId, setSchoolId] = useState(mySchoolIds[0])
   const [area, setArea] = useState<StringKey>('shTktAreaMarking')
   const [impact, setImpact] = useState<Impact>('one')
@@ -158,7 +159,7 @@ export function SharedSupportTicket() {
                             : 'border-border text-muted-foreground hover:bg-surface',
                         )}
                       >
-                        {school.name}
+                        {schoolName(school, locale)}
                       </button>
                     )
                   })}
@@ -334,7 +335,9 @@ export function SharedSupportTicket() {
                     {/* The reference is read down a phone line, so it stays an identifier. */}
                     <TableCell className="font-medium text-foreground">{ticket.ref}</TableCell>
                     <TableCell className="text-foreground">{t(ticket.issueKey)}</TableCell>
-                    <TableCell className="text-muted-foreground">{school?.name}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {schoolName(school, locale)}
+                    </TableCell>
                     <TableCell className="text-muted-foreground">
                       {t(impactLabel[ticket.impact])}
                     </TableCell>
