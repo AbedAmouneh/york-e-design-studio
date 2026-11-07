@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import {
   atRiskInClass,
@@ -77,7 +78,7 @@ export function TeacherMyClasses() {
                       to={`/teacher/classes/${classGroup.id}`}
                       className="underline-offset-4 hover:underline"
                     >
-                      {classGroup.name}
+                      {groupName(classGroup, locale)}
                     </Link>
                   </CardTitle>
                   {early ? <Badge variant="outline">{t('tchK1ToG3')}</Badge> : null}
@@ -161,7 +162,7 @@ export function TeacherMyClasses() {
                     {locale === 'ar' ? course.titleAr : course.title}
                   </span>
                   <span className="block truncate text-caption text-muted-foreground">
-                    {classGroup.name}
+                    {groupName(classGroup, locale)}
                   </span>
                 </span>
               </Link>
