@@ -66,6 +66,19 @@
 
     --radius: 0.375rem;
     --radius-learner: 0.75rem;
+
+    /*
+      Which way a progress bar fills. The indicator is translated rather than
+      resized so the motion starts from the reading edge, and the sign of that
+      translation is the one thing that has to flip for Arabic. Keeping it as a
+      variable means the Progress component never has to ask what direction it
+      is in.
+    */
+    --progress-sign: -1;
+  }
+
+  [dir='rtl'] {
+    --progress-sign: 1;
   }
 
   * {
