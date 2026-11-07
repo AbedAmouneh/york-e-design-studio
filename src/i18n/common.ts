@@ -21,6 +21,9 @@ export const common = {
   tabParent: { en: 'Parent', ar: 'ولي الأمر' },
   tabShared: { en: 'Shared', ar: 'شاشات مشتركة' },
   tabDesignSystem: { en: 'Design system', ar: 'نظام التصميم' },
+  // Names for controls that are only ever read aloud, never seen.
+  dismiss: { en: 'Dismiss', ar: 'إغلاق التنبيه' },
+  close: { en: 'Close', ar: 'إغلاق' },
   switchToArabic: { en: 'العربية', ar: 'العربية' },
   switchToEnglish: { en: 'English', ar: 'English' },
 
