@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { schoolName, schoolSearchText } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import { classesForSchool, schools, studentsForSchool, teachersForSchool } from '@/data/seed'
@@ -49,7 +50,7 @@ const scaleKey: Record<GradingScale, StringKey> = {
  * makes the RTL work visible from the operator's side.
  */
 export function SuperAdminTenants() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [query, setQuery] = useState('')
 
   const rows = schools
@@ -61,9 +62,7 @@ export function SuperAdminTenants() {
     }))
     .filter((row) =>
       query
-        ? `${row.school.name} ${row.school.city} ${row.school.country}`
-            .toLowerCase()
-            .includes(query.toLowerCase())
+        ? schoolSearchText(row.school).toLowerCase().includes(query.toLowerCase())
         : true,
     )
 
@@ -135,13 +134,15 @@ export function SuperAdminTenants() {
                           to={`/super-admin/tenant/${row.school.id}`}
                           className="font-medium text-foreground underline-offset-4 hover:underline"
                         >
-                          {row.school.name}
+                          {schoolName(row.school, locale)}
                         </Link>
                         <span className="block text-caption text-muted-foreground">
-                          {row.school.city}
+                          {locale === 'ar' ? row.school.cityAr : row.school.city}
                         </span>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{row.school.country}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {locale === 'ar' ? row.school.countryAr : row.school.country}
+                      </TableCell>
                       <TableCell>
                         <Badge variant={row.school.locale === 'ar' ? 'accent' : 'outline'}>
                           {t(row.school.locale === 'ar' ? 'saLangArabic' : 'saLangEnglish')}
