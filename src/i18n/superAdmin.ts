@@ -242,7 +242,7 @@ export const superAdmin = {
   saColLength: { en: 'Length', ar: 'المدة' },
   saNMinutes: { en: '{n} min', ar: '{n} دقيقة' },
   saPlatformOperations: { en: 'Platform operations', ar: 'عمليات المنصة' },
-  saImpAs1: { en: 'Teacher, Grade 6 Falcon', ar: 'معلم، Grade 6 Falcon' },
+  saImpAs1: { en: 'Teacher, Grade 6 Falcon', ar: 'معلم، الصف السادس، شعبة الصقر' },
   saImpAs2: { en: 'School admin', ar: 'إدارة المدرسة' },
   saImpReason1: {
     en: 'Gradebook totals reported wrong after a scale change',
@@ -282,7 +282,7 @@ export const superAdmin = {
     en: 'Not built. Phase 3 or later.',
     ar: 'لم يُبنَ بعد. المرحلة الثالثة أو ما بعدها.',
   },
-  saRolloutCedarOnly: { en: 'Cedar Valley only', ar: 'Cedar Valley فقط' },
+  saRolloutCedarOnly: { en: 'Cedar Valley only', ar: 'وادي الأرز فقط' },
   saRolloutAll: { en: 'All schools', ar: 'كل المدارس' },
   saRolloutNotAvailable: { en: 'Not available', ar: 'غير متاح' },
   saCompliance: { en: 'Compliance', ar: 'الامتثال' },
