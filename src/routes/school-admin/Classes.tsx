@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName, groupSearchText, schoolName } from '@/lib/names'
 import {
   classesForSchool,
   courses,
@@ -53,7 +54,9 @@ export function SchoolAdminClasses() {
         return { classGroup, average, atRisk, status, teacher, classCourses }
       })
       .filter((row) =>
-        query ? row.classGroup.name.toLowerCase().includes(query.toLowerCase()) : true,
+        query
+          ? groupSearchText(row.classGroup).toLowerCase().includes(query.toLowerCase())
+          : true,
       )
   }, [school.id, schoolTeachers, standingById, query])
 
@@ -67,7 +70,7 @@ export function SchoolAdminClasses() {
     <Page>
       <PageHeader
         title={t('navClasses')}
-        subtitle={`${school.name} · ${school.academicYear}`}
+        subtitle={`${schoolName(school, locale)} · ${school.academicYear}`}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/school-admin/classes/new">
@@ -108,7 +111,7 @@ export function SchoolAdminClasses() {
                         to={`/school-admin/classes/${row.classGroup.id}`}
                         className="font-medium text-foreground underline-offset-4 hover:underline"
                       >
-                        {row.classGroup.name}
+                        {groupName(row.classGroup, locale)}
                       </Link>
                       {row.classGroup.ageTier === 'early' ? (
                         <Badge variant="outline" className="ms-2">
