@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import { attendance, classes, courses, standings, students, teachers } from '@/data/seed'
 import type { ProgressStatus, Trend } from '@/types'
@@ -76,7 +77,7 @@ export function SchoolAdminClassDetail() {
   return (
     <Page>
       <PageHeader
-        title={classGroup.name}
+        title={groupName(classGroup, locale)}
         subtitle={t('admClassSubtitle')
           .replace('{g}', String(classGroup.grade))
           .replace('{n}', String(classGroup.studentIds.length))}
