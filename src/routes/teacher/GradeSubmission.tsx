@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
 import { useStudioState } from '@/lib/studioState'
+import { groupName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
 import {
   activityById,
@@ -162,7 +163,7 @@ export function TeacherGradeSubmission() {
       <PageHeader
         title={activity ? (locale === 'ar' ? activity.titleAr : activity.title) : t('tchMarking')}
         subtitle={t('tchMarkingSubtitle')
-          .replace('{c}', classGroup?.name ?? '')
+          .replace('{c}', groupName(classGroup, locale))
           .replace('{p}', String(activity?.points ?? 20))
           .replace('{n}', String(waiting.length - index))}
         actions={
