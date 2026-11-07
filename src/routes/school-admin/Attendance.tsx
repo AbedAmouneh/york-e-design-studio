@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { attendance, classesForSchool, DEFAULT_SCHOOL_ID, students } from '@/data/seed'
 import type { AttendanceRecord } from '@/types'
@@ -56,7 +57,7 @@ const stateMark: Record<
 }
 
 export function SchoolAdminAttendance() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const schoolClasses = classesForSchool(DEFAULT_SCHOOL_ID)
   const [classId, setClassId] = useState(schoolClasses[0]?.id ?? '')
 
@@ -114,7 +115,7 @@ export function SchoolAdminAttendance() {
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   )}
                 >
-                  {item.name}
+                  {groupName(item, locale)}
                 </button>
               ))}
             </div>
