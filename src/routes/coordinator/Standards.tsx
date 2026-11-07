@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
+import { classes } from '@/data/seed'
 import type { StringKey } from '@/i18n'
 
 /**
@@ -21,7 +23,17 @@ import type { StringKey } from '@/i18n'
 
 type Level = 'covered' | 'partial' | 'none'
 
-const classesShown = ['Grade 6 Cedar', 'Grade 6 Maple', 'Grade 7 Jasmine', 'Grade 7 Laurel']
+/**
+ * The four classes are held as ids, not as names.
+ *
+ * Writing the names here would mean a second place where a class is called
+ * something, and the column headers would stay English on an Arabic page. Ids
+ * resolve against the seed, so a class renamed in one place is renamed
+ * everywhere and arrives in whichever language is on screen.
+ *
+ * The order matters: each row's `levels` array is positional against this list.
+ */
+const classIdsShown = ['cls-3', 'cls-4', 'cls-5', 'cls-6']
 
 const rows: Array<{ code: string; labelKey: StringKey; levels: Level[] }> = [
   { code: '6.NS.1', labelKey: 'coStdPlaceValueMillions', levels: ['covered', 'covered', 'covered', 'covered'] },
@@ -46,7 +58,7 @@ const markKey: Record<Level, StringKey> = {
 }
 
 export function CoordinatorStandards() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   const counts = rows.reduce(
     (totals, row) => {
@@ -106,12 +118,15 @@ export function CoordinatorStandards() {
                 <th className="min-w-[220px] px-4 py-2.5 text-start font-medium text-muted-foreground">
                   {t('coColStandard')}
                 </th>
-                {classesShown.map((name) => (
+                {classIdsShown.map((classId) => (
                   <th
-                    key={name}
+                    key={classId}
                     className="min-w-[120px] px-3 py-2.5 text-center font-medium text-muted-foreground"
                   >
-                    {name}
+                    {groupName(
+                      classes.find((group) => group.id === classId),
+                      locale,
+                    )}
                   </th>
                 ))}
               </tr>
