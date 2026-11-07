@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
+import { useStudioState } from '@/lib/studioState'
 import { cn, initials } from '@/lib/utils'
 import {
   activityById,
@@ -59,6 +60,7 @@ export function TeacherGradeSubmission() {
     [assignment],
   )
 
+  const releaseGrades = useStudioState((state) => state.releaseGrades)
   const [index, setIndex] = useState(0)
   const [scores, setScores] = useState<Record<string, number | undefined>>({})
   const [feedback, setFeedback] = useState<Record<string, string | undefined>>({})
@@ -82,9 +84,34 @@ export function TeacherGradeSubmission() {
   const score = scores[current.id] ?? ''
   const comment = feedback[current.id] ?? ''
 
+  /*
+   * Releasing is what makes a mark exist for the student and the parent, so it
+   * is the only point that writes to the studio state. Marking alone writes
+   * nothing, which is the same rule the real product follows.
+   */
+  const publish = () => {
+    releaseGrades(
+      waiting
+        .filter((submission) => scores[submission.id] !== undefined)
+        .map((submission) => ({
+          assignmentId: submission.assignmentId,
+          studentId: submission.studentId,
+          activityTitle: activity?.title ?? '',
+          activityTitleAr: activity?.titleAr ?? '',
+          score: scores[submission.id] ?? 0,
+          outOf: activity?.points ?? 20,
+          feedback: feedback[submission.id] ?? '',
+        })),
+    )
+  }
+
   const save = () => {
-    if (index < waiting.length - 1) setIndex(index + 1)
-    else setDone(true)
+    if (index < waiting.length - 1) {
+      setIndex(index + 1)
+      return
+    }
+    if (releaseNow) publish()
+    setDone(true)
   }
 
   if (done) {
@@ -109,7 +136,14 @@ export function TeacherGradeSubmission() {
             </p>
             <div className="mt-2 flex items-center gap-2">
               {!releaseNow ? (
-                <Button variant="accent" size="sm" onClick={() => setReleaseNow(true)}>
+                <Button
+                  variant="accent"
+                  size="sm"
+                  onClick={() => {
+                    publish()
+                    setReleaseNow(true)
+                  }}
+                >
                   {t('tchReleaseToStudents')}
                 </Button>
               ) : null}
