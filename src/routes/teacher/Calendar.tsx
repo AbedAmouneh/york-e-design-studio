@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { teacherClasses } from '@/data/teacher'
@@ -63,7 +64,7 @@ const weekdayKeys = [
 ] as const
 
 export function TeacherCalendar() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [active, setActive] = useState<Set<string>>(new Set(teacherClasses.map((item) => item.id)))
 
   const toggle = (id: string) => {
@@ -132,7 +133,7 @@ export function TeacherCalendar() {
                   )}
                   aria-hidden
                 />
-                {item.name}
+                {groupName(item, locale)}
               </button>
             )
           })}
