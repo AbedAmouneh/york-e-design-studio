@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/lib/i18n'
+import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn, initials } from '@/lib/utils'
 import { attendanceForClass, fullName, studentsInClass, teacherClasses } from '@/data/teacher'
@@ -45,7 +46,7 @@ const states: Array<{ key: State; labelKey: StringKey; tone: string }> = [
 ]
 
 export function TeacherAttendance() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [classId, setClassId] = useState(teacherClasses[1]?.id ?? teacherClasses[0].id)
   const [marks, setMarks] = useState<Record<string, State>>({})
   const [saved, setSaved] = useState(false)
@@ -106,7 +107,7 @@ export function TeacherAttendance() {
               setSaved(false)
             }}
           >
-            {item.name}
+            {groupName(item, locale)}
           </Button>
         ))}
       </div>
