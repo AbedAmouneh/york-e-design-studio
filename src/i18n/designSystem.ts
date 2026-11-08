@@ -66,27 +66,57 @@ export const designSystem = {
     ar: 'المكونات نفسها داخل ‎.learner-scope‎. زوايا أوسع، ولون أساسي أزرق مخضر، وسطح دافئ. ولا أحمر ولا نسب مئوية في هذه الفئة إطلاقاً.',
   },
 
-  dsNotBuilt: { en: 'Still missing', ar: 'ما زال ناقصاً' },
+  dsNotBuilt: { en: 'Open questions', ar: 'أسئلة مفتوحة' },
   dsNotBuiltNote: {
-    en: 'Listed so nobody assumes these exist. Everything above this line is written and in the repository.',
-    ar: 'مذكورة هنا حتى لا يفترض أحد وجودها. وكل ما فوق هذا السطر مكتوب وموجود في المستودع.',
+    en: 'Not missing components. Decisions a component cannot make on its own, listed so they are answered rather than rediscovered.',
+    ar: 'ليست مكوّنات ناقصة، بل قرارات لا يستطيع المكوّن حسمها وحده، مذكورة ليُجاب عنها لا لتُكتشف من جديد.',
   },
-  dsMissingRadio: {
-    en: 'No radio group. Screens that needed one used a row of buttons, which is not the same thing to a screen reader.',
-    ar: 'لا توجد مجموعة أزرار اختيار. والشاشات التي احتاجت واحدة استخدمت صف أزرار، وهو ليس الشيء نفسه لقارئ الشاشة.',
+  dsOpenHijri: {
+    en: 'The date picker is Gregorian only. Every academic date in Lebanon, the Gulf and Jordan is Gregorian, but holidays, Ramadan timetables and the shortened school day are Hijri. Whether a parent sees both needs an answer from editorial before anyone builds a dual calendar.',
+    ar: 'منتقي التواريخ ميلادي فقط. فكل تاريخ دراسي في لبنان والخليج والأردن ميلادي، لكن العطل وجداول رمضان واليوم الدراسي المختصر هجرية. وما إذا كان ولي الأمر يرى الاثنين يحتاج جواباً من القسم التحريري قبل أن يبني أحد تقويماً مزدوجاً.',
   },
-  dsMissingDatePicker: {
-    en: 'No date picker. Due dates are typed. Both calendars and both numeral systems are a real decision, not a component choice.',
-    ar: 'لا يوجد منتقي تواريخ. وتواريخ التسليم تُكتب يدوياً. فالتقويمان ونظاما الأرقام قرار حقيقي لا مجرد اختيار مكوّن.',
+  dsOpenNumerals: {
+    en: 'Numerals are Latin in Arabic, following formatDate. That matches how timetables and exam papers are printed across the three markets, and it is a convention worth confirming once rather than per screen.',
+    ar: 'الأرقام لاتينية في العربية، تبعاً لـ ‎formatDate‎. وهذا يطابق طريقة طباعة الجداول وأوراق الامتحانات في الأسواق الثلاثة، وهو عرف يستحق تثبيته مرة واحدة لا في كل شاشة.',
   },
-  dsMissingFileUpload: {
-    en: 'No file upload. The bulk import screen draws its own drop zone and it does not accept a real file.',
-    ar: 'لا يوجد رفع ملفات. وشاشة الاستيراد المجمّع ترسم منطقة إفلات خاصة بها ولا تقبل ملفاً حقيقياً.',
+  dsOpenUpload: {
+    en: 'The file upload holds files in state and sends them nowhere. That is correct for a studio and the first thing to change in the real build.',
+    ar: 'رفع الملفات يحتفظ بالملفات في الحالة ولا يرسلها إلى أي مكان. وهذا صحيح في الاستوديو، وأول ما يتغير في البناء الحقيقي.',
   },
   dsMigrationNote: {
-    en: 'Seven screens wrote their own save confirmation before SavedIndicator existed, and twelve drew their own progress bar. Both now have one definition. Migrating the existing screens onto them is a separate pass, not done.',
-    ar: 'سبع شاشات كتبت تأكيد الحفظ الخاص بها قبل وجود ‎SavedIndicator‎، واثنتا عشرة رسمت شريط تقدمها. ولكليهما الآن تعريف واحد. ونقل الشاشات القائمة إليهما مرحلة منفصلة لم تُنفّذ بعد.',
+    en: 'Migration done: all seven hand written save confirmations and twenty three hand drawn progress bars now use the shared components. Three bars were deliberately left alone, including the one in the early tier, which counts filled blocks because three of three is countable by a six year old and 67% is not.',
+    ar: 'اكتمل النقل: جميع تأكيدات الحفظ السبعة المكتوبة يدوياً وثلاثة وعشرون شريط تقدم مرسوماً يدوياً تستخدم الآن المكوّنات المشتركة. وتُركت ثلاثة أشرطة عمداً، منها شريط الفئة المبكرة الذي يعدّ مربعات ممتلئة، لأن ثلاثة من ثلاثة يعدّها طفل في السادسة أما ٦٧٪ فلا.',
   },
+
+  // Components added later on 7 November
+  dsRadioGroup: { en: 'Radio group', ar: 'مجموعة الاختيار' },
+  dsDatePicker: { en: 'Date picker', ar: 'منتقي التواريخ' },
+  dsFileUpload: { en: 'File upload', ar: 'رفع الملفات' },
+
+  dsRadioNote: {
+    en: 'Native inputs, not a Radix primitive. Grouped radios already give one tab stop, arrow key selection, wrapping at the ends and reversed arrows in RTL, and a hand rolled roving tabindex usually gets one of those four wrong.',
+    ar: 'عناصر إدخال أصلية لا من Radix. فأزرار الاختيار المجمّعة تعطي محطة تنقل واحدة، واختياراً بأسهم لوحة المفاتيح، والتفافاً عند الطرفين، وعكساً للأسهم في العربية، والتنفيذ اليدوي يخطئ عادة في إحدى هذه الأربع.',
+  },
+  dsDateNote: {
+    en: 'The weekday order and the first day of the week come from Intl, not a table. Saturday starts the week in much of the region and Monday does in the UK, so hardcoding either would be wrong half the time.',
+    ar: 'ترتيب أيام الأسبوع وأول يوم فيه يأتيان من ‎Intl‎ لا من جدول. فالسبت يبدأ الأسبوع في معظم المنطقة والاثنين في بريطانيا، وتثبيت أيهما يكون خطأ في نصف الحالات.',
+  },
+  dsUploadNote: {
+    en: 'A real file input behind the drop zone, so Tab reaches it and Space opens the dialog. Drag and drop is an addition, never the only way in. A rejected file is named and explained rather than dropped quietly, which is how a person ends up believing they uploaded their spreadsheet.',
+    ar: 'عنصر إدخال ملفات حقيقي خلف منطقة الإفلات، فيصله مفتاح التنقل ويفتحه مفتاح المسافة. والسحب والإفلات إضافة لا الطريق الوحيد. والملف المرفوض يُسمّى ويُفسَّر لا يُسقَط بصمت، فالصمت هو ما يجعل الشخص يظن أنه رفع جدوله.',
+  },
+  dsRadioTermLabel: { en: 'When do reports close?', ar: 'متى تُقفل التقارير؟' },
+  dsRadioTermHint: {
+    en: 'Applies to every class in the school.',
+    ar: 'ينطبق على كل صفوف المدرسة.',
+  },
+  dsRadioEndOfTerm: { en: 'End of term', ar: 'نهاية الفصل' },
+  dsRadioEndOfTermHint: { en: '2 April 2027', ar: '٢ نيسان ٢٠٢٧' },
+  dsRadioTwoWeeks: { en: 'Two weeks after', ar: 'بعد أسبوعين' },
+  dsRadioTwoWeeksHint: { en: 'Gives teachers a marking window', ar: 'يمنح المعلمين مهلة للتصحيح' },
+  dsRadioNever: { en: 'Leave open', ar: 'اتركها مفتوحة' },
+  dsDueDate: { en: 'Due date', ar: 'تاريخ التسليم' },
+  dsPickDate: { en: 'Pick a date', ar: 'اختر تاريخاً' },
 
   // Components added 7 November
   dsSelect: { en: 'Select', ar: 'القائمة المنسدلة' },
