@@ -5,6 +5,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
@@ -146,19 +147,14 @@ export function TeacherSkillDrilldown() {
                     {record.mastery}%
                   </span>
                 </span>
-                <span className="mt-1.5 block h-1 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn(
-                      'block h-full rounded-full',
-                      record.mastery < 50
-                        ? 'bg-danger'
-                        : record.mastery < 70
-                          ? 'bg-warning'
-                          : 'bg-success',
-                    )}
-                    style={{ width: `${record.mastery}%` }}
-                  />
-                </span>
+                <Progress
+                  value={record.mastery}
+                  label={`${skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('colSkill')} · ${t('colMastery')}`}
+                  tone={
+                    record.mastery < 50 ? 'danger' : record.mastery < 70 ? 'warning' : 'success'
+                  }
+                  className="mt-1.5 h-1"
+                />
               </button>
             ))}
           </CardContent>

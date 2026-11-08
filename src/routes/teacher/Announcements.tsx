@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
@@ -245,12 +246,13 @@ export function TeacherAnnouncements() {
                   <div className="flex flex-wrap items-center gap-3">
                     <Badge variant="outline">{post.audience}</Badge>
                     <span className="flex items-center gap-2 text-caption text-muted-foreground">
-                      <span className="h-1.5 w-20 overflow-hidden rounded-full bg-muted">
-                        <span
-                          className="block h-full rounded-full bg-foreground"
-                          style={{ width: `${(post.readBy / post.total) * 100}%` }}
-                        />
-                      </span>
+                      <Progress
+                        value={(post.readBy / post.total) * 100}
+                        label={t('tchReadByOf')
+                          .replace('{n}', String(post.readBy))
+                          .replace('{m}', String(post.total))}
+                        className="w-20 flex-none"
+                      />
                       {t('tchReadByOf')
                         .replace('{n}', String(post.readBy))
                         .replace('{m}', String(post.total))}

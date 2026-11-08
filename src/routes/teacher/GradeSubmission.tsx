@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { useStudioState } from '@/lib/studioState'
 import { groupName } from '@/lib/names'
@@ -176,12 +177,11 @@ export function TeacherGradeSubmission() {
         }
       />
 
-      <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-accent transition-all"
-          style={{ width: `${(index / waiting.length) * 100}%` }}
-        />
-      </div>
+      <Progress
+        value={(index / waiting.length) * 100}
+        label={`${t('tchMarking')} · ${t('tchQueue')}`}
+        className="h-1"
+      />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
         <div className="space-y-4">

@@ -5,6 +5,7 @@ import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
@@ -239,12 +240,11 @@ export function TeacherToday() {
                   <span className="min-w-0 flex-1 truncate text-small font-medium text-foreground">
                     {groupName(classGroup, locale)}
                   </span>
-                  <span className="h-1.5 w-24 flex-none overflow-hidden rounded-full bg-muted">
-                    <span
-                      className="block h-full rounded-full bg-foreground"
-                      style={{ width: `${average}%` }}
-                    />
-                  </span>
+                  <Progress
+                    value={average}
+                    label={`${groupName(classGroup, locale)} · ${t('colAverage')}`}
+                    className="w-24 flex-none"
+                  />
                   <span className="tabular w-10 flex-none text-end text-caption text-muted-foreground">
                     {average}%
                   </span>

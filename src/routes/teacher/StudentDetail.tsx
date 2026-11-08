@@ -15,6 +15,7 @@ import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Table,
   TableBody,
@@ -25,7 +26,7 @@ import {
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
-import { cn, initials } from '@/lib/utils'
+import { initials } from '@/lib/utils'
 import { attendance, guardians, mastery, skills } from '@/data/seed'
 import {
   activityById,
@@ -300,19 +301,13 @@ export function TeacherStudentDetail() {
                     {record.mastery}%
                   </span>
                 </div>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn(
-                      'block h-full rounded-full',
-                      record.mastery < 50
-                        ? 'bg-danger'
-                        : record.mastery < 70
-                          ? 'bg-warning'
-                          : 'bg-success',
-                    )}
-                    style={{ width: `${record.mastery}%` }}
-                  />
-                </span>
+                <Progress
+                  value={record.mastery}
+                  label={`${skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('colSkill')} · ${t('colMastery')}`}
+                  tone={
+                    record.mastery < 50 ? 'danger' : record.mastery < 70 ? 'warning' : 'success'
+                  }
+                />
               </div>
             ))}
           </CardContent>
