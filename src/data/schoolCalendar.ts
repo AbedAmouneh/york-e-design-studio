@@ -69,8 +69,11 @@ export const holidays: Holiday[] = [
     // why it is a range and why the picker shows it differently from a closure.
     startsOn: '2027-02-08',
     endsOn: '2027-03-09',
-    name: 'Ramadan, shortened day',
-    nameAr: 'رمضان، دوام مختصر',
+    // Just the name. "Shortened day" is a qualifier the interface adds, not
+    // part of what the month is called, and baking it in produced lines like
+    // "Ramadan, shortened day, date not yet confirmed".
+    name: 'Ramadan',
+    nameAr: 'رمضان',
     kind: 'religious',
     approximate: true,
   },
