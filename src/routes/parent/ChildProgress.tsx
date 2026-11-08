@@ -12,8 +12,8 @@ import { Star } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
-import { cn } from '@/lib/utils'
 import { masteryFor } from '@/data/student'
 import {
   childById,
@@ -176,19 +176,18 @@ export function ParentChildProgress() {
                     {label}
                   </Badge>
                 </div>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn(
-                      'block h-full rounded-full',
-                      record.mastery >= 75
-                        ? 'bg-success'
-                        : record.mastery >= 55
-                          ? 'bg-warning'
-                          : 'bg-border-strong',
-                    )}
-                    style={{ width: `${record.mastery}%` }}
-                  />
-                </span>
+                <Progress
+                  value={record.mastery}
+                  label={`${skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('parTopic')} · ${label}`}
+                  // `muted` rather than `default` at the bottom, and never
+                  // `danger`. This is a parent reading about their own child:
+                  // red is forbidden on this screen and a solid black bar
+                  // reads as an accusation, so the lowest band goes quiet
+                  // instead of loud.
+                  tone={
+                    record.mastery >= 75 ? 'success' : record.mastery >= 55 ? 'warning' : 'muted'
+                  }
+                />
               </div>
             )
           })}
