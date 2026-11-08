@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { schoolName, schoolPlace } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
@@ -503,10 +504,15 @@ export function SuperAdminBranding() {
         </Button>
         {!passes ? (
           <span className="text-small text-danger">{t('saBrandSaveBlocked')}</span>
-        ) : saved ? (
-          <span className="text-small text-success">{t('saBrandSaved')}</span>
         ) : (
-          <span className="text-caption text-muted-foreground">{t('saBrandChangesLogged')}</span>
+          <>
+            <SavedIndicator saved={saved} label={t('saBrandSaved')} />
+            {saved ? null : (
+              <span className="text-caption text-muted-foreground">
+                {t('saBrandChangesLogged')}
+              </span>
+            )}
+          </>
         )}
       </div>
     </Page>
