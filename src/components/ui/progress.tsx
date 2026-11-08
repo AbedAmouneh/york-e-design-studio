@@ -21,12 +21,29 @@ export const Progress = forwardRef<
   ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
     value: number
     label: string
-    tone?: 'default' | 'success' | 'warning' | 'danger' | 'learner'
+    tone?: 'default' | 'accent' | 'muted' | 'success' | 'warning' | 'danger' | 'learner'
   }
 >(({ className, value, label, tone = 'default', ...props }, ref) => {
   const clamped = Math.max(0, Math.min(100, value))
+  /**
+   * `accent` and `muted` were added after the first migration, because the
+   * first five screens converted had been drawing their bar in York yellow and
+   * one in a deliberately soft grey, and a palette of five tones silently
+   * turned all six black. A component that forces every call site to the
+   * nearest available colour is worse than the hand written bars it replaced.
+   *
+   * `accent` is the student's own progress through their own work, which is
+   * the one place the brand colour earns being a fill rather than an accent:
+   * nothing is being judged, so there is no status for a status colour to say.
+   *
+   * `muted` is for a bar that should not draw the eye at all, such as the
+   * lowest mastery band on a parent screen, where black reads as an
+   * accusation and red is forbidden outright.
+   */
   const fill = {
     default: 'bg-foreground',
+    accent: 'bg-accent',
+    muted: 'bg-border-strong',
     success: 'bg-success',
     warning: 'bg-warning',
     danger: 'bg-danger',
