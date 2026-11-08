@@ -3,7 +3,7 @@ import { CalendarDays, TriangleAlert } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   CalendarGrid,
-  CalendarLegend,
+  CalendarNotes,
   MonthHeader,
   intlLocale,
   startOfMonth,
@@ -98,11 +98,11 @@ export function DatePicker({
           ? info.holiday.nameAr
           : info.holiday.name
         : t('calClosed')
-      return info.holiday?.approximate
-        ? `${name} · ${t('calApproximate')}`
-        : `${name} · ${t('calClosed')}`
+      const quals: string[] = [t('calClosed')]
+      if (info.holiday?.approximate) quals.push(t('calApproximate'))
+      return `${name} (${quals.join(', ')})`
     }
-    if (context === 'load' && info.dueCount >= 3) {
+    if (info.dueCount >= 3) {
       return t('calNDue').replace('{n}', String(info.dueCount))
     }
     if (!info.inTerm) return t('calOutOfTerm')
@@ -150,7 +150,7 @@ export function DatePicker({
             min={min}
             max={max}
           />
-          <CalendarLegend context={context} />
+          <CalendarNotes month={month} schoolId={schoolId} context={context} />
         </PopoverContent>
       </Popover>
 
