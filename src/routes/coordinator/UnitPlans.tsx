@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
@@ -153,9 +154,8 @@ export function CoordinatorUnitPlans() {
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
           {t('coPublishToAllClasses')}
         </Button>
-        {saved ? (
-          <span className="text-small text-success">{t('coPublishedNotified')}</span>
-        ) : (
+        <SavedIndicator saved={saved} label={t('coPublishedNotified')} />
+        {saved ? null : (
           <span className="text-caption text-muted-foreground">{t('coPublishHint')}</span>
         )}
       </div>
