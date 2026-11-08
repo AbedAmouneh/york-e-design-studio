@@ -105,6 +105,7 @@ import { TeacherCourseSearch } from '@/routes/teacher/CourseSearch'
 import { DesignApp } from '@/routes/design/DesignApp'
 import { DesignComponents } from '@/routes/design/Components'
 import { DesignTokens } from '@/routes/design/Tokens'
+import { DesignCalendar } from '@/routes/design/Calendar'
 
 export default function App() {
   return (
@@ -237,6 +238,7 @@ export default function App() {
           <Route index element={<Navigate to="/design/components" replace />} />
           <Route path="components" element={<DesignComponents />} />
           <Route path="tokens" element={<DesignTokens />} />
+          <Route path="calendar" element={<DesignCalendar />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/school-admin" replace />} />
