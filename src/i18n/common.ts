@@ -38,7 +38,6 @@ export const common = {
   calTermEnds: { en: 'term ends', ar: 'نهاية الفصل' },
   calOutOfTerm: { en: 'outside the term', ar: 'خارج الفصل' },
   calNDue: { en: '{n} already due', ar: '{n} مستحقة بالفعل' },
-  calAlreadyDue: { en: 'already due', ar: 'مستحق بالفعل' },
   calApproximate: { en: 'date not yet confirmed', ar: 'التاريخ غير مؤكد بعد' },
   // School is open, the day is shorter. Never "closed", which would be both
   // wrong and quietly insulting during Ramadan.
