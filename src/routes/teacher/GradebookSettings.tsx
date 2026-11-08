@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
@@ -213,9 +214,8 @@ export function TeacherGradebookSettings() {
         <Button variant="accent" size="sm" disabled={!balanced} onClick={() => setSaved(true)}>
           {t('tchSaveRecalculate')}
         </Button>
-        {saved ? (
-          <span className="text-small text-success">{t('tchSavedRecalculated')}</span>
-        ) : (
+        <SavedIndicator saved={saved} label={t('tchSavedRecalculated')} />
+        {saved ? null : (
           <span className="text-small text-muted-foreground">{t('tchNothingUntilSave')}</span>
         )}
       </div>
