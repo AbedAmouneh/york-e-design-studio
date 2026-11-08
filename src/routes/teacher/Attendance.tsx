@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
@@ -186,12 +187,8 @@ export function TeacherAttendance() {
         </CardContent>
       </Card>
 
-      {saved ? (
-        <p className="flex items-center gap-2 text-small text-success">
-          <Check className="h-4 w-4" aria-hidden />
-          {t('tchRegisterSaved')}
-        </p>
-      ) : (
+      <SavedIndicator saved={saved} label={t('tchRegisterSaved')} />
+      {saved ? null : (
         <p className="text-caption text-muted-foreground">{t('tchAttendanceNote')}</p>
       )}
     </Page>
