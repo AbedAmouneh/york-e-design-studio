@@ -36,6 +36,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Progress } from '@/components/ui/progress'
+import { RadioGroup, RadioItem } from '@/components/ui/radio-group'
+import { DatePicker } from '@/components/ui/date-picker'
+import { FileUpload } from '@/components/ui/file-upload'
 import { PersonAvatar } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
@@ -130,6 +133,8 @@ export function DesignComponents() {
   const { t } = useLocale()
   const toast = useToast()
   const [saved, setSaved] = useState(false)
+  const [reportsClose, setReportsClose] = useState('end')
+  const [due, setDue] = useState('2027-02-26')
 
   // The saved indicator is the only thing on this page with real behaviour, so
   // it clears itself rather than sitting there forever after one click.
@@ -140,9 +145,9 @@ export function DesignComponents() {
   }, [saved])
 
   const missing: StringKey[] = [
-    'dsMissingRadio',
-    'dsMissingDatePicker',
-    'dsMissingFileUpload',
+    'dsOpenHijri',
+    'dsOpenNumerals',
+    'dsOpenUpload',
     'dsMigrationNote',
   ]
 
@@ -291,6 +296,78 @@ export function DesignComponents() {
         <Spec label="SearchInput" code="ps-9, icon at start-3, mirrors in RTL">
           <SearchInput id="ds-label-demo" placeholder={t('search')} readOnly />
         </Spec>
+      </Section>
+
+      <Section title={t('dsRadioGroup')} note={t('dsRadioNote')}>
+        <div className="px-5 py-4">
+          <RadioGroup
+            value={reportsClose}
+            onValueChange={setReportsClose}
+            label={t('dsRadioTermLabel')}
+            description={t('dsRadioTermHint')}
+          >
+            <RadioItem
+              value="end"
+              label={t('dsRadioEndOfTerm')}
+              description={t('dsRadioEndOfTermHint')}
+            />
+            <RadioItem
+              value="plus-two"
+              label={t('dsRadioTwoWeeks')}
+              description={t('dsRadioTwoWeeksHint')}
+            />
+            <RadioItem value="open" label={t('dsRadioNever')} />
+            <RadioItem value="locked" label={t('dsStateDisabled')} disabled />
+          </RadioGroup>
+          <p className="mt-3 font-mono text-caption text-muted-foreground">
+            &lt;RadioGroup value onValueChange label&gt;&lt;RadioItem /&gt;
+          </p>
+        </div>
+      </Section>
+
+      <Section title={t('dsDatePicker')} note={t('dsDateNote')}>
+        <Spec label={t('dsDueDate')} code="<DatePicker value onChange label placeholder />">
+          <DatePicker
+            value={due}
+            onChange={setDue}
+            label={t('dsDueDate')}
+            placeholder={t('dsPickDate')}
+            className="w-full"
+          />
+        </Spec>
+        <Spec label={t('dsStateError')} code="<DatePicker invalid />">
+          <DatePicker
+            value=""
+            onChange={() => undefined}
+            label={t('dsDueDate')}
+            placeholder={t('dsPickDate')}
+            invalid
+            className="w-full"
+          />
+        </Spec>
+        <Spec label={t('dsStateDisabled')} code="<DatePicker disabled />">
+          <DatePicker
+            value=""
+            onChange={() => undefined}
+            label={t('dsDueDate')}
+            placeholder={t('dsPickDate')}
+            disabled
+            className="w-full"
+          />
+        </Spec>
+      </Section>
+
+      <Section title={t('dsFileUpload')} note={t('dsUploadNote')}>
+        <div className="px-5 py-4">
+          <FileUpload
+            accept=".csv,.xlsx"
+            acceptHint="CSV, XLSX"
+            maxBytes={5 * 1024 * 1024}
+          />
+          <p className="mt-3 font-mono text-caption text-muted-foreground">
+            &lt;FileUpload accept acceptHint maxBytes multiple /&gt;
+          </p>
+        </div>
       </Section>
 
       <Section title={t('dsSelect')} note={t('dsSelectNote')}>
