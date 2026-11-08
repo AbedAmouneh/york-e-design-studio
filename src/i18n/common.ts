@@ -26,6 +26,20 @@ export const common = {
   close: { en: 'Close', ar: 'إغلاق' },
   // Labels the tier switch as studio furniture. No real student sees it.
   tierSwitchLabel: { en: 'Studio view', ar: 'عرض الاستوديو' },
+
+  // Date picker. Month navigation is icon only, so these are its only names.
+  dpPreviousMonth: { en: 'Previous month', ar: 'الشهر السابق' },
+  dpNextMonth: { en: 'Next month', ar: 'الشهر التالي' },
+
+  // File upload. A rejected file is named and explained, never dropped quietly.
+  fuDropHere: { en: 'Drop a file here, or choose one', ar: 'أفلِت ملفاً هنا أو اختر واحداً' },
+  fuMaxSize: { en: 'up to {s}', ar: 'حتى {s}' },
+  fuWrongType: {
+    en: '{n} is not a file type this accepts.',
+    ar: '{n} ليس من أنواع الملفات المقبولة هنا.',
+  },
+  fuTooBig: { en: '{n} is larger than {s}.', ar: '{n} أكبر من {s}.' },
+  fuRemove: { en: 'Remove {n}', ar: 'إزالة {n}' },
   switchToArabic: { en: 'العربية', ar: 'العربية' },
   switchToEnglish: { en: 'English', ar: 'English' },
 
