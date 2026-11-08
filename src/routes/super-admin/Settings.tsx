@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
@@ -161,9 +162,8 @@ export function SuperAdminSettings() {
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
           {t('save')}
         </Button>
-        {saved ? (
-          <span className="text-small text-success">{t('saSavedFlags')}</span>
-        ) : (
+        <SavedIndicator saved={saved} label={t('saSavedFlags')} />
+        {saved ? null : (
           <span className="text-caption text-muted-foreground">{t('saFlagChangesLogged')}</span>
         )}
       </div>
