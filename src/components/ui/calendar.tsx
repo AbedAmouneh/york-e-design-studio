@@ -27,7 +27,24 @@ import type { Locale } from '@/types'
 
 const MS_DAY = 86400000
 
-export type CalendarContext = 'plain' | 'term' | 'load'
+/**
+ * Two levels, not three.
+ *
+ * The first pass offered plain, term-aware and load-aware, and the aware ones
+ * carried their knowledge inside the cells: a tint across Ramadan, a strike
+ * through closures, dots for workload. Shown side by side the verdict was that
+ * the plain one looked right and the clever ones looked cluttered, but that
+ * the knowledge was the point. Both halves of that are correct.
+ *
+ * So `aware` now knows everything the old `load` knew and says almost none of
+ * it in the grid. A closed day is dimmed, the same weight as a day outside the
+ * month, so it adds no new visual language. Everything else moves to prose:
+ * one quiet line under the grid for what is in this month, and a warning under
+ * the field only when the date actually chosen is a problem.
+ *
+ * The grid stays quiet. The product still knows.
+ */
+export type CalendarContext = 'plain' | 'aware'
 
 export function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1)
@@ -173,7 +190,16 @@ function dayLabel(
   else if (info.weekend) parts.push(t('calWeekend'))
   if (info.termEnd) parts.push(t('calTermEnds'))
   if (!info.inTerm) parts.push(t('calOutOfTerm'))
-  if (context === 'load' && info.dueCount > 0) {
+  /*
+    The workload reaches the label even though no cell draws it.
+
+    This is the one place the quiet version is deliberately louder than the
+    visible grid. A sighted teacher scans the month and sees the shape of it;
+    somebody using a screen reader is already hearing each day one at a time,
+    so naming the load costs them nothing extra and is the only way they get it
+    at all. Hiding it to match the pixels would be matching the wrong thing.
+  */
+  if (info.dueCount > 0) {
     parts.push(t('calNDue').replace('{n}', String(info.dueCount)))
   }
   return parts.join(', ')
@@ -232,10 +258,15 @@ export function CalendarGrid({
         const isToday = sameDay(day, today)
         const blocked = (minDate ? day < minDate : false) || (maxDate ? day > maxDate : false)
 
-        // In the aware variants a closed day is still clickable. Blocking it
-        // would be the computer refusing a thing a teacher may have a reason
-        // to do; marking it lets them see the cost and decide.
-        const muted = context !== 'plain' && (info.closed || info.weekend || !info.inTerm)
+        // A closed day stays clickable. Blocking it would be the computer
+        // refusing something a teacher may have a reason to do; dimming lets
+        // them see it and decide, and the warning under the field says what
+        // they chose.
+        //
+        // Weekends are deliberately NOT dimmed. Dimming five of every seven
+        // cells is what made the first attempt look busy, and a Saturday is
+        // not a surprise to anyone who works at a school.
+        const muted = context === 'aware' && (info.closed || !info.inTerm)
 
         return (
           <button
@@ -259,66 +290,19 @@ export function CalendarGrid({
                     ? 'text-muted-foreground hover:bg-muted'
                     : 'text-foreground hover:bg-muted',
               isToday && !isSelected && 'ring-1 ring-inset ring-border-strong',
-              // A closed day reads as struck through rather than greyed, so it
-              // is distinguishable from a day that is merely outside the month.
-              context !== 'plain' && info.closed && !isSelected && 'line-through decoration-1',
-              /*
-                A shortened day, which in practice means Ramadan, gets a wash
-                rather than a glyph.
-
-                This took two attempts. The data always distinguished closed
-                from shortened, but the grid only drew closures, so a February
-                containing the whole of Ramadan looked like any other month:
-                the thing a teacher in Beirut or Dubai most needs the calendar
-                to know was the one thing it said nothing about. Marking each
-                day then overcorrected, because twenty eight dashed underlines
-                read as damage rather than information.
-
-                A tint across the span says "this period is different", which
-                is what a month long observance actually is. Never a
-                strikethrough: school is open and the day is real.
-              */
-              context !== 'plain' &&
-                info.holiday &&
-                !info.closed &&
-                !isSelected &&
-                'bg-warning-tint/60',
             )}
           >
             <span className="tabular text-small leading-none">
               {new Intl.NumberFormat(tag).format(day.getDate())}
             </span>
 
-            {/* Term end gets a rule rather than a dot: it is a boundary, not an event. */}
-            {context !== 'plain' && info.termEnd && !isSelected ? (
-              <span
-                aria-hidden
-                className="absolute inset-x-1 bottom-0.5 h-px bg-warning"
-              />
-            ) : null}
-
-
-            {context === 'load' && info.dueCount > 0 && !isSelected ? (
-              <span
-                aria-hidden
-                className={cn(
-                  'mt-0.5 flex items-center gap-[2px]',
-                  size === 'full' && 'mt-1',
-                )}
-              >
-                {Array.from({ length: Math.min(info.dueCount, 3) }, (_, i) => (
-                  <span
-                    key={i}
-                    className={cn(
-                      'block h-1 w-1 rounded-full',
-                      info.dueCount >= 3 ? 'bg-warning' : 'bg-muted-foreground',
-                    )}
-                  />
-                ))}
-              </span>
-            ) : null}
-
-            {size === 'full' && context !== 'plain' && info.holiday && !outside ? (
+            {/*
+              The month view is the one place the grid may speak, because a
+              cell 64px tall has room for a word and a person looking at a
+              month view came to read it. In the small picker the same
+              information goes under the grid instead.
+            */}
+            {size === 'full' && context === 'aware' && info.holiday && !outside ? (
               <span className="mt-1 line-clamp-2 w-full text-start text-caption leading-tight text-muted-foreground">
                 {locale === 'ar' ? info.holiday.nameAr : info.holiday.name}
               </span>
@@ -331,42 +315,70 @@ export function CalendarGrid({
 }
 
 /**
- * The legend.
+ * What is in this month, as one line of prose.
  *
- * Shown only in the aware variants, because a legend on a plain grid is an
- * apology for a thing that needed no explaining.
+ * This replaced the legend, and the swap is the whole idea. A legend is a
+ * glossary for marks the grid is making; remove the marks and the glossary
+ * goes with them. What is left is the thing the marks were trying to say,
+ * said plainly: "Ramadan 8 Feb to 9 Mar, shortened days."
+ *
+ * It names at most two things. A line that lists six is a legend again.
  */
-export function CalendarLegend({ context }: { context: CalendarContext }) {
-  const { t } = useLocale()
-  if (context === 'plain') return null
+export function CalendarNotes({
+  month,
+  schoolId,
+  context,
+  className,
+}: {
+  month: Date
+  schoolId: string
+  context: CalendarContext
+  className?: string
+}) {
+  const { locale, t } = useLocale()
+
+  const notes = useMemo(() => {
+    if (context === 'plain') return []
+    const seen = new Set<string>()
+    const found: string[] = []
+
+    const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate()
+    for (let day = 1; day <= days; day += 1) {
+      const date = new Date(month.getFullYear(), month.getMonth(), day)
+      const info = dayContext(date, schoolId)
+
+      if (info.holiday && !seen.has(info.holiday.name)) {
+        seen.add(info.holiday.name)
+        const name = locale === 'ar' ? info.holiday.nameAr : info.holiday.name
+
+        // Qualifiers go in brackets and the notes are joined by a middle dot,
+        // so the two separators never mean the same thing. The first version
+        // used the dot for both and produced "Ramadan, shortened day · date
+        // not yet confirmed · Saint Maron", where only a reader who already
+        // knew the answer could tell where one note ended.
+        const quals: string[] = []
+        if (!info.closed) quals.push(t('calShortDay'))
+        if (info.holiday.approximate) quals.push(t('calApproximate'))
+        found.push(quals.length > 0 ? `${name} (${quals.join(', ')})` : name)
+      }
+      if (info.termEnd && !seen.has('term-end')) {
+        seen.add('term-end')
+        found.push(t('calTermEnds'))
+      }
+    }
+    return found.slice(0, 2)
+  }, [month, schoolId, context, locale, t])
+
+  if (notes.length === 0) return null
 
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border pt-2">
-      <span className="flex items-center gap-1.5 text-caption text-muted-foreground">
-        <span aria-hidden className="h-px w-3 bg-warning" />
-        {t('calTermEnds')}
-      </span>
-      <span className="flex items-center gap-1.5 text-caption text-muted-foreground">
-        <span aria-hidden className="text-foreground line-through decoration-1">
-          00
-        </span>
-        {t('calClosed')}
-      </span>
-      <span className="flex items-center gap-1.5 text-caption text-muted-foreground">
-        <span aria-hidden className="rounded bg-warning-tint/60 px-1 text-foreground">
-          00
-        </span>
-        {t('calShortDay')}
-      </span>
-      {context === 'load' ? (
-        <span className="flex items-center gap-1.5 text-caption text-muted-foreground">
-          <span aria-hidden className="flex gap-[2px]">
-            <span className="block h-1 w-1 rounded-full bg-muted-foreground" />
-            <span className="block h-1 w-1 rounded-full bg-muted-foreground" />
-          </span>
-          {t('calAlreadyDue')}
-        </span>
-      ) : null}
-    </div>
+    <p
+      className={cn(
+        'mt-2 border-t border-border pt-2 text-caption text-muted-foreground',
+        className,
+      )}
+    >
+      {notes.join(' · ')}
+    </p>
   )
 }
