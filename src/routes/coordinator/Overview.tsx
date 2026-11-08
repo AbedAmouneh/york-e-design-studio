@@ -5,6 +5,7 @@ import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import { cn } from '@/lib/utils'
@@ -115,15 +116,12 @@ export function CoordinatorOverview() {
               </span>
 
               <span className="flex flex-none items-center gap-2.5">
-                <span className="h-1.5 w-24 overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn(
-                      'block h-full rounded-full',
-                      row.coverage < 70 ? 'bg-warning' : 'bg-foreground',
-                    )}
-                    style={{ width: `${row.coverage}%` }}
-                  />
-                </span>
+                <Progress
+                  value={row.coverage}
+                  label={`${groupName(row.group, locale)} · ${t('coPercentOfPlan').replace('{n}', String(row.coverage))}`}
+                  tone={row.coverage < 70 ? 'warning' : 'default'}
+                  className="w-24"
+                />
                 <span
                   className={cn(
                     'tabular w-24 text-caption',
