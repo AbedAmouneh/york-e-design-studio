@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { SavedIndicator } from '@/components/ui/toast'
 import { cn } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
 import type { StringKey } from '@/i18n'
@@ -139,9 +140,8 @@ export function ParentSettings() {
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
           {t('save')}
         </Button>
-        {saved ? (
-          <span className="text-small text-success">{t('saved')}</span>
-        ) : (
+        <SavedIndicator saved={saved} label={t('saved')} />
+        {saved ? null : (
           <span className="text-caption text-muted-foreground">{t('parSettingsNote')}</span>
         )}
       </div>
