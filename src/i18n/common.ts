@@ -31,6 +31,19 @@ export const common = {
   dpPreviousMonth: { en: 'Previous month', ar: 'الشهر السابق' },
   dpNextMonth: { en: 'Next month', ar: 'الشهر التالي' },
 
+  // School calendar. Most of these are only ever read aloud, since the grid
+  // says them with colour and dots that a screen reader gets none of.
+  calClosed: { en: 'school closed', ar: 'المدرسة مغلقة' },
+  calWeekend: { en: 'weekend', ar: 'عطلة نهاية الأسبوع' },
+  calTermEnds: { en: 'term ends', ar: 'نهاية الفصل' },
+  calOutOfTerm: { en: 'outside the term', ar: 'خارج الفصل' },
+  calNDue: { en: '{n} already due', ar: '{n} مستحقة بالفعل' },
+  calAlreadyDue: { en: 'already due', ar: 'مستحق بالفعل' },
+  calApproximate: { en: 'date not yet confirmed', ar: 'التاريخ غير مؤكد بعد' },
+  // School is open, the day is shorter. Never "closed", which would be both
+  // wrong and quietly insulting during Ramadan.
+  calShortDay: { en: 'shortened day', ar: 'دوام مختصر' },
+
   // File upload. A rejected file is named and explained, never dropped quietly.
   fuDropHere: { en: 'Drop a file here, or choose one', ar: 'أفلِت ملفاً هنا أو اختر واحداً' },
   fuMaxSize: { en: 'up to {s}', ar: 'حتى {s}' },
