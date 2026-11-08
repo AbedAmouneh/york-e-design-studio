@@ -91,50 +91,31 @@ export const designSystem = {
   // The calendar comparison. Three variants, one decision.
   calCompareTitle: { en: 'Choosing the calendar', ar: 'اختيار التقويم' },
   calCompareSubtitle: {
-    en: 'Three variants that differ in one way only: how much the grid is allowed to know about the school.',
-    ar: 'ثلاثة خيارات تختلف في شيء واحد فقط: مقدار ما يُسمح للتقويم بمعرفته عن المدرسة.',
+    en: 'Two grids that look the same. One knows nothing about the school. The other knows everything and keeps it out of the cells.',
+    ar: 'شبكتان تبدوان متطابقتين. إحداهما لا تعرف شيئاً عن المدرسة، والأخرى تعرف كل شيء وتبقيه خارج الخانات.',
   },
-  calWhyTitle: { en: 'Why this axis', ar: 'لماذا هذا المحور' },
+  calWhyTitle: { en: 'How this got quiet', ar: 'كيف صار هادئاً' },
   calWhyBody: {
-    en: 'A generic date picker is a solved problem and nobody needs York Press to redraw one. Choosing between three skins would teach us nothing. Choosing how much the picker knows is a product decision, and each step up costs real data.',
-    ar: 'منتقي التواريخ العادي مسألة محلولة، ولا أحد يحتاج أن تعيد يورك برس رسمها. والاختيار بين ثلاثة أشكال لا يعلّمنا شيئاً. أما اختيار مقدار ما يعرفه المنتقي فقرار منتَج، وكل درجة إضافية تكلّف بيانات حقيقية.',
+    en: 'The first pass showed its knowledge inside the cells: a tint across Ramadan, a strike through closures, dots for workload. The verdict was that the plain one looked right and the clever ones looked cluttered, but that the knowledge was the point. Both are true, and together they describe a better component than any of the three. Try 10 March below. The grid barely moves and the message is unmissable.',
+    ar: 'في المحاولة الأولى كانت المعرفة داخل الخانات: لون عبر رمضان، وشطب على الإغلاقات، ونقاط للعبء. وكان الحكم أن الشكل المجرد هو الصحيح وأن الأشكال الذكية مزدحمة، لكن المعرفة هي المقصد. وكلا الأمرين صحيح، ومعاً يصفان مكوّناً أفضل من الثلاثة جميعاً. جرّب ١٠ آذار أدناه: تكاد الشبكة لا تتغير والرسالة لا تُفوَّت.',
   },
-  calCost: { en: 'Costs', ar: 'التكلفة' },
 
-  calVariantPlainTitle: { en: 'A. Plain', ar: 'أ. مجرد' },
+  calVariantPlainTitle: { en: 'Plain', ar: 'مجرد' },
   calVariantPlainBlurb: {
-    en: 'Dates and nothing else. What every library ships.',
-    ar: 'تواريخ لا غير. وهو ما تقدمه كل المكتبات الجاهزة.',
-  },
-  calVariantPlainCost: {
-    en: 'Nothing. It also tells a teacher nothing, so a deadline can land in the Easter break and the platform will not mention it.',
-    ar: 'لا شيء. كما أنه لا يخبر المعلم بشيء، فقد يقع موعد التسليم في عطلة الفصح دون أن تنبّه المنصة إلى ذلك.',
+    en: 'Dates and nothing else. What every library ships. A deadline can land in the Easter break and the platform will not mention it.',
+    ar: 'تواريخ لا غير، وهو ما تقدمه كل المكتبات الجاهزة. وقد يقع موعد التسليم في عطلة الفصح دون أن تنبّه المنصة إلى ذلك.',
   },
 
-  calVariantTermTitle: { en: 'B. Knows the year', ar: 'ب. يعرف السنة الدراسية' },
-  calVariantTermBlurb: {
-    en: 'Weekends, closures and the end of term are marked. Closed days stay clickable.',
-    ar: 'تُعلَّم عطل نهاية الأسبوع والإغلاقات ونهاية الفصل. وتبقى الأيام المغلقة قابلة للاختيار.',
-  },
-  calVariantTermCost: {
-    en: 'Needs a real holiday list per branch, which does not exist yet and cannot be guessed. Beirut, Dubai and Amman do not share a weekend either.',
-    ar: 'يحتاج قائمة عطل حقيقية لكل فرع، وهي غير موجودة ولا يمكن تخمينها. كما أن بيروت ودبي وعمّان لا تتشارك عطلة نهاية الأسبوع نفسها.',
-  },
-
-  calVariantLoadTitle: { en: 'C. Knows the workload', ar: 'ج. يعرف العبء' },
-  calVariantLoadBlurb: {
-    en: 'Everything in B, plus what is already due that day across the teacher’s classes.',
-    ar: 'كل ما في «ب»، إضافة إلى ما هو مستحق أصلاً ذلك اليوم في صفوف المعلم.',
-  },
-  calVariantLoadCost: {
-    en: 'Needs the assignment data live at the moment of picking. This is the one a competitor cannot copy from a component library, and the one that stops three deadlines landing on one Tuesday.',
-    ar: 'يحتاج بيانات الواجبات لحظة الاختيار. وهو الخيار الذي لا يستطيع منافس نسخه من مكتبة مكوّنات، والذي يمنع وقوع ثلاثة مواعيد تسليم في ثلاثاء واحد.',
+  calVariantAwareTitle: { en: 'Aware, and quiet about it', ar: 'واعٍ، وهادئ' },
+  calVariantAwareBlurb: {
+    en: 'Knows the term, the closures and what is already due. Says it in three places, none of them a cell: a closed day is dimmed, the month names what it holds in one line, and the field speaks only when the chosen date is a problem.',
+    ar: 'يعرف الفصل والإغلاقات وما هو مستحق أصلاً. ويقولها في ثلاثة مواضع ليس بينها خانة: اليوم المغلق يخفت، والشهر يسمّي ما فيه في سطر واحد، والحقل لا يتكلم إلا حين يكون التاريخ المختار مشكلة.',
   },
 
   calMonthViewTitle: { en: 'The same grid as a month view', ar: 'الشبكة نفسها كعرض شهري' },
   calMonthViewBlurb: {
-    en: 'One component, a larger size. This is why the choice is a prop and not three files: the calendar screens inherit whichever variant wins.',
-    ar: 'المكوّن نفسه بحجم أكبر. ولهذا كان الاختيار خاصية لا ثلاثة ملفات: فشاشات التقويم ترث الخيار الفائز أياً كان.',
+    en: 'One component, a larger size. A cell 64px tall has room for a word and a person looking at a month view came to read it, so here the grid may speak. This is why the choice is a prop and not three files: the calendar screens inherit it.',
+    ar: 'المكوّن نفسه بحجم أكبر. فالخانة بارتفاع ٦٤ بكسل تتسع لكلمة، ومن يفتح عرضاً شهرياً جاء ليقرأ، فيُسمح للشبكة هنا أن تتكلم. ولهذا كان الاختيار خاصية لا ثلاثة ملفات: فشاشات التقويم ترثه.',
   },
 
   calLunarTitle: { en: 'Before this ships', ar: 'قبل الإطلاق' },
