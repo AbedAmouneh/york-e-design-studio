@@ -1,4 +1,4 @@
-import { Component, Layers, Palette, TriangleAlert } from 'lucide-react'
+import { CalendarDays, Component, Layers, Palette, TriangleAlert } from 'lucide-react'
 import { AppShell, type NavItem } from '@/components/app/AppShell'
 import { useLocale } from '@/lib/i18n'
 
@@ -18,6 +18,7 @@ import { useLocale } from '@/lib/i18n'
 const nav: NavItem[] = [
   { to: '/design/components', labelKey: 'dsComponents', icon: Component },
   { to: '/design/tokens', labelKey: 'dsTokens', icon: Palette },
+  { to: '/design/calendar', labelKey: 'calCompareTitle', icon: CalendarDays },
   { to: '/shared/empty', labelKey: 'navEmptyState', icon: Layers },
   { to: '/shared/error', labelKey: 'navErrorState', icon: TriangleAlert },
 ]
