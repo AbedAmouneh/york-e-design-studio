@@ -4,6 +4,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import { useStudentDue, useStudentReleased } from '@/lib/liveData'
@@ -105,12 +106,12 @@ export function StudentDashboard() {
                 <span className="text-muted-foreground">{t('stuWorkCompleted')}</span>
                 <span className="tabular text-foreground">{standing?.completion}%</span>
               </div>
-              <span className="block h-2 w-full overflow-hidden rounded-full bg-muted">
-                <span
-                  className="block h-full rounded-full bg-accent"
-                  style={{ width: `${standing?.completion ?? 0}%` }}
-                />
-              </span>
+              <Progress
+                value={standing?.completion ?? 0}
+                label={t('stuWorkCompleted')}
+                tone="accent"
+                className="h-2"
+              />
             </div>
 
             <p className="text-caption text-muted-foreground">{t('stuAverageNote')}</p>

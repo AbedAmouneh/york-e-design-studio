@@ -15,6 +15,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { courses } from '@/data/seed'
@@ -201,12 +202,14 @@ export function StudentLessonPlayer() {
         </Button>
       </header>
 
-      <div className="h-1 w-full flex-none bg-muted">
-        <div
-          className="h-full bg-accent transition-all"
-          style={{ width: `${((index + 1) / steps.length) * 100}%` }}
-        />
-      </div>
+      <Progress
+        value={((index + 1) / steps.length) * 100}
+        label={t('stuStepNofM')
+          .replace('{n}', String(index + 1))
+          .replace('{m}', String(steps.length))}
+        tone="accent"
+        className="h-1 flex-none rounded-none"
+      />
 
       <main className="min-h-0 flex-1 overflow-y-auto p-6 lg:p-10">
         <div className="mx-auto max-w-3xl space-y-5">

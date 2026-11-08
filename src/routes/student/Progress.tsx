@@ -12,8 +12,8 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
-import { cn } from '@/lib/utils'
 import { masteryFor, standingOf, upperStudent, visibleWork } from '@/data/student'
 
 /**
@@ -30,9 +30,9 @@ import { masteryFor, standingOf, upperStudent, visibleWork } from '@/data/studen
  */
 
 const bands = [
-  { key: 'solid', labelKey: 'stuBandSolid', min: 75, tone: 'bg-success' },
-  { key: 'getting', labelKey: 'stuBandGetting', min: 55, tone: 'bg-warning' },
-  { key: 'practise', labelKey: 'stuBandPractise', min: 0, tone: 'bg-danger' },
+  { key: 'solid', labelKey: 'stuBandSolid', min: 75, tone: 'success' },
+  { key: 'getting', labelKey: 'stuBandGetting', min: 55, tone: 'warning' },
+  { key: 'practise', labelKey: 'stuBandPractise', min: 0, tone: 'danger' },
 ] as const
 
 function bandFor(value: number) {
@@ -143,12 +143,11 @@ export function StudentProgress() {
                     {t(band.labelKey)}
                   </Badge>
                 </div>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn('block h-full rounded-full', band.tone)}
-                    style={{ width: `${record.mastery}%` }}
-                  />
-                </span>
+                <Progress
+                  value={record.mastery}
+                  label={`${skill ? (locale === 'ar' ? skill.nameAr : skill.name) : t('stuSkill')} · ${t(band.labelKey)}`}
+                  tone={band.tone}
+                />
               </div>
             )
           })}

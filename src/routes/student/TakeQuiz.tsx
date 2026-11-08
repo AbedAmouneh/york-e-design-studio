@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { upperStudent, workFor } from '@/data/student'
@@ -113,12 +114,12 @@ export function StudentTakeQuiz() {
         </Button>
       </header>
 
-      <div className="h-1 w-full flex-none bg-muted">
-        <div
-          className="h-full bg-accent transition-all"
-          style={{ width: `${(answered / questions.length) * 100}%` }}
-        />
-      </div>
+      <Progress
+        value={(answered / questions.length) * 100}
+        label={t('stuNAnswered').replace('{n}', String(answered))}
+        tone="accent"
+        className="h-1 flex-none rounded-none"
+      />
 
       <div className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[1fr_220px]">
         <main className="overflow-y-auto p-6 lg:p-10">

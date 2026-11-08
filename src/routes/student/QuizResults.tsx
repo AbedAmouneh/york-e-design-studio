@@ -5,6 +5,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { upperStudent, workFor } from '@/data/student'
@@ -125,12 +126,16 @@ export function StudentQuizResults() {
             </span>
           </span>
           <span className="tabular text-small text-muted-foreground">{percent}%</span>
-          <span className="h-2 min-w-[120px] flex-1 overflow-hidden rounded-full bg-muted">
-            <span
-              className="block h-full rounded-full bg-accent"
-              style={{ width: `${percent}%` }}
-            />
-          </span>
+          <Progress
+            value={percent}
+            label={
+              work?.activity
+                ? `${locale === 'ar' ? work.activity.titleAr : work.activity.title} · ${t('stuYourResults')}`
+                : t('stuYourResults')
+            }
+            tone="accent"
+            className="h-2 min-w-[120px] flex-1"
+          />
           <Badge variant="outline">
             {t('stuFullyRight')
               .replace('{n}', String(results.filter((r) => r.marks === r.outOf).length))

@@ -3,6 +3,7 @@ import { BookOpen } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import { classOf, coursesOf, upperStudent, visibleWork } from '@/data/student'
@@ -62,18 +63,17 @@ export function StudentMyCourses() {
                 </span>
               </span>
 
-              <span className="mt-auto space-y-1.5">
+              <div className="mt-auto space-y-1.5">
                 <span className="flex items-center justify-between text-caption">
                   <span className="text-muted-foreground">{t('stuYourProgress')}</span>
                   <span className="tabular text-foreground">{percent}%</span>
                 </span>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className="block h-full rounded-full bg-accent"
-                    style={{ width: `${percent}%` }}
-                  />
-                </span>
-              </span>
+                <Progress
+                  value={percent}
+                  label={`${locale === 'ar' ? course.titleAr : course.title} · ${t('stuYourProgress')}`}
+                  tone="accent"
+                />
+              </div>
             </Link>
           )
         })}
