@@ -16,6 +16,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Table,
@@ -212,12 +213,11 @@ export function SchoolAdminAnalytics() {
                       <TableCell className="font-medium text-foreground">{row.unit}</TableCell>
                       <TableCell>
                         <span className="flex items-center gap-3">
-                          <span className="h-1.5 w-full max-w-[180px] overflow-hidden rounded-full bg-muted">
-                            <span
-                              className="block h-full rounded-full bg-foreground"
-                              style={{ width: `${row.completion}%` }}
-                            />
-                          </span>
+                          <Progress
+                            value={row.completion}
+                            label={`${row.unit} · ${t('colCompletion')}`}
+                            className="max-w-[180px]"
+                          />
                           <span className="tabular text-caption text-muted-foreground">
                             {row.completion}%
                           </span>
@@ -265,19 +265,18 @@ export function SchoolAdminAnalytics() {
                       </TableCell>
                       <TableCell>
                         <span className="flex items-center gap-3">
-                          <span className="h-1.5 w-full max-w-[180px] overflow-hidden rounded-full bg-muted">
-                            <span
-                              className={cn(
-                                'block h-full rounded-full',
-                                row.average < 55
-                                  ? 'bg-danger'
-                                  : row.average < 70
-                                    ? 'bg-warning'
-                                    : 'bg-success',
-                              )}
-                              style={{ width: `${row.average}%` }}
-                            />
-                          </span>
+                          <Progress
+                            value={row.average}
+                            label={`${locale === 'ar' ? row.skill!.nameAr : row.skill!.name} · ${t('colMastery')}`}
+                            tone={
+                              row.average < 55
+                                ? 'danger'
+                                : row.average < 70
+                                  ? 'warning'
+                                  : 'success'
+                            }
+                            className="max-w-[180px]"
+                          />
                           <span className="tabular text-caption text-muted-foreground">
                             {row.average}%
                           </span>

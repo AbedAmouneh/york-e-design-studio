@@ -4,6 +4,7 @@ import { ArrowUpRight, Users } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { StatCard } from '@/components/app/StatCard'
 import {
   Table,
@@ -279,15 +280,11 @@ export function SchoolAdminOverview() {
                     {row.average}%
                   </span>
                 </div>
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className={cn(
-                      'h-full rounded-full',
-                      row.average < 55 ? 'bg-danger' : row.average < 70 ? 'bg-warning' : 'bg-success',
-                    )}
-                    style={{ width: `${row.average}%` }}
-                  />
-                </div>
+                <Progress
+                  value={row.average}
+                  label={`${locale === 'ar' ? row.skill.nameAr : row.skill.name} · ${t('colMastery')}`}
+                  tone={row.average < 55 ? 'danger' : row.average < 70 ? 'warning' : 'success'}
+                />
               </div>
             ))}
           </CardContent>
