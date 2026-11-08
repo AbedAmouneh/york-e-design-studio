@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { SearchInput } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
 import {
   Table,
   TableBody,
@@ -154,15 +155,12 @@ export function SuperAdminTenants() {
                       <TableCell className="tabular text-end">{row.learners}</TableCell>
                       <TableCell>
                         <span className="flex items-center gap-2.5">
-                          <span className="h-1.5 w-full max-w-[84px] overflow-hidden rounded-full bg-muted">
-                            <span
-                              className={cn(
-                                'block h-full rounded-full',
-                                used > 90 ? 'bg-warning' : 'bg-foreground',
-                              )}
-                              style={{ width: `${Math.min(used, 100)}%` }}
-                            />
-                          </span>
+                          <Progress
+                            value={used}
+                            label={`${schoolName(row.school, locale)} · ${t('saColSeats')}`}
+                            tone={used > 90 ? 'warning' : 'default'}
+                            className="max-w-[84px]"
+                          />
                           <span
                             className={cn(
                               'tabular whitespace-nowrap text-caption',

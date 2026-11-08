@@ -3,6 +3,7 @@ import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Table,
   TableBody,
@@ -124,15 +125,12 @@ export function SuperAdminSeats() {
                   <TableCell className="tabular text-end">{row.school.seatsUsed}</TableCell>
                   <TableCell>
                     <span className="flex items-center gap-2.5">
-                      <span className="h-1.5 w-full max-w-[84px] overflow-hidden rounded-full bg-muted">
-                        <span
-                          className={cn(
-                            'block h-full rounded-full',
-                            row.used > 90 ? 'bg-warning' : 'bg-foreground',
-                          )}
-                          style={{ width: `${Math.min(row.used, 100)}%` }}
-                        />
-                      </span>
+                      <Progress
+                        value={row.used}
+                        label={`${schoolName(row.school, locale)} · ${t('saColAssigned')}`}
+                        tone={row.used > 90 ? 'warning' : 'default'}
+                        className="max-w-[84px]"
+                      />
                       <span className="tabular text-caption text-muted-foreground">
                         {row.used}%
                       </span>
@@ -140,15 +138,12 @@ export function SuperAdminSeats() {
                   </TableCell>
                   <TableCell>
                     <span className="flex items-center gap-2.5">
-                      <span className="h-1.5 w-full max-w-[84px] overflow-hidden rounded-full bg-muted">
-                        <span
-                          className={cn(
-                            'block h-full rounded-full',
-                            row.active < 40 ? 'bg-danger' : 'bg-success',
-                          )}
-                          style={{ width: `${row.active}%` }}
-                        />
-                      </span>
+                      <Progress
+                        value={row.active}
+                        label={`${schoolName(row.school, locale)} · ${t('saColActiveWeekly')}`}
+                        tone={row.active < 40 ? 'danger' : 'success'}
+                        className="max-w-[84px]"
+                      />
                       <span
                         className={cn(
                           'tabular text-caption',

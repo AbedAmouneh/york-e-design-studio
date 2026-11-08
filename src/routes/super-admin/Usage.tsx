@@ -12,6 +12,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { StatCard } from '@/components/app/StatCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
 import { schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
@@ -171,12 +172,10 @@ export function SuperAdminUsage() {
                   <span className="text-foreground">{t(row.labelKey)}</span>
                   <span className="tabular text-muted-foreground">{row.share}%</span>
                 </div>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className="block h-full rounded-full bg-foreground"
-                    style={{ width: `${row.share}%` }}
-                  />
-                </span>
+                <Progress
+                  value={row.share}
+                  label={`${t(row.labelKey)} · ${t('saDevices')}`}
+                />
               </div>
             ))}
             <p className="pt-1 text-caption text-muted-foreground">{t('saDevicesNote')}</p>
@@ -202,15 +201,11 @@ export function SuperAdminUsage() {
                     {row.share}%
                   </span>
                 </div>
-                <span className="block h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn(
-                      'block h-full rounded-full',
-                      row.share < 40 ? 'bg-warning' : 'bg-foreground',
-                    )}
-                    style={{ width: `${row.share}%` }}
-                  />
-                </span>
+                <Progress
+                  value={row.share}
+                  label={`${t(row.labelKey)} · ${t('saOfActiveSchools')}`}
+                  tone={row.share < 40 ? 'warning' : 'default'}
+                />
               </div>
             ))}
           </CardContent>

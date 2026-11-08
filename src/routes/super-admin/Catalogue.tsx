@@ -2,6 +2,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Table,
   TableBody,
@@ -105,15 +106,12 @@ export function SuperAdminCatalogue() {
                     <TableCell className="tabular text-end">{row.activities}</TableCell>
                     <TableCell>
                       <span className="flex items-center gap-2.5">
-                        <span className="h-1.5 w-full max-w-[72px] overflow-hidden rounded-full bg-muted">
-                          <span
-                            className={cn(
-                              'block h-full rounded-full',
-                              percent === 100 ? 'bg-success' : 'bg-warning',
-                            )}
-                            style={{ width: `${percent}%` }}
-                          />
-                        </span>
+                        <Progress
+                          value={percent}
+                          label={`${locale === 'ar' ? row.course.titleAr : row.course.title} · ${t('saColTagged')}`}
+                          tone={percent === 100 ? 'success' : 'warning'}
+                          className="max-w-[72px]"
+                        />
                         <span
                           className={cn(
                             'tabular text-caption',
