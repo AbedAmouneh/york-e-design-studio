@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input, SearchInput } from '@/components/ui/input'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
 import { useStudioState } from '@/lib/studioState'
@@ -297,14 +298,25 @@ export function TeacherAssignActivity() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="flex flex-col gap-1.5">
+              {/*
+                Was `<Input type="date">`, which opened Chrome's own grey
+                calendar: system font, none of our tokens, the browser's locale
+                rather than ours, and a British week in Arabic. It was the last
+                piece of unstyled browser chrome in the studio.
+
+                A div wrapper rather than a label, because the trigger is a
+                button and wrapping a button in a label makes a click toggle
+                the label instead of opening the popover.
+              */}
+              <div className="flex flex-col gap-1.5">
                 <span className="text-small font-medium text-foreground">{t('colDue')}</span>
-                <Input
-                  type="date"
+                <DatePicker
                   value={dueOn}
-                  onChange={(event) => setDueOn(event.target.value)}
+                  onChange={setDueOn}
+                  label={t('colDue')}
+                  placeholder={t('dsPickDate')}
                 />
-              </label>
+              </div>
               <label className="flex flex-col gap-1.5">
                 <span className="text-small font-medium text-foreground">
                   {t('tchAttemptsAllowed')}
