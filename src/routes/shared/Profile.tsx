@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
 import { schoolName } from '@/lib/names'
 import { cn, initials } from '@/lib/utils'
@@ -185,7 +186,7 @@ export function SharedProfile() {
         <Button variant="accent" size="sm" onClick={() => setSaved(true)}>
           {t('save')}
         </Button>
-        {saved ? <span className="text-small text-success">{t('saved')}</span> : null}
+        <SavedIndicator saved={saved} label={t('saved')} />
       </div>
     </Page>
   )
