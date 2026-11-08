@@ -88,6 +88,61 @@ export const designSystem = {
     ar: 'اكتمل النقل: جميع تأكيدات الحفظ السبعة المكتوبة يدوياً وثلاثة وعشرون شريط تقدم مرسوماً يدوياً تستخدم الآن المكوّنات المشتركة. وتُركت ثلاثة أشرطة عمداً، منها شريط الفئة المبكرة الذي يعدّ مربعات ممتلئة، لأن ثلاثة من ثلاثة يعدّها طفل في السادسة أما ٦٧٪ فلا.',
   },
 
+  // The calendar comparison. Three variants, one decision.
+  calCompareTitle: { en: 'Choosing the calendar', ar: 'اختيار التقويم' },
+  calCompareSubtitle: {
+    en: 'Three variants that differ in one way only: how much the grid is allowed to know about the school.',
+    ar: 'ثلاثة خيارات تختلف في شيء واحد فقط: مقدار ما يُسمح للتقويم بمعرفته عن المدرسة.',
+  },
+  calWhyTitle: { en: 'Why this axis', ar: 'لماذا هذا المحور' },
+  calWhyBody: {
+    en: 'A generic date picker is a solved problem and nobody needs York Press to redraw one. Choosing between three skins would teach us nothing. Choosing how much the picker knows is a product decision, and each step up costs real data.',
+    ar: 'منتقي التواريخ العادي مسألة محلولة، ولا أحد يحتاج أن تعيد يورك برس رسمها. والاختيار بين ثلاثة أشكال لا يعلّمنا شيئاً. أما اختيار مقدار ما يعرفه المنتقي فقرار منتَج، وكل درجة إضافية تكلّف بيانات حقيقية.',
+  },
+  calCost: { en: 'Costs', ar: 'التكلفة' },
+
+  calVariantPlainTitle: { en: 'A. Plain', ar: 'أ. مجرد' },
+  calVariantPlainBlurb: {
+    en: 'Dates and nothing else. What every library ships.',
+    ar: 'تواريخ لا غير. وهو ما تقدمه كل المكتبات الجاهزة.',
+  },
+  calVariantPlainCost: {
+    en: 'Nothing. It also tells a teacher nothing, so a deadline can land in the Easter break and the platform will not mention it.',
+    ar: 'لا شيء. كما أنه لا يخبر المعلم بشيء، فقد يقع موعد التسليم في عطلة الفصح دون أن تنبّه المنصة إلى ذلك.',
+  },
+
+  calVariantTermTitle: { en: 'B. Knows the year', ar: 'ب. يعرف السنة الدراسية' },
+  calVariantTermBlurb: {
+    en: 'Weekends, closures and the end of term are marked. Closed days stay clickable.',
+    ar: 'تُعلَّم عطل نهاية الأسبوع والإغلاقات ونهاية الفصل. وتبقى الأيام المغلقة قابلة للاختيار.',
+  },
+  calVariantTermCost: {
+    en: 'Needs a real holiday list per branch, which does not exist yet and cannot be guessed. Beirut, Dubai and Amman do not share a weekend either.',
+    ar: 'يحتاج قائمة عطل حقيقية لكل فرع، وهي غير موجودة ولا يمكن تخمينها. كما أن بيروت ودبي وعمّان لا تتشارك عطلة نهاية الأسبوع نفسها.',
+  },
+
+  calVariantLoadTitle: { en: 'C. Knows the workload', ar: 'ج. يعرف العبء' },
+  calVariantLoadBlurb: {
+    en: 'Everything in B, plus what is already due that day across the teacher’s classes.',
+    ar: 'كل ما في «ب»، إضافة إلى ما هو مستحق أصلاً ذلك اليوم في صفوف المعلم.',
+  },
+  calVariantLoadCost: {
+    en: 'Needs the assignment data live at the moment of picking. This is the one a competitor cannot copy from a component library, and the one that stops three deadlines landing on one Tuesday.',
+    ar: 'يحتاج بيانات الواجبات لحظة الاختيار. وهو الخيار الذي لا يستطيع منافس نسخه من مكتبة مكوّنات، والذي يمنع وقوع ثلاثة مواعيد تسليم في ثلاثاء واحد.',
+  },
+
+  calMonthViewTitle: { en: 'The same grid as a month view', ar: 'الشبكة نفسها كعرض شهري' },
+  calMonthViewBlurb: {
+    en: 'One component, a larger size. This is why the choice is a prop and not three files: the calendar screens inherit whichever variant wins.',
+    ar: 'المكوّن نفسه بحجم أكبر. ولهذا كان الاختيار خاصية لا ثلاثة ملفات: فشاشات التقويم ترث الخيار الفائز أياً كان.',
+  },
+
+  calLunarTitle: { en: 'Before this ships', ar: 'قبل الإطلاق' },
+  calLunarBody: {
+    en: 'Ramadan and Eid here are computed estimates for 1448 AH, marked approximate in the data. Their real dates depend on moon sighting, are declared per country, and differ between Lebanon, the UAE and Jordan. They must come from each branch, and the interface has to be able to say "around" rather than implying certainty.',
+    ar: 'رمضان والعيد هنا تقديرات محسوبة لعام ١٤٤٨ هـ، ومعلَّمة في البيانات بأنها تقريبية. فتواريخها الحقيقية تعتمد على رؤية الهلال، وتُعلَن في كل بلد على حدة، وتختلف بين لبنان والإمارات والأردن. ويجب أن تأتي من كل فرع، وأن تكون الواجهة قادرة على قول «نحو» لا أن توحي باليقين.',
+  },
+
   // Components added later on 7 November
   dsRadioGroup: { en: 'Radio group', ar: 'مجموعة الاختيار' },
   dsDatePicker: { en: 'Date picker', ar: 'منتقي التواريخ' },
