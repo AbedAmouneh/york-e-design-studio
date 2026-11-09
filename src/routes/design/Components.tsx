@@ -144,6 +144,15 @@ export function DesignComponents() {
     return () => window.clearTimeout(timer)
   }, [saved])
 
+  const browserChrome: StringKey[] = [
+    'dsChromeSelection',
+    'dsChromeScrollbar',
+    'dsChromeAutofill',
+    'dsChromeFocus',
+    'dsChromeMotion',
+    'dsChromeTouch',
+  ]
+
   const missing: StringKey[] = [
     'dsOpenHijri',
     'dsOpenNumerals',
@@ -651,6 +660,29 @@ export function DesignComponents() {
             .learner-scope {'{'} --primary: var(--learner-primary) {'}'}
           </p>
         </div>
+      </Section>
+
+      {/*
+        The browser's own furniture.
+
+        Listed rather than demonstrated, because none of it can be shown in a
+        still: selection needs a selection, a scrollbar needs something to
+        scroll, autofill needs a saved password. A developer reading this page
+        is the only audience who will ever see these written down, and the
+        thing they most need to know is that all six live in one stylesheet.
+      */}
+      <Section title={t('dsBrowserChrome')} note={t('dsBrowserChromeNote')}>
+        <ul className="space-y-2 px-5 py-4">
+          {browserChrome.map((key) => (
+            <li key={key} className="flex gap-2.5">
+              <span
+                className="mt-2 h-1 w-1 flex-none rounded-full bg-border-strong"
+                aria-hidden
+              />
+              <span className="min-w-0 text-small text-foreground">{t(key)}</span>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section title={t('dsNotBuilt')} note={t('dsNotBuiltNote')}>
