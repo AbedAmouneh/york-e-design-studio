@@ -1,11 +1,18 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import {
+  CalendarGrid,
+  CalendarNotes,
+  MonthHeader,
+  startOfMonth,
+  toISO,
+} from '@/components/ui/calendar'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
+import { DEFAULT_SCHOOL_ID } from '@/data/seed'
 
 /**
  * Student calendar.
@@ -13,116 +20,125 @@ import type { StringKey } from '@/i18n'
  * One class, so none of the filtering the teacher needs. What a student needs
  * instead is the difference between a lesson and a deadline, which is why due
  * dates carry the accent and lessons do not.
+ *
+ * On the same grid as the teacher screen and the date picker, which it had to
+ * be: this one carried the same hardcoded Monday week, the same 28 cells with
+ * no leading offset, and the same decorative month chevrons. Three copies of a
+ * month grid meant three copies of every bug in it.
+ *
+ * A student sees the school calendar for the same reason a teacher does. Eid
+ * and the end of term are not staff information.
  */
 
 interface Event {
-  day: number
+  /** Real ISO date. The old version held a day number and could not change month. */
+  on: string
   labelKey: StringKey
   kind: 'lesson' | 'due' | 'assessment'
   subjectKey: StringKey
 }
 
 const events: Event[] = [
-  { day: 2, labelKey: 'stuEvtEquivalentFractions', kind: 'lesson', subjectKey: 'stuSubjMathematics' },
-  { day: 3, labelKey: 'stuEvtReadingComprehension', kind: 'lesson', subjectKey: 'stuSubjEnglish' },
-  { day: 4, labelKey: 'stuEvtCheck23', kind: 'due', subjectKey: 'stuSubjMathematics' },
-  { day: 5, labelKey: 'stuEvtApply15', kind: 'due', subjectKey: 'stuSubjMathematics' },
-  { day: 9, labelKey: 'stuEvtWaterCycle', kind: 'lesson', subjectKey: 'stuSubjScience' },
-  { day: 10, labelKey: 'stuEvtAddingFractions', kind: 'lesson', subjectKey: 'stuSubjMathematics' },
-  { day: 12, labelKey: 'stuEvtEndOfUnitCheck', kind: 'assessment', subjectKey: 'stuSubjMathematics' },
-  { day: 17, labelKey: 'stuEvtPhotosynthesis', kind: 'lesson', subjectKey: 'stuSubjScience' },
-  { day: 19, labelKey: 'stuEvtPractise24', kind: 'due', subjectKey: 'stuSubjMathematics' },
-  { day: 24, labelKey: 'stuEvtParagraphStructure', kind: 'lesson', subjectKey: 'stuSubjEnglish' },
+  {
+    on: '2027-02-02',
+    labelKey: 'stuEvtEquivalentFractions',
+    kind: 'lesson',
+    subjectKey: 'stuSubjMathematics',
+  },
+  {
+    on: '2027-02-03',
+    labelKey: 'stuEvtReadingComprehension',
+    kind: 'lesson',
+    subjectKey: 'stuSubjEnglish',
+  },
+  { on: '2027-02-04', labelKey: 'stuEvtCheck23', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  { on: '2027-02-05', labelKey: 'stuEvtApply15', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  { on: '2027-02-09', labelKey: 'stuEvtWaterCycle', kind: 'lesson', subjectKey: 'stuSubjScience' },
+  {
+    on: '2027-02-10',
+    labelKey: 'stuEvtAddingFractions',
+    kind: 'lesson',
+    subjectKey: 'stuSubjMathematics',
+  },
+  {
+    on: '2027-02-12',
+    labelKey: 'stuEvtEndOfUnitCheck',
+    kind: 'assessment',
+    subjectKey: 'stuSubjMathematics',
+  },
+  {
+    on: '2027-02-17',
+    labelKey: 'stuEvtPhotosynthesis',
+    kind: 'lesson',
+    subjectKey: 'stuSubjScience',
+  },
+  { on: '2027-02-19', labelKey: 'stuEvtPractise24', kind: 'due', subjectKey: 'stuSubjMathematics' },
+  {
+    on: '2027-02-24',
+    labelKey: 'stuEvtParagraphStructure',
+    kind: 'lesson',
+    subjectKey: 'stuSubjEnglish',
+  },
 ]
 
-const weekdayKeys: StringKey[] = [
-  'stuMonShort',
-  'stuTueShort',
-  'stuWedShort',
-  'stuThuShort',
-  'stuFriShort',
-  'stuSatShort',
-  'stuSunShort',
-]
+const FEBRUARY_2027 = new Date(2027, 1, 1)
 
 export function StudentCalendar() {
   const { t } = useLocale()
-  const cells = Array.from({ length: 28 }, (_, index) => index + 1)
+  const [month, setMonth] = useState(() => startOfMonth(FEBRUARY_2027))
+  const [selected, setSelected] = useState<Date | null>(null)
+
+  const shift = (by: number) =>
+    setMonth((current) => new Date(current.getFullYear(), current.getMonth() + by, 1))
 
   return (
     <Page>
       <PageHeader
         title={t('navCalendar')}
-        // The class name is data and stays as it is in both languages.
-        subtitle={`${t('stuCalendarMonth')} · Grade 6 Cedar`}
-        actions={
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label={t('stuPreviousMonth')}>
-              <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
-            </Button>
-            <Button variant="ghost" size="icon" aria-label={t('stuNextMonth')}>
-              <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
-            </Button>
-          </div>
-        }
+        // The class name is data and stays as it is in both languages. The
+        // month moved into the grid header, which now says the month actually
+        // on screen rather than the one this screen opened on.
+        subtitle={`${t('term2')} · Grade 6 Cedar`}
       />
 
       <Card>
         <CardContent className="p-3">
-          <div className="grid grid-cols-7 gap-1.5">
-            {weekdayKeys.map((key) => (
-              <div key={key} className="px-2 py-1.5 text-caption font-medium text-muted-foreground">
-                {t(key)}
-              </div>
-            ))}
-
-            {cells.map((day) => {
-              const dayEvents = events.filter((event) => event.day === day)
-              const weekend = day % 7 === 6 || day % 7 === 0
-              const today = day === 10
+          <MonthHeader month={month} onShift={shift} className="mb-2" />
+          <CalendarGrid
+            month={month}
+            selected={selected}
+            onSelect={setSelected}
+            schoolId={DEFAULT_SCHOOL_ID}
+            context="aware"
+            size="full"
+            renderDay={(date) => {
+              const key = toISO(date)
+              const dayEvents = events.filter((event) => event.on === key)
+              if (dayEvents.length === 0) return null
               return (
-                <div
-                  key={day}
-                  className={cn(
-                    'min-h-[104px] rounded border p-1.5',
-                    today ? 'border-foreground' : 'border-border',
-                    weekend ? 'bg-surface' : 'bg-background',
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'tabular mb-1 inline-flex h-5 min-w-5 items-center justify-center rounded px-1 text-caption',
-                      today
-                        ? 'bg-foreground font-semibold text-background'
-                        : 'text-muted-foreground',
-                    )}
-                  >
-                    {day}
-                  </span>
-
-                  <div className="space-y-1">
-                    {dayEvents.map((event, index) => (
-                      <div
-                        key={`${day}-${index}`}
-                        title={`${t(event.subjectKey)}: ${t(event.labelKey)}`}
-                        className={cn(
-                          'truncate rounded border px-1.5 py-1 text-caption leading-tight',
-                          event.kind === 'lesson'
-                            ? 'border-border text-muted-foreground'
-                            : event.kind === 'due'
-                              ? 'border-accent/50 bg-accent/15 font-medium text-foreground'
-                              : 'border-foreground bg-foreground text-background',
-                        )}
-                      >
-                        {event.kind === 'due' ? t('stuDuePrefix') : ''}
-                        {t(event.labelKey)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <span className="flex flex-col gap-1">
+                  {dayEvents.map((event, index) => (
+                    <span
+                      key={`${key}-${index}`}
+                      title={`${t(event.subjectKey)}: ${t(event.labelKey)}`}
+                      className={cn(
+                        'block truncate rounded border px-1.5 py-1 text-caption leading-tight',
+                        event.kind === 'lesson'
+                          ? 'border-border text-muted-foreground'
+                          : event.kind === 'due'
+                            ? 'border-accent/50 bg-accent/15 font-medium text-foreground'
+                            : 'border-foreground bg-foreground text-background',
+                      )}
+                    >
+                      {event.kind === 'due' ? t('stuDuePrefix') : ''}
+                      {t(event.labelKey)}
+                    </span>
+                  ))}
+                </span>
               )
-            })}
-          </div>
+            }}
+          />
+          <CalendarNotes month={month} schoolId={DEFAULT_SCHOOL_ID} context="aware" />
         </CardContent>
       </Card>
 
