@@ -21,10 +21,15 @@ import { DEFAULT_SCHOOL_ID } from '@/data/seed'
  * Two decisions were settled before this could be written, and only one was
  * open.
  *
- * Numerals were already settled. `formatDate` has used `ar-EG-u-nu-latn` since
- * the Arabic pass: Arabic language, Latin digits. That matches how timetables
- * and exam papers print across Lebanon, the Gulf and Jordan, and it would be
+ * Numerals were already settled. `formatDate` has used `-u-nu-latn` since the
+ * Arabic pass: Arabic language, Latin digits. That matches how timetables and
+ * exam papers print across Lebanon, the Gulf and Jordan, and it would be
  * strange for one control to disagree with every date already on screen.
+ *
+ * The country in that tag was not settled, and turned out to matter: the month
+ * name is شباط in the Levant and فبراير in Egypt and the Gulf, so it comes
+ * from the school rather than from the reader's language. See `calendarLocale`
+ * in `data/schoolCalendar.ts`.
  *
  * The calendar system is the part still open, and this takes the narrow answer
  * rather than pretending to the wide one. Gregorian only, because every
@@ -136,7 +141,7 @@ export function DatePicker({
         </PopoverTrigger>
 
         <PopoverContent className="w-auto p-3">
-          <MonthHeader month={month} onShift={shift} className="mb-2" />
+          <MonthHeader month={month} onShift={shift} schoolId={schoolId} className="mb-2" />
           <CalendarGrid
             month={month}
             selected={selected}
