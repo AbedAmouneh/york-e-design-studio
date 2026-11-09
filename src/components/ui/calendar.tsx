@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
@@ -215,6 +215,7 @@ export function CalendarGrid({
   min,
   max,
   size = 'compact',
+  renderDay,
   className,
 }: {
   month: Date
@@ -226,6 +227,19 @@ export function CalendarGrid({
   min?: string
   max?: string
   size?: 'compact' | 'full'
+  /**
+   * Extra content inside a day cell, for the calendar screens.
+   *
+   * A render prop rather than a baked-in events array, because the two screens
+   * that need it want different things: a teacher sees lessons from five
+   * classes colour coded by class, a student sees their own work split by
+   * whether it is a deadline. Pushing both into the grid would make it a
+   * calendar screen with a date picker hidden inside it.
+   *
+   * Only called for days inside the displayed month. Days from the previous
+   * and next month are shown for shape, not for content.
+   */
+  renderDay?: (date: Date, info: DayContext) => ReactNode
   className?: string
 }) {
   const { locale, t } = useLocale()
@@ -235,7 +249,10 @@ export function CalendarGrid({
   const minDate = min ? new Date(min) : null
   const maxDate = max ? new Date(max) : null
 
-  const cell = size === 'full' ? 'h-16 w-full' : 'h-8 w-8'
+  // `min-h` rather than `h` at full size: a day with four things on it should
+  // grow rather than clip, and a fixed height is how a month view quietly
+  // hides the exact day a teacher most needed to see.
+  const cell = size === 'full' ? 'min-h-[6rem] w-full' : 'h-8 w-8'
 
   return (
     <div className={cn('grid grid-cols-7 gap-0.5', className)}>
@@ -268,6 +285,14 @@ export function CalendarGrid({
         // not a surprise to anyone who works at a school.
         const muted = context === 'aware' && (info.closed || !info.inTerm)
 
+        // The first day of the holiday, or the first of the month when the
+        // holiday started earlier. Everything after it is the same holiday
+        // and does not need telling again.
+        const key = toISO(day)
+        const namesHoliday =
+          info.holiday !== null &&
+          (info.holiday.startsOn === key || day.getDate() === 1)
+
         return (
           <button
             key={day.toISOString()}
@@ -277,9 +302,11 @@ export function CalendarGrid({
             aria-label={dayLabel(day, info, context, locale, t)}
             onClick={() => onSelect(day)}
             className={cn(
-              'relative grid place-items-start justify-items-center rounded transition-colors',
+              'relative grid rounded transition-colors',
               cell,
-              size === 'full' ? 'content-start p-1.5' : 'place-items-center',
+              size === 'full'
+                ? 'content-start justify-items-start border border-border p-1.5 text-start'
+                : 'place-items-center',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               'disabled:pointer-events-none disabled:opacity-30',
               isSelected
@@ -301,11 +328,22 @@ export function CalendarGrid({
               cell 64px tall has room for a word and a person looking at a
               month view came to read it. In the small picker the same
               information goes under the grid instead.
+
+              Named once per range, not once per day. Ramadan runs 8 February
+              to 9 March, so the first version printed "Ramadan" into twenty
+              one consecutive cells, which is the exact noise that got the
+              clever variants rejected. It now appears on the day the range
+              starts, or on the first of the month when the range began in the
+              month before, which is what a wall calendar does.
             */}
-            {size === 'full' && context === 'aware' && info.holiday && !outside ? (
+            {size === 'full' && context === 'aware' && info.holiday && !outside && namesHoliday ? (
               <span className="mt-1 line-clamp-2 w-full text-start text-caption leading-tight text-muted-foreground">
                 {locale === 'ar' ? info.holiday.nameAr : info.holiday.name}
               </span>
+            ) : null}
+
+            {renderDay && !outside ? (
+              <span className="mt-1 w-full min-w-0">{renderDay(day, info)}</span>
             ) : null}
           </button>
         )
