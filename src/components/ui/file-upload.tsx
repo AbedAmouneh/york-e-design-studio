@@ -31,7 +31,8 @@ import { FieldError } from '@/components/ui/input'
  */
 
 function formatSize(bytes: number, locale: 'en' | 'ar') {
-  const tag = locale === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB'
+  // Matches the tags in `lib/utils`, which explain the choice of country.
+  const tag = locale === 'ar' ? 'ar-LB-u-nu-latn' : 'en-GB'
   const kb = bytes / 1024
   if (kb < 1024) return `${new Intl.NumberFormat(tag, { maximumFractionDigits: 0 }).format(kb)} KB`
   return `${new Intl.NumberFormat(tag, { maximumFractionDigits: 1 }).format(kb / 1024)} MB`
