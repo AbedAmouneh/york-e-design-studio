@@ -131,8 +131,8 @@ export const designSystem = {
     ar: 'أربعة مواضع ومكوّن واحد. فشاشتا «المعلم ← التقويم» و«الطالب ← التقويم» كانت كل منهما شبكة شهرية مكتوبة يدوياً إلى أن حلّت محلهما الشبكة المشتركة، ويستخدم منتقي التواريخ و«المعلم ← إسناد نشاط» الشبكة نفسها بحجمها المضغوط.',
   },
   calAppliedBug1: {
-    en: 'Both screens hardcoded a Monday to Sunday weekday row, so the Arabic build showed correct Arabic in the wrong columns. The week now comes from the locale and starts on Saturday in Arabic.',
-    ar: 'كانت الشاشتان تثبّتان صف الأيام من الإثنين إلى الأحد، فظهرت في النسخة العربية كلمات عربية صحيحة في أعمدة خاطئة. والأسبوع الآن يأتي من اللغة ويبدأ بالسبت في العربية.',
+    en: 'Both screens hardcoded a Monday to Sunday weekday row, so the Arabic build showed correct Arabic in the wrong columns. The week now comes from the school, which is the harder half of the fix: reading it from the language instead would still have put Amman on a Beirut week.',
+    ar: 'كانت الشاشتان تثبّتان صف الأيام من الإثنين إلى الأحد، فظهرت في النسخة العربية كلمات عربية صحيحة في أعمدة خاطئة. والأسبوع الآن يأتي من المدرسة، وهذا هو النصف الأصعب من الإصلاح: فقراءته من اللغة كانت ستضع عمّان على أسبوع بيروت.',
   },
   calAppliedBug2: {
     en: 'Both drew 28 cells with no leading blanks, under a comment noting that February 2027 happens to start on a Monday. True for exactly that month in exactly that week convention.',
@@ -141,6 +141,18 @@ export const designSystem = {
   calAppliedBug3: {
     en: 'The previous and next month arrows on both screens had no click handler. They were decoration, and the fixed month in each subtitle was what kept that from showing.',
     ar: 'ولم يكن لسهمَي الشهر السابق والتالي في الشاشتين أي معالج نقر. كانا زينة، والشهر الثابت في العنوان الفرعي هو ما أخفى ذلك.',
+  },
+
+  /*
+    The second question for the branches, alongside the lunar dates.
+
+    It sits in the same warning card because it is the same kind of question:
+    neither of these is ours to settle, and both are wrong by default until a
+    branch answers.
+  */
+  calRegionBody: {
+    en: 'The week itself is also regional, and the studio reads it from the school rather than the language. Beirut and Dubai start on Monday and close Saturday and Sunday; Amman, Cairo and Riyadh start on Saturday and close Friday and Saturday. February is شباط in the Levant and فبراير in Egypt and the Gulf. Each branch needs to confirm its own week and month names, and the UAE in particular changed to a Monday to Friday week in January 2022.',
+    ar: 'والأسبوع نفسه إقليمي، والاستوديو يقرأه من المدرسة لا من اللغة. فبيروت ودبي تبدآن الإثنين وتغلقان السبت والأحد، وعمّان والقاهرة والرياض تبدأ السبت وتغلق الجمعة والسبت. وشهر شباط في المشرق هو فبراير في مصر والخليج. وعلى كل فرع أن يؤكد أسبوعه وأسماء أشهره، والإمارات تحديداً انتقلت إلى أسبوع من الإثنين إلى الجمعة في كانون الثاني ٢٠٢٢.',
   },
 
   calLunarTitle: { en: 'Before this ships', ar: 'قبل الإطلاق' },

@@ -94,7 +94,7 @@ export function DesignCalendar() {
               />
 
               <div className="rounded border border-border p-2.5">
-                <MonthHeader month={month} onShift={shift} className="mb-2" />
+                <MonthHeader month={month} onShift={shift} schoolId={DEFAULT_SCHOOL_ID} className="mb-2" />
                 <CalendarGrid
                   month={month}
                   selected={new Date(dates[variant.context])}
@@ -122,7 +122,7 @@ export function DesignCalendar() {
         </CardHeader>
         <CardContent>
           <p className="mb-3 text-small text-muted-foreground">{t('calMonthViewBlurb')}</p>
-          <MonthHeader month={month} onShift={shift} className="mb-2 max-w-xs" />
+          <MonthHeader month={month} onShift={shift} schoolId={DEFAULT_SCHOOL_ID} className="mb-2 max-w-xs" />
           <CalendarGrid
             month={month}
             selected={new Date(dates.aware)}
@@ -164,7 +164,10 @@ export function DesignCalendar() {
       <Card className="border-warning/40">
         <CardContent className="flex flex-wrap items-start gap-3 p-4">
           <Badge variant="warning">{t('calLunarTitle')}</Badge>
-          <span className="min-w-0 flex-1 text-small text-foreground">{t('calLunarBody')}</span>
+          <div className="min-w-0 flex-1 space-y-2 text-small text-foreground">
+            <p>{t('calLunarBody')}</p>
+            <p>{t('calRegionBody')}</p>
+          </div>
         </CardContent>
       </Card>
     </Page>
