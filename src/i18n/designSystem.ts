@@ -199,6 +199,41 @@ export const designSystem = {
     ar: 'اللمس والتدوير. اختفى الوميض الرمادي الذي تتركه اللمسة على الشاشة، فلكل زر حالة ضغط أصلاً، ولم تعد iOS تكبّر نص الصفحة عند تدوير الهاتف أفقياً.',
   },
 
+  /*
+    Number input and textarea, 9 November.
+
+    Both were migrations rather than new work: the markup already existed in
+    ten places and the job was to make it one thing.
+  */
+  dsNumberInput: { en: 'Number input', ar: 'حقل الأرقام' },
+  dsNumberInputNote: {
+    en: 'Four screens used a bare number field. The native spinners are eleven pixels of system grey and unhittable on a touch screen, so they are hidden and replaced. Typing is the primary path and the buttons are for nudging, which is why the value is held as text while the field is focused and committed on blur.',
+    ar: 'أربع شاشات كانت تستخدم حقل رقم مجرداً. وأسهم المتصفح الأصلية أحد عشر بكسلاً من رمادي النظام ولا يمكن إصابتها على شاشة لمس، فأُخفيت واستُبدلت. والكتابة هي المسار الأساسي والأزرار للتعديل الطفيف، ولهذا تُحفظ القيمة كنص أثناء التركيز وتُثبَّت عند الخروج.',
+  },
+  dsNumberClamp: {
+    en: 'All four had the same bug. A field with min 1 holding 1, where somebody selects the value and types 3, passes through the empty string on the way, and Number(’’) || 1 snapped it back before the 3 arrived.',
+    ar: 'الأربعة كلها كان فيها الخلل نفسه. فحقل حدّه الأدنى ١ ويحمل ١، حين يحدد أحدهم القيمة ويكتب ٣، يمر بالنص الفارغ في طريقه، فيعيده Number بلا قيمة إلى ١ قبل وصول الـ٣.',
+  },
+  dsNumberBounds: {
+    en: 'The bounds were also invisible. All four set min and max and nothing on screen said so, so a teacher could type 150 into a field capped at 100 and the only feedback was the number quietly changing later. The plus disables itself at the ceiling instead.',
+    ar: 'والحدود كانت خفية أيضاً. فالأربعة تضبط حدّاً أدنى وأعلى ولا شيء على الشاشة يقول ذلك، فيستطيع معلم أن يكتب ١٥٠ في حقل سقفه ١٠٠ ولا يجد رداً سوى الرقم يتغير بهدوء لاحقاً. وزر الزائد الآن يُعطَّل عند السقف.',
+  },
+  dsNumberUnmarked: { en: 'Not marked yet', ar: 'لم يُصحَّح بعد' },
+  dsNumberNull: {
+    en: 'null is a real value here, and the marking screen is why. A script nobody has marked and a script marked zero are different facts, and a field that cannot tell them apart shows thirty unmarked submissions as thirty zeros. Clearing the box returns the script to unmarked rather than setting it to nothing.',
+    ar: 'القيمة الفارغة قيمة حقيقية هنا، والسبب شاشة التصحيح. فالورقة التي لم يصححها أحد والورقة التي نالت صفراً أمران مختلفان، والحقل الذي لا يميز بينهما يُظهر ثلاثين ورقة غير مصححة كثلاثين صفراً. وإفراغ الصندوق يعيد الورقة إلى غير مصححة لا إلى لا شيء.',
+  },
+
+  dsTextarea: { en: 'Textarea', ar: 'حقل النص الطويل' },
+  dsTextareaNote: {
+    en: 'Six screens each had their own, with the class list written out by hand, which is how a design system quietly stops being one. They had already drifted: five focused with no ring offset while every Input in the studio has one, so a focused comment box sat a pixel tighter than the field beside it, and none carried the invalid state Input grew last week.',
+    ar: 'ست شاشات لكل منها نسختها، وقائمة الأصناف مكتوبة يدوياً، وهكذا يكفّ نظام التصميم بهدوء عن كونه نظاماً. وقد تباعدت النسخ أصلاً: خمس منها تُركّز بلا إزاحة حلقة بينما كل حقل إدخال في الاستوديو له إزاحة، فجلس صندوق التعليق المركَّز أضيق ببكسل من الحقل المجاور، ولم تحمل أي منها حالة الخطأ التي أُضيفت إلى حقل الإدخال الأسبوع الماضي.',
+  },
+  dsTextareaResize: {
+    en: 'resize-y rather than the browser default of both. Horizontal resize lets a person drag a field wider than the card holding it, which breaks the layout and has never once been what they wanted.',
+    ar: 'تغيير الحجم رأسياً فقط بدل الاتجاهين كما هو افتراضي في المتصفح. فالتوسيع الأفقي يتيح سحب الحقل أعرض من البطاقة التي تحويه، فيكسر التخطيط، ولم يكن يوماً ما أراده أحد.',
+  },
+
   // Components added later on 7 November
   dsRadioGroup: { en: 'Radio group', ar: 'مجموعة الاختيار' },
   dsDatePicker: { en: 'Date picker', ar: 'منتقي التواريخ' },
