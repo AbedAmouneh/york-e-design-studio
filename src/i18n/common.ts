@@ -27,6 +27,14 @@ export const common = {
   // Labels the tier switch as studio furniture. No real student sees it.
   tierSwitchLabel: { en: 'Studio view', ar: 'عرض الاستوديو' },
 
+  /*
+    Number input. The two buttons are icon only, so these are the only names
+    they have, and the field's own label is substituted in so a screen reader
+    hears which number is going up rather than just that one is.
+  */
+  niDecrease: { en: 'Decrease {n}', ar: 'إنقاص {n}' },
+  niIncrease: { en: 'Increase {n}', ar: 'زيادة {n}' },
+
   // Date picker. Month navigation is icon only, so these are its only names.
   dpPreviousMonth: { en: 'Previous month', ar: 'الشهر السابق' },
   dpNextMonth: { en: 'Next month', ar: 'الشهر التالي' },
