@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
@@ -174,16 +175,25 @@ export function SuperAdminProvision() {
             </Badge>
           </CardHeader>
           <CardContent className="space-y-4">
-            <label className="flex max-w-xs flex-col gap-1.5">
+            {/*
+              A div rather than a label, because a label wrapping buttons makes
+              a click on the minus toggle the label instead of the control. The
+              field carries its own accessible name.
+
+              Steps of 50, not 1. Schools are provisioned in the hundreds, and a
+              stepper that walks to 900 one seat at a time is a decoration.
+            */}
+            <div className="flex max-w-xs flex-col gap-1.5">
               <span className="text-small font-medium text-foreground">{t('saColSeats')}</span>
-              <Input
-                type="number"
-                min={1}
+              <NumberInput
                 value={seats}
-                onChange={(event) => setSeats(Number(event.target.value) || 0)}
+                onChange={setSeats}
+                label={t('saColSeats')}
+                min={1}
+                step={50}
               />
               <span className="text-caption text-muted-foreground">{t('saSeatHint')}</span>
-            </label>
+            </div>
 
             <div className="space-y-2">
               <span className="text-small font-medium text-foreground">{t('navCourses')}</span>

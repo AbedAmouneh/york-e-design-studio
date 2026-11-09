@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Input, SearchInput } from '@/components/ui/input'
+import { SearchInput } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Switch } from '@/components/ui/switch'
 import { useLocale } from '@/lib/i18n'
@@ -317,18 +318,25 @@ export function TeacherAssignActivity() {
                   placeholder={t('dsPickDate')}
                 />
               </div>
-              <label className="flex flex-col gap-1.5">
+              {/*
+                One to five, and the clearest case for the buttons: a teacher
+                choosing between two attempts and three is not typing, they are
+                nudging. It was also the worst case for the old field, since
+                `Number('') || 1` snapped an emptied box to 1 before the new
+                digit landed.
+              */}
+              <div className="flex flex-col gap-1.5">
                 <span className="text-small font-medium text-foreground">
                   {t('tchAttemptsAllowed')}
                 </span>
-                <Input
-                  type="number"
+                <NumberInput
+                  value={attempts}
+                  onChange={setAttempts}
+                  label={t('tchAttemptsAllowed')}
                   min={1}
                   max={5}
-                  value={attempts}
-                  onChange={(event) => setAttempts(Number(event.target.value) || 1)}
                 />
-              </label>
+              </div>
             </div>
 
             <label className="flex items-center justify-between gap-4 rounded border border-border px-4 py-3">

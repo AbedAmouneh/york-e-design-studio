@@ -5,7 +5,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { Switch } from '@/components/ui/switch'
 import { SavedIndicator } from '@/components/ui/toast'
 import { useLocale } from '@/lib/i18n'
@@ -101,20 +101,28 @@ export function TeacherGradebookSettings() {
                 {t(category.nameKey)}
               </span>
 
-              <label className="flex items-center gap-2">
+              {/*
+                Weights, where the per cent sign moves inside the field. It was
+                a separate span after the box, which read as a unit floating
+                between two controls rather than belonging to this one.
+
+                The label is the category's name and not the word "weight", so
+                four of these in a row announce themselves as four different
+                fields instead of four identical ones.
+              */}
+              <div className="flex items-center gap-2">
                 <span className="text-caption text-muted-foreground">{t('tchWeight')}</span>
-                <Input
-                  type="number"
+                <NumberInput
                   value={category.weight}
+                  onChange={(next) => update(category.id, { weight: next })}
+                  label={`${t(category.nameKey)} ${t('tchWeight')}`}
                   min={0}
                   max={100}
-                  className="h-8 w-20"
-                  onChange={(event) =>
-                    update(category.id, { weight: Number(event.target.value) || 0 })
-                  }
+                  step={5}
+                  suffix="%"
+                  className="h-9 w-32"
                 />
-                <span className="text-caption text-muted-foreground">%</span>
-              </label>
+              </div>
 
               <label className="flex items-center gap-2">
                 <span className="text-caption text-muted-foreground">{t('tchDropLowest')}</span>
