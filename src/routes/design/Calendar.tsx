@@ -135,6 +135,32 @@ export function DesignCalendar() {
         </CardContent>
       </Card>
 
+      {/*
+        The reach, and what it paid for.
+
+        Three bugs that two separate hand written grids were both carrying.
+        Each of them looked finished: every date was correct, every weekday was
+        correct Arabic, and the month navigation looked like month navigation.
+        They are listed here because this is the only place anyone meets the
+        case for a shared component instead of the assertion.
+      */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('calAppliedTitle')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2.5">
+          <p className="text-small text-muted-foreground">{t('calAppliedBlurb')}</p>
+          <ul className="space-y-2 text-small text-foreground">
+            {(['calAppliedBug1', 'calAppliedBug2', 'calAppliedBug3'] as StringKey[]).map((key) => (
+              <li key={key} className="flex gap-2">
+                <span className="mt-2 h-1 w-1 flex-none rounded-full bg-border-strong" aria-hidden />
+                <span className="min-w-0">{t(key)}</span>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
       <Card className="border-warning/40">
         <CardContent className="flex flex-wrap items-start gap-3 p-4">
           <Badge variant="warning">{t('calLunarTitle')}</Badge>
