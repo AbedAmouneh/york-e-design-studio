@@ -118,6 +118,31 @@ export const designSystem = {
     ar: 'المكوّن نفسه بحجم أكبر. فالخانة بارتفاع ٦٤ بكسل تتسع لكلمة، ومن يفتح عرضاً شهرياً جاء ليقرأ، فيُسمح للشبكة هنا أن تتكلم. ولهذا كان الاختيار خاصية لا ثلاثة ملفات: فشاشات التقويم ترثه.',
   },
 
+  /*
+    What applying the grid actually bought.
+
+    Worth stating plainly on the page rather than only in the commit log,
+    because it is the argument for shared components in general and this is the
+    only place a reader meets the evidence.
+  */
+  calAppliedTitle: { en: 'Where the grid is used', ar: 'أين تُستخدم هذه الشبكة' },
+  calAppliedBlurb: {
+    en: 'Four places, one component. Teacher > Calendar and Student > Calendar were each a hand written month grid until the shared one replaced them, and the date picker and Teacher > Assign activity use the same grid in its compact size.',
+    ar: 'أربعة مواضع ومكوّن واحد. فشاشتا «المعلم ← التقويم» و«الطالب ← التقويم» كانت كل منهما شبكة شهرية مكتوبة يدوياً إلى أن حلّت محلهما الشبكة المشتركة، ويستخدم منتقي التواريخ و«المعلم ← إسناد نشاط» الشبكة نفسها بحجمها المضغوط.',
+  },
+  calAppliedBug1: {
+    en: 'Both screens hardcoded a Monday to Sunday weekday row, so the Arabic build showed correct Arabic in the wrong columns. The week now comes from the locale and starts on Saturday in Arabic.',
+    ar: 'كانت الشاشتان تثبّتان صف الأيام من الإثنين إلى الأحد، فظهرت في النسخة العربية كلمات عربية صحيحة في أعمدة خاطئة. والأسبوع الآن يأتي من اللغة ويبدأ بالسبت في العربية.',
+  },
+  calAppliedBug2: {
+    en: 'Both drew 28 cells with no leading blanks, under a comment noting that February 2027 happens to start on a Monday. True for exactly that month in exactly that week convention.',
+    ar: 'وكانت كل منهما ترسم ٢٨ خانة بلا فراغات في البداية، مع تعليق يوضح أن شباط ٢٠٢٧ يبدأ صدفةً يوم إثنين. وهذا صحيح لذلك الشهر وحده وبذلك التقويم الأسبوعي وحده.',
+  },
+  calAppliedBug3: {
+    en: 'The previous and next month arrows on both screens had no click handler. They were decoration, and the fixed month in each subtitle was what kept that from showing.',
+    ar: 'ولم يكن لسهمَي الشهر السابق والتالي في الشاشتين أي معالج نقر. كانا زينة، والشهر الثابت في العنوان الفرعي هو ما أخفى ذلك.',
+  },
+
   calLunarTitle: { en: 'Before this ships', ar: 'قبل الإطلاق' },
   calLunarBody: {
     en: 'Ramadan and Eid here are computed estimates for 1448 AH, marked approximate in the data. Their real dates depend on moon sighting, are declared per country, and differ between Lebanon, the UAE and Jordan. They must come from each branch, and the interface has to be able to say "around" rather than implying certainty.',
