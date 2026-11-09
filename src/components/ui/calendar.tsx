@@ -2,7 +2,13 @@ import { useMemo, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useLocale } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
-import { dayContext, type DayContext } from '@/data/schoolCalendar'
+import {
+  calendarLocale,
+  dayContext,
+  weekRuleOf,
+  type DayContext,
+} from '@/data/schoolCalendar'
+import { DEFAULT_SCHOOL_ID } from '@/data/seed'
 import type { Locale } from '@/types'
 
 /**
@@ -46,6 +52,9 @@ const MS_DAY = 86400000
  */
 export type CalendarContext = 'plain' | 'aware'
 
+/** Compact is the picker. Full is a month view with room to say things. */
+export type CellSize = 'compact' | 'full'
+
 export function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1)
 }
@@ -64,50 +73,87 @@ export function sameDay(a: Date, b: Date) {
   )
 }
 
-/** Latin digits in both languages, matching `formatDate` in `lib/utils`. */
-export function intlLocale(locale: Locale) {
-  return locale === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB'
+/**
+ * The tag dates are formatted with. Language from the reader, country from the
+ * school. See `calendarLocale` in `data/schoolCalendar.ts` for why both.
+ */
+export function intlLocale(locale: Locale, schoolId: string = DEFAULT_SCHOOL_ID) {
+  return calendarLocale(locale, schoolId)
 }
 
 /**
- * Which weekday the locale starts on.
+ * Which weekday the week starts on.
  *
- * Three spellings because this API changed under us: the original proposal
- * exposed a `weekInfo` getter, the accepted one renamed it `getWeekInfo()`,
- * and older engines have neither. Reading only `weekInfo` returns undefined in
- * current Chrome and silently falls through to Monday, which put the Arabic
- * calendar on a British week. Every date was correct and only the columns were
- * wrong, which is why it survived the first pass.
+ * It comes from the school, not the locale, and the first version read it from
+ * `Intl.Locale` instead. That was wrong twice over. It was wrong in practice,
+ * because `weekInfo` was renamed `getWeekInfo()` between the proposal and the
+ * accepted spec, so reading only the old name returned undefined in Chrome and
+ * fell through to Monday: the Arabic calendar ran a British week with every
+ * date correct and only the columns wrong, which is why it survived a review.
+ *
+ * It was also wrong in principle, which took longer to see. Even reading the
+ * API correctly, `ar-LB` answers Monday and `ar-JO` answers Saturday, so the
+ * day a week starts on is a fact about a country and not about a language. A
+ * Beirut school that teaches in Arabic still starts on Monday, and a Jordanian
+ * school that teaches in English still starts on Saturday. Asking the reader's
+ * language was asking the wrong question, however carefully.
  */
-export function firstWeekday(locale: Locale) {
-  const tag = intlLocale(locale)
-  type WithWeekInfo = Intl.Locale & {
-    getWeekInfo?: () => { firstDay: number }
-    weekInfo?: { firstDay: number }
-  }
-  const resolved = new Intl.Locale(tag) as WithWeekInfo
-  const info = resolved.getWeekInfo?.() ?? resolved.weekInfo
-  const firstDay = info?.firstDay ?? (locale === 'ar' ? 6 : 1)
-  return firstDay % 7
+export function firstWeekday(schoolId: string) {
+  return weekRuleOf(schoolId).weekStart % 7
 }
 
-export function useMonthGrid(month: Date, locale: Locale) {
-  const weekStart = firstWeekday(locale)
-  const tag = intlLocale(locale)
+export function useMonthGrid(month: Date, locale: Locale, schoolId: string, size: CellSize) {
+  const weekStart = firstWeekday(schoolId)
+  const tag = intlLocale(locale, schoolId)
 
   const weekdays = useMemo(() => {
-    const format = new Intl.DateTimeFormat(tag, { weekday: 'narrow' })
+    /*
+      English gets Mon, Tue, Wed. Arabic gets س, ح, ن.
+
+      Not a shortcut, and not inconsistency for its own sake. `narrow` in
+      English is S S M T W T F, where two pairs are indistinguishable, and
+      `short` in Arabic is the full word السبت, which is not an abbreviation at
+      all and does not fit a column. Arabic wall calendars use the single
+      letters, so each language is getting the form it actually uses.
+
+      The compact picker stays narrow in both, because an eight pixel wide cell
+      has no room for Wed and the month name above it already carries the
+      context.
+    */
+    const style = size === 'full' && locale === 'en' ? 'short' : 'narrow'
+    const format = new Intl.DateTimeFormat(tag, { weekday: style })
     // 4 January 1970 was a Sunday, a stable base for day zero.
     return Array.from({ length: 7 }, (_, i) =>
       format.format(new Date(Date.UTC(1970, 0, 4 + ((weekStart + i) % 7)))),
     )
-  }, [tag, weekStart])
+  }, [tag, weekStart, size, locale])
 
   const days = useMemo(() => {
     const first = startOfMonth(month)
     const lead = (first.getDay() - weekStart + 7) % 7
     const start = new Date(first.getTime() - lead * MS_DAY)
-    return Array.from({ length: 42 }, (_, i) => new Date(start.getTime() + i * MS_DAY))
+    const all = Array.from({ length: 42 }, (_, i) => new Date(start.getTime() + i * MS_DAY))
+
+    /*
+      Trim trailing weeks that contain none of this month.
+
+      Six rows is the worst case, not the normal one. February 2027 starts on a
+      Monday and has 28 days, so on a Monday week it fills exactly four rows and
+      the other two were drawn as fourteen empty cells. In the compact picker
+      that is a shrug; in the month view it was two full rows of nothing, about
+      a third of the screen.
+
+      Only trailing rows go. A leading row is never empty, since the first of
+      the month is in it by construction.
+    */
+    const weeks = Math.ceil(all.length / 7)
+    let keep = weeks
+    while (keep > 1) {
+      const week = all.slice((keep - 1) * 7, keep * 7)
+      if (week.some((day) => day.getMonth() === month.getMonth())) break
+      keep -= 1
+    }
+    return all.slice(0, keep * 7)
   }, [month, weekStart])
 
   return { weekdays, days }
@@ -116,19 +162,27 @@ export function useMonthGrid(month: Date, locale: Locale) {
 export function MonthHeader({
   month,
   onShift,
+  schoolId = DEFAULT_SCHOOL_ID,
   className,
 }: {
   month: Date
   onShift: (by: number) => void
+  /**
+   * Only here for the month name, which is regional in Arabic: this header is
+   * where شباط and فبراير differ, and getting it from the reader's language
+   * alone showed a Jordanian teacher the Egyptian calendar.
+   */
+  schoolId?: string
   className?: string
 }) {
   const { locale, dir, t } = useLocale()
   const label = useMemo(
     () =>
-      new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric' }).format(
-        month,
-      ),
-    [locale, month],
+      new Intl.DateTimeFormat(intlLocale(locale, schoolId), {
+        month: 'long',
+        year: 'numeric',
+      }).format(month),
+    [locale, schoolId, month],
   )
 
   // Previous and next, not left and right, so they swap in Arabic. One of the
@@ -171,10 +225,11 @@ function dayLabel(
   info: DayContext,
   context: CalendarContext,
   locale: Locale,
+  schoolId: string,
   t: (key: Parameters<ReturnType<typeof useLocale>['t']>[0]) => string,
 ) {
   const parts = [
-    new Intl.DateTimeFormat(intlLocale(locale), {
+    new Intl.DateTimeFormat(intlLocale(locale, schoolId), {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -226,7 +281,7 @@ export function CalendarGrid({
   context?: CalendarContext
   min?: string
   max?: string
-  size?: 'compact' | 'full'
+  size?: CellSize
   /**
    * Extra content inside a day cell, for the calendar screens.
    *
@@ -243,8 +298,8 @@ export function CalendarGrid({
   className?: string
 }) {
   const { locale, t } = useLocale()
-  const { weekdays, days } = useMonthGrid(month, locale)
-  const tag = intlLocale(locale)
+  const { weekdays, days } = useMonthGrid(month, locale, schoolId, size)
+  const tag = intlLocale(locale, schoolId)
   const today = new Date()
   const minDate = min ? new Date(min) : null
   const maxDate = max ? new Date(max) : null
@@ -299,7 +354,7 @@ export function CalendarGrid({
             type="button"
             disabled={blocked}
             aria-current={isToday ? 'date' : undefined}
-            aria-label={dayLabel(day, info, context, locale, t)}
+            aria-label={dayLabel(day, info, context, locale, schoolId, t)}
             onClick={() => onSelect(day)}
             className={cn(
               'relative grid rounded transition-colors',
@@ -385,7 +440,7 @@ export function CalendarNotes({
       const date = new Date(month.getFullYear(), month.getMonth(), day)
       const info = dayContext(date, schoolId)
 
-      if (info.holiday && !seen.has(info.holiday.name)) {
+      if (info.holiday !== null && !seen.has(info.holiday.name)) {
         seen.add(info.holiday.name)
         const name = locale === 'ar' ? info.holiday.nameAr : info.holiday.name
 
