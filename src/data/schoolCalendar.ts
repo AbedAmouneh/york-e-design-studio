@@ -1,5 +1,5 @@
-import { assignments, terms } from './seed'
-import type { Term } from '@/types'
+import { assignments, schools, terms } from './seed'
+import type { Locale, Term } from '@/types'
 
 /**
  * The school calendar: what a date means to a school, as opposed to what it
@@ -25,6 +25,73 @@ import type { Term } from '@/types'
  * for a long time, which is why it is flagged in the data itself rather than
  * in a ticket somewhere.
  */
+
+/**
+ * Which days a country's school week runs on, and what the month is called.
+ *
+ * This table exists because the Arabic build disproved two assumptions at
+ * once, and both had survived a review.
+ *
+ * The first was that the first day of the week is a property of the language.
+ * It is not. It is a property of the country, and the countries York sells to
+ * disagree: Beirut and Dubai start on Monday, Amman and Cairo and Riyadh start
+ * on Saturday. Reading it from the locale put Jordan on a Beirut week.
+ *
+ * The second was that Arabic is one calendar. The Levant says شباط and Egypt
+ * and the Gulf say فبراير. Both are correct, and a Jordanian teacher shown
+ * فبراير is being shown a foreign calendar in their own language. The locale
+ * tag therefore has to carry the country, which is why `calendarLocale` builds
+ * `ar-JO` rather than a single `ar`.
+ *
+ * The weekend moved in here for the same reason. The UAE changed to a Monday
+ * to Friday week with a Saturday and Sunday weekend in January 2022, so the
+ * old rule of "Friday and Saturday everywhere except Lebanon" was wrong for
+ * Dubai, which is the second largest market in the seed.
+ *
+ * None of this is settled by us. It is a question for each branch, and the
+ * table is the shape of the answer rather than the answer itself.
+ */
+export interface WeekRule {
+  /** 0 Sunday through 6 Saturday, matching `Date.getDay()`. */
+  weekStart: number
+  /** The two days school is closed. */
+  weekendDays: number[]
+}
+
+export const weekRules: Record<string, WeekRule> = {
+  LB: { weekStart: 1, weekendDays: [6, 0] },
+  AE: { weekStart: 1, weekendDays: [6, 0] },
+  JO: { weekStart: 6, weekendDays: [5, 6] },
+  EG: { weekStart: 6, weekendDays: [5, 6] },
+  SA: { weekStart: 6, weekendDays: [5, 6] },
+  IQ: { weekStart: 6, weekendDays: [5, 6] },
+  SY: { weekStart: 6, weekendDays: [5, 6] },
+  MA: { weekStart: 1, weekendDays: [6, 0] },
+  TR: { weekStart: 1, weekendDays: [6, 0] },
+  GR: { weekStart: 1, weekendDays: [6, 0] },
+  GB: { weekStart: 1, weekendDays: [6, 0] },
+}
+
+const FALLBACK_RULE: WeekRule = { weekStart: 1, weekendDays: [6, 0] }
+
+export function countryCodeOf(schoolId: string): string {
+  return schools.find((school) => school.id === schoolId)?.countryCode ?? 'LB'
+}
+
+export function weekRuleOf(schoolId: string): WeekRule {
+  return weekRules[countryCodeOf(schoolId)] ?? FALLBACK_RULE
+}
+
+/**
+ * The tag every date in a calendar is formatted with.
+ *
+ * Latin digits in both languages, which was settled during the Arabic pass and
+ * matches how timetables and exam papers print across all three markets. The
+ * country is what is new: it decides whether February is شباط or فبراير.
+ */
+export function calendarLocale(locale: Locale, schoolId: string): string {
+  return locale === 'ar' ? `ar-${countryCodeOf(schoolId)}-u-nu-latn` : 'en-GB'
+}
 
 export type HolidayKind = 'public' | 'school' | 'religious'
 
@@ -150,13 +217,16 @@ export function isClosed(date: Date, schoolId: string): boolean {
   return holiday.kind !== 'religious' || !holiday.name.includes('Ramadan')
 }
 
-/** Weekend, which is not the same two days everywhere we sell. */
+/**
+ * Weekend, which is not the same two days everywhere we sell.
+ *
+ * This used to read "Friday and Saturday unless the school is Cedar", which
+ * was a guess from a school id and was wrong for Dubai: the UAE moved to a
+ * Monday to Friday week with a Saturday and Sunday weekend in January 2022.
+ * It now comes from the country, via `weekRules`.
+ */
 export function isWeekend(date: Date, schoolId: string): boolean {
-  const day = date.getDay()
-  // Friday and Saturday across the Arab branches, Saturday and Sunday for the
-  // rest. Hardcoding Sat/Sun would put a deadline on a Friday in Amman.
-  const arabWeekend = schoolId !== 'sch-cedar'
-  return arabWeekend ? day === 5 || day === 6 : day === 6 || day === 0
+  return weekRuleOf(schoolId).weekendDays.includes(date.getDay())
 }
 
 /** How many things are already due that day, across the given classes. */
