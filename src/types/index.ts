@@ -42,6 +42,25 @@ export interface School {
   cityAr: string
   country: string
   countryAr: string
+  /**
+   * ISO 3166-1 alpha-2, and not decoration.
+   *
+   * `country` above is a label to print. This one is read by the calendar, and
+   * three things depend on it that a language tag alone gets wrong:
+   *
+   *   The Arabic month names split by region. Lebanon, Syria, Jordan and Iraq
+   *   say شباط; Egypt and the Gulf say فبراير. Both are correct Arabic and
+   *   neither is correct everywhere York sells.
+   *
+   *   The week does not start on the same day. Lebanon and the UAE start on
+   *   Monday; Jordan, Egypt and Saudi Arabia start on Saturday.
+   *
+   *   The weekend is not the same two days. Lebanon and the UAE close Saturday
+   *   and Sunday; Jordan, Egypt and Saudi Arabia close Friday and Saturday.
+   *
+   * See `weekRules` in `data/schoolCalendar.ts`.
+   */
+  countryCode: string
   locale: Locale
   gradingScale: GradingScale
   academicYear: string
