@@ -407,10 +407,23 @@ export const teacher = {
   tchShow: { en: 'Show', ar: 'إظهار' },
   tchClearAll: { en: 'Clear all', ar: 'ألغِ تحديد الكل' },
   tchSelectAll: { en: 'Select all', ar: 'حدد الكل' },
-  tchDuePrefix: { en: 'Due: ', ar: 'موعد التسليم: ' },
-  tchEvtCheck23Due: { en: 'Check 2.3 due', ar: 'تسليم تحقق 2.3' },
-  tchEvtApply15Due: { en: 'Apply 1.5 due', ar: 'تسليم تطبيق 1.5' },
-  tchEvtPractise24Due: { en: 'Practise 2.4 due', ar: 'تسليم تدريب 2.4' },
+  /*
+    The deadline prefix, and the three labels under it.
+
+    This read "Due: Check 2.3 due" until the month view was wide enough to show
+    the whole chip. Both halves carried the word: the prefix said it and every
+    label repeated it. In Arabic it was worse, because "موعد التسليم: تسليم
+    تحقق 2.3" is long enough that the cell truncated it and the duplication was
+    hidden behind an ellipsis rather than visible.
+
+    The labels are now the activity's own name and the prefix is the only place
+    the deadline is stated. The Arabic prefix is the short form a timetable
+    uses, because the long one leaves no room for the name it introduces.
+  */
+  tchDuePrefix: { en: 'Due: ', ar: 'تسليم: ' },
+  tchEvtCheck23Due: { en: 'Check 2.3', ar: 'تحقق 2.3' },
+  tchEvtApply15Due: { en: 'Apply 1.5', ar: 'تطبيق 1.5' },
+  tchEvtPractise24Due: { en: 'Practise 2.4', ar: 'تدريب 2.4' },
   tchEvtAddingFractions: { en: 'Adding fractions practice', ar: 'تدريب على جمع الكسور' },
   tchEvtRatioPractice: { en: 'Ratio practice', ar: 'تدريب على النسبة' },
   tchEvtRatioAssessment: { en: 'Ratio assessment', ar: 'تقييم النسبة' },
