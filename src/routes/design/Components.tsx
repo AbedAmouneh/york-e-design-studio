@@ -39,6 +39,8 @@ import { Progress } from '@/components/ui/progress'
 import { RadioGroup, RadioItem } from '@/components/ui/radio-group'
 import { DatePicker } from '@/components/ui/date-picker'
 import { FileUpload } from '@/components/ui/file-upload'
+import { NumberInput } from '@/components/ui/number-input'
+import { Textarea } from '@/components/ui/textarea'
 import { PersonAvatar } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { Label } from '@/components/ui/label'
@@ -109,6 +111,7 @@ function Spec({ label, code, children }: { label: string; code: string; children
     <div className="grid items-center gap-3 border-b border-border px-5 py-3 last:border-0 md:grid-cols-[140px_minmax(0,220px)_1fr]">
       <span className="text-small text-muted-foreground">{label}</span>
       <span className="flex min-w-0 items-center gap-2">{children}</span>
+      {/* Stays left to right in Arabic. The rule is on `code` in index.css. */}
       <code className="block overflow-x-auto whitespace-pre font-mono text-caption text-foreground">
         {code}
       </code>
@@ -135,6 +138,9 @@ export function DesignComponents() {
   const [saved, setSaved] = useState(false)
   const [reportsClose, setReportsClose] = useState('end')
   const [due, setDue] = useState('2027-02-26')
+  const [score, setScore] = useState(16)
+  const [attempts, setAttempts] = useState(2)
+  const [weight, setWeight] = useState(40)
 
   // The saved indicator is the only thing on this page with real behaviour, so
   // it clears itself rather than sitting there forever after one click.
@@ -328,9 +334,9 @@ export function DesignComponents() {
             <RadioItem value="open" label={t('dsRadioNever')} />
             <RadioItem value="locked" label={t('dsStateDisabled')} disabled />
           </RadioGroup>
-          <p className="mt-3 font-mono text-caption text-muted-foreground">
+          <code className="mt-3 block font-mono text-caption text-muted-foreground">
             &lt;RadioGroup value onValueChange label&gt;&lt;RadioItem /&gt;
-          </p>
+          </code>
         </div>
       </Section>
 
@@ -366,6 +372,104 @@ export function DesignComponents() {
         </Spec>
       </Section>
 
+      {/*
+        Number input, shown at three of its four real bounds rather than with
+        invented ones. The marking field runs 0 to the activity's points, the
+        attempts field 1 to 5, and the weight field 0 to 100 in fives with the
+        unit inside the box.
+      */}
+      <Section title={t('dsNumberInput')} note={t('dsNumberInputNote')}>
+        <Spec label={t('colScore')} code="<NumberInput value onChange label min max />">
+          <NumberInput
+            value={score}
+            onChange={setScore}
+            label={t('colScore')}
+            min={0}
+            max={20}
+            className="w-32"
+          />
+        </Spec>
+        <Spec label={t('tchAttemptsAllowed')} code="min={1} max={5}  plus disables at 5">
+          <NumberInput
+            value={attempts}
+            onChange={setAttempts}
+            label={t('tchAttemptsAllowed')}
+            min={1}
+            max={5}
+            className="w-32"
+          />
+        </Spec>
+        <Spec label={t('tchWeight')} code='step={5} suffix="%"'>
+          <NumberInput
+            value={weight}
+            onChange={setWeight}
+            label={t('tchWeight')}
+            min={0}
+            max={100}
+            step={5}
+            suffix="%"
+            className="w-36"
+          />
+        </Spec>
+        <Spec label={t('dsNumberUnmarked')} code="value={null}  onClear reverts to unmarked">
+          <NumberInput
+            value={null}
+            onChange={() => undefined}
+            onClear={() => undefined}
+            label={t('colScore')}
+            min={0}
+            max={20}
+            className="w-32"
+          />
+        </Spec>
+        <Spec label={t('dsStateError')} code="<NumberInput invalid />">
+          <NumberInput
+            value={0}
+            onChange={() => undefined}
+            label={t('colScore')}
+            invalid
+            className="w-32"
+          />
+        </Spec>
+        <Spec label={t('dsStateDisabled')} code="<NumberInput disabled />">
+          <NumberInput
+            value={3}
+            onChange={() => undefined}
+            label={t('colScore')}
+            disabled
+            className="w-32"
+          />
+        </Spec>
+        <div className="space-y-2 border-b border-border px-5 py-4">
+          <p className="text-small text-foreground">{t('dsNumberClamp')}</p>
+          <p className="text-small text-foreground">{t('dsNumberBounds')}</p>
+          <p className="text-small text-foreground">{t('dsNumberNull')}</p>
+        </div>
+      </Section>
+
+      <Section title={t('dsTextarea')} note={t('dsTextareaNote')}>
+        <Spec label={t('dsStateRest')} code="<Textarea />  rows=3, text-small">
+          <Textarea placeholder={t('tchFeedbackPlaceholder')} aria-label={t('tchFeedback')} />
+        </Spec>
+        <Spec label="comfortable" code='<Textarea size="comfortable" />  text-body, px-4 py-3'>
+          <Textarea
+            size="comfortable"
+            rows={2}
+            placeholder={t('stuWriteYourAnswer')}
+            aria-label={t('stuWriteYourAnswer')}
+          />
+        </Spec>
+        <Spec label={t('dsStateError')} code="<Textarea invalid />">
+          <Textarea invalid rows={2} aria-label={t('tchFeedback')} />
+        </Spec>
+        <Spec label={t('dsStateDisabled')} code="<Textarea disabled />">
+          <Textarea disabled rows={2} aria-label={t('tchFeedback')} />
+        </Spec>
+        <div className="px-5 py-4">
+          <p className="text-small text-foreground">{t('dsTextareaResize')}</p>
+        </div>
+      </Section>
+
       <Section title={t('dsFileUpload')} note={t('dsUploadNote')}>
         <div className="px-5 py-4">
           <FileUpload
@@ -373,9 +477,9 @@ export function DesignComponents() {
             acceptHint="CSV, XLSX"
             maxBytes={5 * 1024 * 1024}
           />
-          <p className="mt-3 font-mono text-caption text-muted-foreground">
+          <code className="mt-3 block font-mono text-caption text-muted-foreground">
             &lt;FileUpload accept acceptHint maxBytes multiple /&gt;
-          </p>
+          </code>
         </div>
       </Section>
 
@@ -606,8 +710,9 @@ export function DesignComponents() {
               </TableRow>
             </TableBody>
           </Table>
-          <p className="mt-3 font-mono text-caption text-muted-foreground">
-            {t('dsStateSelected')}: className=&quot;bg-muted&quot;
+          <p className="mt-3 text-caption text-muted-foreground">
+            {t('dsStateSelected')}:{' '}
+            <code className="font-mono">className=&quot;bg-muted&quot;</code>
           </p>
         </div>
       </Section>
@@ -656,9 +761,9 @@ export function DesignComponents() {
               </p>
             </CardContent>
           </Card>
-          <p className="font-mono text-caption text-muted-foreground">
+          <code className="block font-mono text-caption text-muted-foreground">
             .learner-scope {'{'} --primary: var(--learner-primary) {'}'}
-          </p>
+          </code>
         </div>
       </Section>
 
