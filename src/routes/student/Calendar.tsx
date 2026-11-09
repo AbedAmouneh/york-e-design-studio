@@ -103,7 +103,7 @@ export function StudentCalendar() {
 
       <Card>
         <CardContent className="p-3">
-          <MonthHeader month={month} onShift={shift} className="mb-2" />
+          <MonthHeader month={month} onShift={shift} schoolId={DEFAULT_SCHOOL_ID} className="mb-2" />
           <CalendarGrid
             month={month}
             selected={selected}
