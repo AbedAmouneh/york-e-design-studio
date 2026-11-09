@@ -238,9 +238,9 @@ export function DesignTokens() {
         ))}
         <div className="px-5 py-3">
           <p className="text-small text-muted-foreground">IBM Plex Sans · IBM Plex Sans Arabic</p>
-          <p className="mt-1 font-mono text-caption text-muted-foreground">
+          <code className="mt-1 block font-mono text-caption text-muted-foreground">
             font-sans, font-arabic, auto on [dir=&quot;rtl&quot;]
-          </p>
+          </code>
         </div>
       </Section>
 

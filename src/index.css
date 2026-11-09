@@ -121,6 +121,32 @@
     black and white.
   */
 
+  /*
+    Code does not mirror.
+
+    In the Arabic build the bidi algorithm was reordering the brackets, so
+    `<NumberInput value onChange />` displayed as `</ NumberInput value onChange
+    >`. Every code sample on the design system pages had it, about eleven of
+    them. The characters were all present and in the right order in the string;
+    only the display was reversed, which is why reading those pages in Arabic
+    was the only way to see it.
+
+    `direction: ltr` fixes the ordering and `unicode-bidi: isolate` stops the
+    sample from reordering the Arabic sentence around it. Set here on the
+    elements rather than as `dir="ltr"` on each sample, so a future sample is
+    right without anybody remembering this.
+
+    A developer copying a line out of the studio has to get the line, not its
+    reflection.
+  */
+  code,
+  pre,
+  samp,
+  kbd {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
   /* Text selection. Yellow on black, which is the brand's own pairing. */
   ::selection {
     background-color: hsl(var(--accent));
