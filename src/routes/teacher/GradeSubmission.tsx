@@ -5,7 +5,8 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
+import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
@@ -251,26 +252,36 @@ export function TeacherGradeSubmission() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <label className="flex items-center gap-2">
+                {/*
+                  The marking field, which is the one that most needed this.
+                  A teacher marking thirty scripts types the number and tabs,
+                  and the old field snapped an empty box back to zero mid-type.
+                  The ceiling is the activity's own points, so the plus stops
+                  at full marks rather than letting a slip award 30 out of 20.
+                */}
+                <div className="flex items-center gap-2">
                   <span className="text-small font-medium text-foreground">{t('colScore')}</span>
-                  <Input
-                    type="number"
+                  <NumberInput
+                    value={score === '' ? null : score}
+                    onChange={(next) =>
+                      setScores((current_) => ({ ...current_, [current.id]: next }))
+                    }
+                    onClear={() =>
+                      setScores((current_) => {
+                        const next = { ...current_ }
+                        delete next[current.id]
+                        return next
+                      })
+                    }
+                    label={t('colScore')}
                     min={0}
                     max={activity?.points ?? 20}
-                    value={score}
-                    autoFocus
-                    className="h-9 w-24"
-                    onChange={(event) =>
-                      setScores((current_) => ({
-                        ...current_,
-                        [current.id]: Number(event.target.value),
-                      }))
-                    }
+                    className="h-9 w-32"
                   />
                   <span className="text-small text-muted-foreground">
                     {t('tchOutOf').replace('{n}', String(activity?.points ?? 20))}
                   </span>
-                </label>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
@@ -284,14 +295,13 @@ export function TeacherGradeSubmission() {
 
               <div className="space-y-2">
                 <span className="text-small font-medium text-foreground">{t('tchFeedback')}</span>
-                <textarea
+                <Textarea
                   value={comment}
-                  rows={3}
                   onChange={(event) =>
                     setFeedback((current_) => ({ ...current_, [current.id]: event.target.value }))
                   }
                   placeholder={t('tchFeedbackPlaceholder')}
-                  className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={t('tchFeedback')}
                 />
                 <div className="flex flex-wrap gap-1.5">
                   {quickCommentKeys.map((key) => (
