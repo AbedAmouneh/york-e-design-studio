@@ -87,6 +87,17 @@
 
   body {
     @apply bg-surface text-foreground font-sans text-body antialiased;
+    /*
+      Stops iOS inflating body text when a phone is turned to landscape. It
+      reflows a page that was laid out at one size, and the effect is a design
+      changing shape for a reason nobody asked for.
+    */
+    -webkit-text-size-adjust: 100%;
+    /*
+      The grey flash a tap leaves on a touch screen. It is the system's colour,
+      not ours, and every button here already has its own pressed state.
+    */
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Any figure that sits in a column lines up. */
@@ -96,6 +107,136 @@
 
   [dir='rtl'] body {
     @apply font-arabic;
+  }
+
+  /*
+    The parts of the interface the browser draws, and we had not touched.
+
+    Everything below here is default Chrome, and the default is always some
+    shade of system blue or grey. None of it is catastrophic on its own, which
+    is why it survived twelve roles and ninety four screens. Put together it is
+    the difference between a product and a prototype: select a sentence and the
+    brand turns blue, fill a form and the field turns pale yellow in a palette
+    that has its own yellow, scroll a long table and a grey bar appears beside
+    black and white.
+  */
+
+  /* Text selection. Yellow on black, which is the brand's own pairing. */
+  ::selection {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  /*
+    The learner tier has no York yellow in it, and its accent is the teal. A
+    six year old selecting a word should not be the one place the staff palette
+    appears.
+  */
+  .learner-scope ::selection {
+    background-color: hsl(var(--learner-primary));
+    color: hsl(var(--learner-primary-foreground));
+  }
+
+  /*
+    Scrollbars, twice, because the standard properties and the old WebKit
+    pseudo-elements do not overlap cleanly. `scrollbar-color` is the standard
+    and is what Firefox and recent Chrome read; the `::-webkit-` block covers
+    the Safari and older Chrome that schools in all three markets still run.
+    Writing only one of them styles the scrollbar for some of our users.
+  */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border-strong)) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border-strong));
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    /* Keeps the border transparent rather than letting the thumb fill it. */
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /*
+    Chrome's autofill.
+
+    It paints its own pale yellow over the field and ignores `background-color`
+    outright, so the only way to override it is an inset shadow large enough to
+    cover the box. `-webkit-text-fill-color` is needed as well, because it
+    overrides `color` by the same trick.
+
+    This matters here more than it usually would: the autofill yellow is close
+    enough to York yellow to look deliberate, so an autofilled field reads as
+    a field we highlighted on purpose.
+  */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px hsl(var(--background)) inset;
+    -webkit-text-fill-color: hsl(var(--foreground));
+    caret-color: hsl(var(--foreground));
+    /* The transition is the usual trick to outlast Chrome repainting it. */
+    transition: background-color 100000s ease-in-out 0s;
+  }
+
+  /* The text cursor, which inherits nothing useful by default. */
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: hsl(var(--foreground));
+  }
+
+  /*
+    A focus ring for anything that is not one of our components: links in prose,
+    skip targets, native controls we have not wrapped yet. `:focus-visible`
+    rather than `:focus`, so a mouse click does not leave a ring behind, and the
+    plain `:focus` rule below removes the one Chrome would otherwise draw.
+  */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /*
+    Respect a person who has asked their system to stop animating things.
+
+    This is WCAG 2.2 and it is also the kind of thing that is cheap now and
+    expensive once a hundred components each have their own transition. The
+    values are near zero rather than zero so that animations still fire their
+    completion events and nothing waiting on one hangs.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
