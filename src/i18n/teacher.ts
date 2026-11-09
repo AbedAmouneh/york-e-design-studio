@@ -389,20 +389,24 @@ export const teacher = {
   },
   tchBuildTheLesson: { en: 'Build the lesson', ar: 'جهّز الدرس' },
 
-  // Calendar
-  tchCalendarSubtitle: { en: 'February 2027 · Term 2', ar: 'شباط ٢٠٢٧ · الفصل الثاني' },
-  tchPreviousMonth: { en: 'Previous month', ar: 'الشهر السابق' },
-  tchNextMonth: { en: 'Next month', ar: 'الشهر التالي' },
+  /*
+    Calendar.
+
+    Seven hand written weekday abbreviations used to live here, Monday first,
+    and the month name and the two chevron labels with them. All ten are gone.
+
+    The weekday row now comes from `Intl.DateTimeFormat`, which also decides
+    which day the week starts on, so an Arabic reader gets a week that starts
+    on Saturday rather than a translated British one. The month name comes from
+    Intl too, and the chevron labels are shared with the date picker in
+    `common.ts` because they say the same thing in all three places.
+
+    Translating a hardcoded week is the kind of fix that looks finished. Every
+    one of these seven was correct Arabic in the wrong column.
+  */
   tchShow: { en: 'Show', ar: 'إظهار' },
   tchClearAll: { en: 'Clear all', ar: 'ألغِ تحديد الكل' },
   tchSelectAll: { en: 'Select all', ar: 'حدد الكل' },
-  tchMonShort: { en: 'Mon', ar: 'إثن' },
-  tchTueShort: { en: 'Tue', ar: 'ثلا' },
-  tchWedShort: { en: 'Wed', ar: 'أرب' },
-  tchThuShort: { en: 'Thu', ar: 'خمي' },
-  tchFriShort: { en: 'Fri', ar: 'جمع' },
-  tchSatShort: { en: 'Sat', ar: 'سبت' },
-  tchSunShort: { en: 'Sun', ar: 'أحد' },
   tchDuePrefix: { en: 'Due: ', ar: 'موعد التسليم: ' },
   tchEvtCheck23Due: { en: 'Check 2.3 due', ar: 'تسليم تحقق 2.3' },
   tchEvtApply15Due: { en: 'Apply 1.5 due', ar: 'تسليم تطبيق 1.5' },
