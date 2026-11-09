@@ -1,23 +1,45 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  CalendarGrid,
+  CalendarNotes,
+  MonthHeader,
+  startOfMonth,
+  toISO,
+} from '@/components/ui/calendar'
 import { useLocale } from '@/lib/i18n'
 import { groupName } from '@/lib/names'
 import type { StringKey } from '@/i18n'
 import { cn } from '@/lib/utils'
-import { teacherClasses } from '@/data/teacher'
+import { teacherClasses, teacherClassIds } from '@/data/teacher'
+import { DEFAULT_SCHOOL_ID } from '@/data/seed'
 
 /**
- * Calendar.
+ * Teacher calendar.
  *
  * Patrick Prendergast, 26 June: "if a teacher has 5 classes, all events appear
- * together". That is the whole reason this screen exists in the studio. The
- * class filter is at the top, selected classes keep their colour, and
- * everything else dims rather than disappears so the teacher can still see
- * what else is happening that day.
+ * together". That is why this screen exists in the studio. The class filter is
+ * at the top, selected classes keep their colour, and everything else dims
+ * rather than disappears so the teacher can still see what else is happening.
+ *
+ * Rebuilt on the shared grid, which fixed three things the hand rolled version
+ * got wrong and nobody had noticed:
+ *
+ *   The weekday row was a hardcoded Monday to Sunday, so the Arabic build
+ *   showed a British week. Beirut starts on Monday but Amman and Dubai do not,
+ *   and the grid now reads that from the locale and the school.
+ *
+ *   The month was 28 cells with no leading offset, under a comment explaining
+ *   that February 2027 happens to start on a Monday. True for exactly that
+ *   month in exactly that week convention.
+ *
+ *   The previous and next chevrons had no onClick. They were decoration.
+ *
+ * It also inherits the school calendar for free: Saint Maron, the Hariri
+ * memorial and Ramadan now appear without this file knowing they exist.
  */
 
 const classTone: Record<string, string> = {
@@ -28,44 +50,39 @@ const classTone: Record<string, string> = {
 }
 
 interface Event {
-  day: number
+  /** Real ISO date, not a day number. The old version could not change month. */
+  on: string
   classId: string
   labelKey: StringKey
   kind: 'lesson' | 'due' | 'assessment'
 }
 
 const events: Event[] = [
-  { day: 2, classId: 'cls-3', labelKey: 'tchPlanEquivalentFractions', kind: 'lesson' },
-  { day: 2, classId: 'cls-1', labelKey: 'tchPlanCountingInTens', kind: 'lesson' },
-  { day: 3, classId: 'cls-4', labelKey: 'tchPlanCommonDenominators', kind: 'lesson' },
-  { day: 4, classId: 'cls-3', labelKey: 'tchEvtCheck23Due', kind: 'due' },
-  { day: 4, classId: 'cls-5', labelKey: 'tchPlanRatioIntro', kind: 'lesson' },
-  { day: 5, classId: 'cls-3', labelKey: 'tchEvtApply15Due', kind: 'due' },
-  { day: 5, classId: 'cls-4', labelKey: 'tchEvtApply15Due', kind: 'due' },
-  { day: 9, classId: 'cls-1', labelKey: 'tchPlanNumberLine100', kind: 'lesson' },
-  { day: 10, classId: 'cls-3', labelKey: 'tchEvtAddingFractions', kind: 'lesson' },
-  { day: 10, classId: 'cls-5', labelKey: 'tchEvtRatioPractice', kind: 'lesson' },
-  { day: 12, classId: 'cls-3', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
-  { day: 12, classId: 'cls-4', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
-  { day: 17, classId: 'cls-5', labelKey: 'tchEvtRatioAssessment', kind: 'assessment' },
-  { day: 19, classId: 'cls-4', labelKey: 'tchEvtPractise24Due', kind: 'due' },
-  { day: 19, classId: 'cls-5', labelKey: 'tchEvtPractise24Due', kind: 'due' },
-  { day: 24, classId: 'cls-1', labelKey: 'tchEvtShapeAndSpace', kind: 'lesson' },
+  { on: '2027-02-02', classId: 'cls-3', labelKey: 'tchPlanEquivalentFractions', kind: 'lesson' },
+  { on: '2027-02-02', classId: 'cls-1', labelKey: 'tchPlanCountingInTens', kind: 'lesson' },
+  { on: '2027-02-03', classId: 'cls-4', labelKey: 'tchPlanCommonDenominators', kind: 'lesson' },
+  { on: '2027-02-04', classId: 'cls-3', labelKey: 'tchEvtCheck23Due', kind: 'due' },
+  { on: '2027-02-04', classId: 'cls-5', labelKey: 'tchPlanRatioIntro', kind: 'lesson' },
+  { on: '2027-02-05', classId: 'cls-3', labelKey: 'tchEvtApply15Due', kind: 'due' },
+  { on: '2027-02-05', classId: 'cls-4', labelKey: 'tchEvtApply15Due', kind: 'due' },
+  { on: '2027-02-09', classId: 'cls-1', labelKey: 'tchPlanNumberLine100', kind: 'lesson' },
+  { on: '2027-02-10', classId: 'cls-3', labelKey: 'tchEvtAddingFractions', kind: 'lesson' },
+  { on: '2027-02-10', classId: 'cls-5', labelKey: 'tchEvtRatioPractice', kind: 'lesson' },
+  { on: '2027-02-12', classId: 'cls-3', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
+  { on: '2027-02-12', classId: 'cls-4', labelKey: 'tchPlanEndOfUnitCheck', kind: 'assessment' },
+  { on: '2027-02-17', classId: 'cls-5', labelKey: 'tchEvtRatioAssessment', kind: 'assessment' },
+  { on: '2027-02-19', classId: 'cls-4', labelKey: 'tchEvtPractise24Due', kind: 'due' },
+  { on: '2027-02-19', classId: 'cls-5', labelKey: 'tchEvtPractise24Due', kind: 'due' },
+  { on: '2027-02-24', classId: 'cls-1', labelKey: 'tchEvtShapeAndSpace', kind: 'lesson' },
 ]
 
-const weekdayKeys = [
-  'tchMonShort',
-  'tchTueShort',
-  'tchWedShort',
-  'tchThuShort',
-  'tchFriShort',
-  'tchSatShort',
-  'tchSunShort',
-] as const
+const FEBRUARY_2027 = new Date(2027, 1, 1)
 
 export function TeacherCalendar() {
   const { t, locale } = useLocale()
-  const [active, setActive] = useState<Set<string>>(new Set(teacherClasses.map((item) => item.id)))
+  const [active, setActive] = useState<Set<string>>(new Set(teacherClassIds))
+  const [month, setMonth] = useState(() => startOfMonth(FEBRUARY_2027))
+  const [selected, setSelected] = useState<Date | null>(null)
 
   const toggle = (id: string) => {
     setActive((current) => {
@@ -76,25 +93,18 @@ export function TeacherCalendar() {
     })
   }
 
-  // February 2027 starts on a Monday, so the grid needs no leading blanks.
-  const cells = Array.from({ length: 28 }, (_, index) => index + 1)
+  const shift = (by: number) =>
+    setMonth((current) => new Date(current.getFullYear(), current.getMonth() + by, 1))
 
   return (
     <Page>
-      <PageHeader
-        title={t('navCalendar')}
-        subtitle={t('tchCalendarSubtitle')}
-        actions={
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" aria-label={t('tchPreviousMonth')}>
-              <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
-            </Button>
-            <Button variant="ghost" size="icon" aria-label={t('tchNextMonth')}>
-              <ChevronRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden />
-            </Button>
-          </div>
-        }
-      />
+      {/*
+        The subtitle says the term, not the month. It used to read "February
+        2027 · Term 2", which was true for as long as the chevrons did nothing.
+        Now that they work, the month lives in the header above the grid and
+        says whatever month is actually on screen.
+      */}
+      <PageHeader title={t('navCalendar')} subtitle={t('term2')} />
 
       <Card>
         <CardHeader>
@@ -103,11 +113,7 @@ export function TeacherCalendar() {
             variant="ghost"
             size="sm"
             onClick={() =>
-              setActive(
-                active.size === teacherClasses.length
-                  ? new Set()
-                  : new Set(teacherClasses.map((item) => item.id)),
-              )
+              setActive(active.size === teacherClasses.length ? new Set() : new Set(teacherClassIds))
             }
           >
             {active.size === teacherClasses.length ? t('tchClearAll') : t('tchSelectAll')}
@@ -121,16 +127,14 @@ export function TeacherCalendar() {
                 key={item.id}
                 type="button"
                 onClick={() => toggle(item.id)}
+                aria-pressed={on}
                 className={cn(
                   'flex items-center gap-2 rounded-full border px-3 py-1.5 text-caption font-medium transition-colors',
                   on ? classTone[item.id] : 'border-border text-muted-foreground',
                 )}
               >
                 <span
-                  className={cn(
-                    'h-2 w-2 rounded-full',
-                    on ? 'bg-current' : 'bg-border-strong',
-                  )}
+                  className={cn('h-2 w-2 rounded-full', on ? 'bg-current' : 'bg-border-strong')}
                   aria-hidden
                 />
                 {groupName(item, locale)}
@@ -142,64 +146,43 @@ export function TeacherCalendar() {
 
       <Card>
         <CardContent className="p-3">
-          <div className="grid grid-cols-7 gap-1.5">
-            {weekdayKeys.map((key) => (
-              <div
-                key={key}
-                className="px-2 py-1.5 text-caption font-medium text-muted-foreground"
-              >
-                {t(key)}
-              </div>
-            ))}
-
-            {cells.map((day) => {
-              const dayEvents = events.filter((event) => event.day === day)
-              const weekend = day % 7 === 6 || day % 7 === 0
-              const today = day === 10
+          <MonthHeader month={month} onShift={shift} className="mb-2" />
+          <CalendarGrid
+            month={month}
+            selected={selected}
+            onSelect={setSelected}
+            schoolId={DEFAULT_SCHOOL_ID}
+            classIds={teacherClassIds}
+            context="aware"
+            size="full"
+            renderDay={(date) => {
+              const key = toISO(date)
+              const dayEvents = events.filter((event) => event.on === key)
+              if (dayEvents.length === 0) return null
               return (
-                <div
-                  key={day}
-                  className={cn(
-                    'min-h-[108px] rounded border p-1.5',
-                    today ? 'border-foreground' : 'border-border',
-                    weekend ? 'bg-surface' : 'bg-background',
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'tabular mb-1 inline-flex h-5 min-w-5 items-center justify-center rounded px-1 text-caption',
-                      today
-                        ? 'bg-foreground font-semibold text-background'
-                        : 'text-muted-foreground',
-                    )}
-                  >
-                    {day}
-                  </span>
-
-                  <div className="space-y-1">
-                    {dayEvents.map((event, index) => {
-                      const on = active.has(event.classId)
-                      return (
-                        <div
-                          key={`${day}-${index}`}
-                          className={cn(
-                            'truncate rounded border px-1.5 py-1 text-caption leading-tight transition-opacity',
-                            on
-                              ? classTone[event.classId]
-                              : 'border-border text-muted-foreground opacity-35',
-                          )}
-                          title={t(event.labelKey)}
-                        >
-                          {event.kind === 'due' ? t('tchDuePrefix') : ''}
-                          {t(event.labelKey)}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <span className="flex flex-col gap-1">
+                  {dayEvents.map((event, index) => {
+                    const on = active.has(event.classId)
+                    return (
+                      <span
+                        key={`${key}-${index}`}
+                        className={cn(
+                          'block truncate rounded border px-1.5 py-1 text-caption leading-tight transition-opacity',
+                          on
+                            ? classTone[event.classId]
+                            : 'border-border text-muted-foreground opacity-35',
+                        )}
+                      >
+                        {event.kind === 'due' ? t('tchDuePrefix') : ''}
+                        {t(event.labelKey)}
+                      </span>
+                    )
+                  })}
+                </span>
               )
-            })}
-          </div>
+            }}
+          />
+          <CalendarNotes month={month} schoolId={DEFAULT_SCHOOL_ID} context="aware" />
         </CardContent>
       </Card>
 
