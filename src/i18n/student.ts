@@ -217,17 +217,15 @@ export const student = {
   },
   stuOpenUnit2: { en: 'Open Unit 2', ar: 'افتح الوحدة الثانية' },
 
-  // Calendar
-  stuCalendarMonth: { en: 'February 2027', ar: 'شباط ٢٠٢٧' },
-  stuPreviousMonth: { en: 'Previous month', ar: 'الشهر السابق' },
-  stuNextMonth: { en: 'Next month', ar: 'الشهر التالي' },
-  stuMonShort: { en: 'Mon', ar: 'إثن' },
-  stuTueShort: { en: 'Tue', ar: 'ثلا' },
-  stuWedShort: { en: 'Wed', ar: 'أرب' },
-  stuThuShort: { en: 'Thu', ar: 'خمي' },
-  stuFriShort: { en: 'Fri', ar: 'جمع' },
-  stuSatShort: { en: 'Sat', ar: 'سبت' },
-  stuSunShort: { en: 'Sun', ar: 'أحد' },
+  /*
+    Calendar.
+
+    The month name, the two chevron labels and seven hand written weekday
+    abbreviations used to live here. All ten are gone, for the reason set out
+    in the matching block in `teacher.ts`: the weekday row, the week start and
+    the month name all come from `Intl` now, so Arabic gets a week starting on
+    Saturday instead of a translated British one.
+  */
   stuDuePrefix: { en: 'Due: ', ar: 'موعد التسليم: ' },
   stuEvtEquivalentFractions: { en: 'Equivalent fractions', ar: 'الكسور المتكافئة' },
   stuEvtReadingComprehension: { en: 'Reading comprehension', ar: 'الفهم القرائي' },
