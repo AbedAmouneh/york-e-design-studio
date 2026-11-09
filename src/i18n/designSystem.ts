@@ -161,6 +161,44 @@ export const designSystem = {
     ar: 'رمضان والعيد هنا تقديرات محسوبة لعام ١٤٤٨ هـ، ومعلَّمة في البيانات بأنها تقريبية. فتواريخها الحقيقية تعتمد على رؤية الهلال، وتُعلَن في كل بلد على حدة، وتختلف بين لبنان والإمارات والأردن. ويجب أن تأتي من كل فرع، وأن تكون الواجهة قادرة على قول «نحو» لا أن توحي باليقين.',
   },
 
+  /*
+    The browser's own furniture, now ours.
+
+    On the component states page rather than the tokens page, because these are
+    states: they are what the interface looks like while somebody is selecting,
+    scrolling, filling or tabbing through it, and none of them appear in a
+    screenshot of a page at rest. That is why they survived ninety four screens.
+  */
+  dsBrowserChrome: { en: 'What the browser draws', ar: 'ما يرسمه المتصفح' },
+  dsBrowserChromeNote: {
+    en: 'Six defaults that were still Chrome’s. None is serious alone, which is why they lasted twelve roles. Together they are the difference between a product and a prototype. They live in index.css, not in a component, so a developer who restyles one of these is restyling all ninety four screens.',
+    ar: 'ستة إعدادات افتراضية بقيت على حالها في كروم. ولا واحد منها خطير بمفرده، ولهذا بقيت عبر اثني عشر دوراً. لكنها مجتمعة هي الفرق بين منتج ونموذج أولي. وهي في index.css لا في مكوّن، فمن يغيّر واحداً منها يغيّر الشاشات الأربع والتسعين كلها.',
+  },
+  dsChromeSelection: {
+    en: 'Selection. Was system blue, which is the one colour the palette does not contain. Now York yellow on black on staff screens, and the learner teal inside .learner-scope, because the youngest tier has no yellow in it at all.',
+    ar: 'التحديد. كان أزرق النظام، وهو اللون الوحيد غير الموجود في اللوحة. وصار أصفر يورك على أسود في شاشات العاملين، والأخضر المزرق داخل learner-scope، لأن الفئة الأصغر لا تحوي الأصفر إطلاقاً.',
+  },
+  dsChromeScrollbar: {
+    en: 'Scrollbars. Styled twice on purpose: scrollbar-color is the standard that Firefox and recent Chrome read, and the ::-webkit- pseudo-elements cover the Safari and older Chrome that schools in all three markets still run. One alone leaves a grey system bar for some of our users.',
+    ar: 'أشرطة التمرير. مُنسَّقة مرتين عن قصد: فخاصية scrollbar-color هي المعيار الذي يقرأه فايرفوكس وكروم الحديث، وعناصر webkit الزائفة تغطي سفاري وكروم الأقدم التي ما زالت المدارس في الأسواق الثلاثة تستخدمها. وواحدة بمفردها تترك شريطاً رمادياً لبعض مستخدمينا.',
+  },
+  dsChromeAutofill: {
+    en: 'Autofill. Chrome paints its own pale yellow and ignores background-color outright, so the override is a 1000px inset shadow plus -webkit-text-fill-color. It matters more here than it usually would: that yellow is close enough to York yellow to look like a field we highlighted on purpose.',
+    ar: 'الملء التلقائي. يرسم كروم أصفره الباهت ويتجاهل background-color تماماً، فالتجاوز ظلٌّ داخلي بعرض ١٠٠٠ بكسل مع webkit-text-fill-color. وهذا أهم هنا من المعتاد: فذلك الأصفر قريب من أصفر يورك إلى حد يجعل الحقل يبدو وكأننا أبرزناه عمداً.',
+  },
+  dsChromeFocus: {
+    en: 'Focus. A fallback ring for anything not wrapped in one of our components: links in prose, skip targets, native controls. :focus-visible rather than :focus, so a mouse click leaves nothing behind.',
+    ar: 'التركيز. حلقة احتياطية لكل ما ليس داخل أحد مكوّناتنا: الروابط في النص، وأهداف التخطي، والعناصر الأصلية. بخاصية focus-visible لا focus، فلا تترك نقرة الفأرة أثراً.',
+  },
+  dsChromeMotion: {
+    en: 'Reduced motion. Honours the system setting, which is WCAG 2.2 and is cheap now and expensive once a hundred components each own a transition. Durations go near zero rather than zero, so animations still fire their completion events and nothing waiting on one hangs.',
+    ar: 'تقليل الحركة. يحترم إعداد النظام، وهو من متطلبات WCAG 2.2، ورخيص الآن وباهظ حين تملك مئة مكوّن انتقالاتها. والمدد تقترب من الصفر لا تساويه، فتُطلق الحركات أحداث انتهائها ولا يتعلق شيء ينتظرها.',
+  },
+  dsChromeTouch: {
+    en: 'Touch and rotation. The grey flash a tap leaves on a touch screen is gone, since every button already has a pressed state, and iOS no longer inflates body text when a phone turns to landscape.',
+    ar: 'اللمس والتدوير. اختفى الوميض الرمادي الذي تتركه اللمسة على الشاشة، فلكل زر حالة ضغط أصلاً، ولم تعد iOS تكبّر نص الصفحة عند تدوير الهاتف أفقياً.',
+  },
+
   // Components added later on 7 November
   dsRadioGroup: { en: 'Radio group', ar: 'مجموعة الاختيار' },
   dsDatePicker: { en: 'Date picker', ar: 'منتقي التواريخ' },
