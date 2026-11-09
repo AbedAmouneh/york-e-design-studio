@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Check, Clock, Flag } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { useLocale } from '@/lib/i18n'
@@ -189,12 +190,13 @@ export function StudentTakeQuiz() {
                 />
               </div>
             ) : (
-              <textarea
+              <Textarea
                 value={answers[question.id] ?? ''}
                 rows={4}
+                size="comfortable"
                 onChange={(event) => setAnswer(event.target.value)}
                 placeholder={t('stuWriteYourAnswer')}
-                className="w-full rounded border border-border bg-background px-4 py-3 text-body text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={t('stuWriteYourAnswer')}
               />
             )}
 

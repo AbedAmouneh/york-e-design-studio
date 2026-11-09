@@ -4,6 +4,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Table,
   TableBody,
@@ -232,7 +233,7 @@ export function SharedSupportTicket() {
 
             <label className="flex flex-col gap-1.5">
               <span className="text-small font-medium text-foreground">{t('shTktDescribe')}</span>
-              <textarea
+              <Textarea
                 value={body}
                 onChange={(event) => {
                   setBody(event.target.value)
@@ -240,7 +241,7 @@ export function SharedSupportTicket() {
                 }}
                 rows={4}
                 placeholder={t('shTktDescribePlaceholder')}
-                className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={t('shTktDescribePlaceholder')}
               />
             </label>
 

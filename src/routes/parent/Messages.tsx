@@ -4,6 +4,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { cn, initials } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n'
 import { useFamilyMessages } from '@/lib/liveData'
@@ -195,15 +196,14 @@ export function ParentMessages() {
             </div>
 
             <div className="space-y-2 border-t border-border pt-4">
-              <textarea
+              <Textarea
                 value={draft}
-                rows={3}
                 onChange={(event) => {
                   setDraft(event.target.value)
                   setSent(false)
                 }}
                 placeholder={t('parReplyTo').replace('{n}', staffNameOf(current))}
-                className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={t('parReplyTo').replace('{n}', staffNameOf(current))}
               />
               <div className="flex items-center gap-3">
                 <Button

@@ -4,6 +4,7 @@ import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
@@ -155,7 +156,7 @@ export function TeacherAnnouncements() {
                 }}
                 placeholder={t('tchTitle')}
               />
-              <textarea
+              <Textarea
                 value={body}
                 rows={4}
                 onChange={(event) => {
@@ -163,7 +164,7 @@ export function TeacherAnnouncements() {
                   setSent(false)
                 }}
                 placeholder={t('tchAnnouncementPlaceholder')}
-                className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={t('tchAnnouncementPlaceholder')}
               />
 
               <div className="space-y-2">

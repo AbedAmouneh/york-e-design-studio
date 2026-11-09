@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Pin, Plus, Send } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -70,12 +71,11 @@ export function SchoolAdminAnnouncements() {
               onChange={(event) => setTitle(event.target.value)}
               placeholder={t('admAnnouncementTitle')}
             />
-            <textarea
+            <Textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
               placeholder={t('admAnnouncementBody')}
-              rows={3}
-              className="w-full rounded border border-border bg-background px-3 py-2 text-small text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label={t('admAnnouncementBody')}
             />
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-1">
