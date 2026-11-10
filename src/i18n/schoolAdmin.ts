@@ -389,4 +389,70 @@ export const schoolAdmin = {
     en: '27 of 40 standards covered, 6 partially, 7 not started. The features sheet marks this screen as needing scope definition, so this is a proposal.',
     ar: 'غُطّي 27 معياراً من 40، و6 معايير جزئياً، و7 لم تبدأ. وتصف قائمة الميزات هذه الشاشة بأنها تحتاج إلى تحديد نطاق، فهي هنا مقترح.',
   },
+
+  /*
+    One person, 9 November.
+
+    The Users table listed 141 students and opened none of them, and neither
+    did the class roster, so the directory was a list with no second page. One
+    route serves all three roles and changes shape for each, because a teacher
+    and a parent are not students with different fields.
+  */
+  admAccount: { en: 'Account', ar: 'الحساب' },
+  admEnrolment: { en: 'Enrolment', ar: 'التسجيل' },
+  admAccess: { en: 'Access', ar: 'الدخول' },
+  admPerformance: { en: 'Performance', ar: 'الأداء' },
+  admLinkedParents: { en: 'Parents', ar: 'أولياء الأمر' },
+  admLinkedChildren: { en: 'Children', ar: 'الأبناء' },
+  admClassesTaught: { en: 'Classes taught', ar: 'الصفوف التي يدرّسها' },
+  admWorkload: { en: 'Workload', ar: 'عبء العمل' },
+
+  admFieldEmail: { en: 'Email', ar: 'البريد الإلكتروني' },
+  admFieldRole: { en: 'Role', ar: 'الدور' },
+  admFieldSeat: { en: 'Seat', ar: 'المقعد' },
+  admFieldSchool: { en: 'School', ar: 'المدرسة' },
+  admFieldYear: { en: 'Academic year', ar: 'العام الدراسي' },
+  admFieldClass: { en: 'Class', ar: 'الشعبة' },
+  admFieldAgeTier: { en: 'Age tier', ar: 'الفئة العمرية' },
+  admFieldLastActive: { en: 'Last active', ar: 'آخر نشاط' },
+  admFieldId: { en: 'Identifier', ar: 'المعرّف' },
+
+  admStatusActive: { en: 'Active', ar: 'نشط' },
+  admSeatUsed: { en: 'Uses a seat', ar: 'يشغل مقعداً' },
+  admTierEarly: { en: 'K1 to Grade 3', ar: 'من الروضة إلى الصف الثالث' },
+  admTierLater: { en: 'Grade 3 and above', ar: 'الصف الثالث فما فوق' },
+
+  admSubmissionsThisTerm: { en: 'Submissions this term', ar: 'التسليمات هذا الفصل' },
+  admDaysPresent: { en: '{n} of {m} days', ar: '{n} من {m} أيام' },
+  admLast30Days: { en: 'in the last 30 days', ar: 'في آخر ٣٠ يوماً' },
+  admStudentsTaught: { en: 'Students', ar: 'الطلاب' },
+  admAwaitingMarking: { en: 'Awaiting marking', ar: 'بانتظار التصحيح' },
+  admAssignmentsSet: { en: 'Assignments set', ar: 'الواجبات المسندة' },
+
+  admOpenTeacherView: { en: "Open the teacher's view", ar: 'افتح عرض المعلم' },
+  admOpenClass: { en: 'Open the class', ar: 'افتح الشعبة' },
+  admNoParentsLinked: { en: 'No parent account is linked.', ar: 'لا يوجد حساب ولي أمر مرتبط.' },
+  admNoChildrenLinked: { en: 'No child is linked.', ar: 'لا يوجد ابن مرتبط.' },
+  admPersonNotFound: { en: 'No such person', ar: 'لا يوجد شخص بهذا المعرّف' },
+  admPersonNotFoundBody: {
+    en: 'The identifier in the address does not match anybody at this school. Go back to Users and pick someone from the list.',
+    ar: 'المعرّف في العنوان لا يطابق أي شخص في هذه المدرسة. ارجع إلى المستخدمين واختر أحداً من القائمة.',
+  },
+
+  /*
+    The age rule, stated on the page rather than only in the code.
+
+    LMS-22: K1 to Grade 3 never sees a percentage and never sees "at risk".
+    That holds here too, because an admin screen that prints a six year old's
+    average as a number is the same screen for that child's parent to be shown
+    at a meeting. The early tier gets stars and completion only.
+  */
+  admEarlyTierNote: {
+    en: 'K1 to Grade 3 shows stars and completion, never a percentage and never a risk label. Same rule as the class roster and the child’s own screens.',
+    ar: 'الفئة من الروضة إلى الصف الثالث تُعرض بالنجوم ونسبة الإنجاز فقط، لا بنسبة مئوية ولا بوصف تعثّر. وهي القاعدة نفسها في كشف الشعبة وفي شاشات الطفل.',
+  },
+  admAdminPerformanceNote: {
+    en: 'A summary for administration, not a marking record. The teacher’s view has the work, the skills and the scores over time.',
+    ar: 'ملخص للإدارة لا سجل تصحيح. فعرض المعلم يحوي الأعمال والمهارات والدرجات عبر الزمن.',
+  },
 } satisfies Record<string, Phrase>
