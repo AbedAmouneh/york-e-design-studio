@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
-import { groupName, schoolName, schoolPlace } from '@/lib/names'
+import { academicYear, groupName, schoolName, schoolPlace } from '@/lib/names'
 import { cn, formatNumber } from '@/lib/utils'
 import {
   activityLog,
@@ -122,7 +122,7 @@ export function SchoolAdminOverview() {
             {t('overviewTitle')}
           </h1>
           <p className="mt-1 text-small text-muted-foreground">
-            {schoolName(school, locale)} · {schoolPlace(school, locale)} · {school.academicYear}
+            {schoolName(school, locale)} · {schoolPlace(school, locale)} · {academicYear(school, locale)}
           </p>
         </div>
         <Button variant="accent" size="sm">

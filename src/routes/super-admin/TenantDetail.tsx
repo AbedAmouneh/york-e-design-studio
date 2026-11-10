@@ -14,7 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
-import { schoolName, schoolPlace } from '@/lib/names'
+import { academicYear, schoolName, schoolPlace } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import type { StringKey } from '@/i18n'
 import {
@@ -59,7 +59,7 @@ export function SuperAdminTenantDetail() {
     <Page>
       <PageHeader
         title={schoolName(school, locale)}
-        subtitle={`${schoolPlace(school, locale)} · ${school.academicYear}`}
+        subtitle={`${schoolPlace(school, locale)} · ${academicYear(school, locale)}`}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild>

@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
-import { groupName, groupSearchText, schoolName } from '@/lib/names'
+import { academicYear, groupName, groupSearchText, schoolName } from '@/lib/names'
 import {
   classesForSchool,
   courses,
@@ -70,7 +70,7 @@ export function SchoolAdminClasses() {
     <Page>
       <PageHeader
         title={t('navClasses')}
-        subtitle={`${schoolName(school, locale)} · ${school.academicYear}`}
+        subtitle={`${schoolName(school, locale)} · ${academicYear(school, locale)}`}
         actions={
           <Button variant="accent" size="sm" asChild>
             <Link to="/school-admin/classes/new">

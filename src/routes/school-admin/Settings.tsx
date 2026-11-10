@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useLocale } from '@/lib/i18n'
-import { schoolName } from '@/lib/names'
+import { academicYear, schoolName } from '@/lib/names'
 import { cn } from '@/lib/utils'
 import { DEFAULT_SCHOOL_ID, schools, terms } from '@/data/seed'
 import type { GradingScale, Role, School } from '@/types'
@@ -115,7 +115,7 @@ export function SchoolAdminSettings() {
         <TabsContent value="year" className="pt-5">
           <Card>
             <CardHeader>
-              <CardTitle>{t('admAcademicYear').replace('{n}', school.academicYear)}</CardTitle>
+              <CardTitle>{t('admAcademicYear').replace('{n}', academicYear(school, locale))}</CardTitle>
               <Button variant="outline" size="sm">
                 {t('admAddTerm')}
               </Button>
