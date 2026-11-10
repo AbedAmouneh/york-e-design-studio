@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Upload } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent } from '@/components/ui/card'
@@ -25,6 +25,7 @@ type Filter = 'all' | 'student' | 'teacher' | 'parent'
 
 export function SchoolAdminUsers() {
   const { t, locale } = useLocale()
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<Filter>('student')
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -189,8 +190,27 @@ export function SchoolAdminUsers() {
                   const classIds =
                     'classIds' in person ? (person.classIds as string[]) : []
                   return (
-                    <TableRow key={person.id}>
-                      <TableCell>
+                    /*
+                      The row opens the person, and the name is also a real
+                      link. Both, on purpose.
+
+                      A row with an onClick is not reachable by keyboard and
+                      announces nothing, so the link is what makes the row
+                      navigable at all; the row click is the large target a
+                      mouse expects from a table like this. The link carries
+                      the accessibility and the row carries the convenience.
+
+                      The checkbox cell stops the click, because selecting
+                      people for a bulk message and opening one of them are
+                      different intentions and the first must not trigger the
+                      second.
+                    */
+                    <TableRow
+                      key={person.id}
+                      onClick={() => navigate(`/school-admin/users/${person.id}`)}
+                      className="cursor-pointer"
+                    >
+                      <TableCell onClick={(event) => event.stopPropagation()}>
                         <Checkbox
                           checked={selected.has(person.id)}
                           onCheckedChange={() => toggleOne(person.id)}
@@ -202,9 +222,13 @@ export function SchoolAdminUsers() {
                           <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-muted text-caption font-semibold text-foreground">
                             {initials(`${person.firstName} ${person.lastName}`)}
                           </span>
-                          <span className="font-medium text-foreground">
+                          <Link
+                            to={`/school-admin/users/${person.id}`}
+                            onClick={(event) => event.stopPropagation()}
+                            className="rounded font-medium text-foreground hover:underline hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
                             {person.firstName} {person.lastName}
-                          </span>
+                          </Link>
                         </span>
                       </TableCell>
                       <TableCell>

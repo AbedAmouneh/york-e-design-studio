@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Plus } from 'lucide-react'
 import { Page, PageHeader } from '@/components/app/PageHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,6 +23,7 @@ import type { ProgressStatus, Trend } from '@/types'
 export function SchoolAdminClassDetail() {
   const { classId } = useParams()
   const { t, locale } = useLocale()
+  const navigate = useNavigate()
 
   const classGroup = classes.find((item) => item.id === classId)
 
@@ -114,15 +115,29 @@ export function SchoolAdminClassDetail() {
                 </TableHeader>
                 <TableBody>
                   {roster.map(({ student, standing }) => (
-                    <TableRow key={student.id}>
+                    /*
+                      Half the time an administrator arrives at a person from
+                      their class rather than from the directory, so this
+                      roster links the same way the Users table does: the row
+                      for the mouse, the name for the keyboard.
+                    */
+                    <TableRow
+                      key={student.id}
+                      onClick={() => navigate(`/school-admin/users/${student.id}`)}
+                      className="cursor-pointer"
+                    >
                       <TableCell>
                         <span className="flex items-center gap-2.5">
                           <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-muted text-caption font-semibold text-foreground">
                             {initials(`${student.firstName} ${student.lastName}`)}
                           </span>
-                          <span className="font-medium text-foreground">
+                          <Link
+                            to={`/school-admin/users/${student.id}`}
+                            onClick={(event) => event.stopPropagation()}
+                            className="rounded font-medium text-foreground hover:underline hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
                             {student.firstName} {student.lastName}
-                          </span>
+                          </Link>
                         </span>
                       </TableCell>
                       <TableCell className="tabular text-end">
