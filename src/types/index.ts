@@ -63,7 +63,18 @@ export interface School {
   countryCode: string
   locale: Locale
   gradingScale: GradingScale
-  academicYear: string
+  /**
+   * The year the academic year opens in, as a number.
+   *
+   * It used to be the string `'2026 to 2027'`, which is a display string
+   * pretending to be data, and the Arabic build showed why that is not a
+   * pedantic distinction: three left to right runs inside a right to left
+   * paragraph got ordered right to left, and six screens printed "to 2027
+   * 2026". The English word was also sitting in the middle of Arabic copy.
+   *
+   * `academicYear` in `lib/names.ts` formats it per language.
+   */
+  academicYearStart: number
   seats: number
   seatsUsed: number
   status: 'active' | 'provisioning' | 'suspended'
