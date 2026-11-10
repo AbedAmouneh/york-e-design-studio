@@ -605,6 +605,13 @@ export const shared = {
   },
   shFrameUsers: { en: 'Users', ar: 'المستخدمون' },
   shFrameBulkImport: { en: 'Bulk import', ar: 'استيراد جماعي' },
+  shFrameUserStudent: { en: 'One student', ar: 'طالب واحد' },
+  shFrameUserStudentEarly: {
+    en: 'One student, K1 to Grade 3',
+    ar: 'طالب واحد، من الروضة إلى الثالث',
+  },
+  shFrameUserTeacher: { en: 'One teacher', ar: 'معلم واحد' },
+  shFrameUserParent: { en: 'One parent', ar: 'ولي أمر واحد' },
   shFrameCoursesLicences: {
     en: 'Courses and licences',
     ar: 'المقررات والتراخيص',

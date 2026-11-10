@@ -59,6 +59,12 @@ export const frameSections: FrameSection[] = [
       f('shFrameClassDetailEarly', '/school-admin/classes/cls-1'),
       f('shFrameUsers', '/school-admin/users'),
       f('shFrameBulkImport', '/school-admin/users/import', { noteKey: 'shFrameNoteFlow' }),
+      // One route, three shapes. Registered three times so a reviewer can open
+      // each one, since the differences between them are the point.
+      f('shFrameUserStudent', '/school-admin/users/std-53'),
+      f('shFrameUserStudentEarly', '/school-admin/users/std-10'),
+      f('shFrameUserTeacher', '/school-admin/users/tch-1'),
+      f('shFrameUserParent', '/school-admin/users/gdn-10'),
       f('shFrameCoursesLicences', '/school-admin/courses'),
       f('shFrameAttendance', '/school-admin/attendance'),
       f('shFrameAnnouncements', '/school-admin/announcements'),
