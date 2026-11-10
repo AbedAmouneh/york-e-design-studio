@@ -6,6 +6,7 @@ import { SchoolAdminApp } from '@/routes/school-admin/SchoolAdminApp'
 import { SchoolAdminOverview } from '@/routes/school-admin/Overview'
 import { SchoolAdminClasses } from '@/routes/school-admin/Classes'
 import { SchoolAdminUsers } from '@/routes/school-admin/Users'
+import { SchoolAdminUserDetail } from '@/routes/school-admin/UserDetail'
 import { SchoolAdminBulkImport } from '@/routes/school-admin/BulkImport'
 import { SchoolAdminClassDetail } from '@/routes/school-admin/ClassDetail'
 import { SchoolAdminAttendance } from '@/routes/school-admin/Attendance'
@@ -140,6 +141,8 @@ export default function App() {
           <Route path="classes/:classId" element={<SchoolAdminClassDetail />} />
           <Route path="users" element={<SchoolAdminUsers />} />
           <Route path="users/import" element={<SchoolAdminBulkImport />} />
+          {/* After import, so the literal segment is not swallowed by :userId. */}
+          <Route path="users/:userId" element={<SchoolAdminUserDetail />} />
           <Route path="courses" element={<SchoolAdminCourses />} />
           <Route path="attendance" element={<SchoolAdminAttendance />} />
           <Route path="announcements" element={<SchoolAdminAnnouncements />} />
